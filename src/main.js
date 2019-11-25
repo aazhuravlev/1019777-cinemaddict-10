@@ -24,7 +24,9 @@ const renderHtmlPart = (container, template, place) => {
 };
 
 const renderHtmlParts = (quantity, container, template, place) => {
-  new Array(quantity).fill(``).forEach(() => renderHtmlPart(container, template, place));
+  for (let i = 0; i < quantity; i++) {
+    renderHtmlPart(container, template, place);
+  }
 };
 
 const pasteElements = () => {

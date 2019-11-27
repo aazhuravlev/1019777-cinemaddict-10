@@ -37,8 +37,9 @@ const renderHtmlParts = (quantity, template) => {
 
 const renderFilmListExtra = (node) => {
   const filmListsExtra = node.querySelectorAll(`.films-list--extra`);
+  const filmCardTemplate = createFilmCardTemplate().repeat(Count.EXTRA_FILMS);
   filmListsExtra.forEach((item) => {
-    renderHtmlPart(item.querySelector(`.films-list__container`), createFilmCardTemplate().repeat(Count.EXTRA_FILMS), `beforeend`);
+    renderHtmlPart(item.querySelector(`.films-list__container`), filmCardTemplate, `beforeend`);
   });
 };
 

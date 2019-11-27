@@ -35,6 +35,13 @@ const renderHtmlParts = (quantity, template) => {
 };
 */
 
+const renderFilmListExtra = () => {
+  const filmListsExtra = document.querySelectorAll(`.films-list--extra`);
+  filmListsExtra.forEach((item) => {
+    renderHtmlPart(item.querySelector(`.films-list__container`), createFilmCardTemplate().repeat(Count.EXTRA_FILMS), `beforeend`);
+  });
+};
+
 const pasteElements = () => {
   renderHtmlPart(Nodes.HEADER, createProfileStatusTemplate(), `beforeend`);
   renderHtmlPart(Nodes.MAIN, createFilterTemplate(), `beforeend`);
@@ -49,10 +56,7 @@ const pasteElements = () => {
 
   renderHtmlPart(filmsContainer, createExtraListTemplate().repeat(Count.EXTRA), `beforeend`);
 
-  const filmListsExtra = filmsContainer.querySelectorAll(`.films-list--extra`);
-  renderHtmlPart(filmListsExtra[0].querySelector(`.films-list__container`), createFilmCardTemplate().repeat(Count.EXTRA_FILMS), `beforeend`);
-  renderHtmlPart(filmListsExtra[1].querySelector(`.films-list__container`), createFilmCardTemplate().repeat(Count.EXTRA_FILMS), `beforeend`);
-
+  renderFilmListExtra();
   renderHtmlPart(Nodes.BODY, createFilmPopupTemplate(), `beforeend`);
 };
 

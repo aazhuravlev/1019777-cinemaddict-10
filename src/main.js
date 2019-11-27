@@ -23,10 +23,14 @@ const renderHtmlPart = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const renderHtmlParts = (quantity, container, template, place) => {
+const renderHtmlParts = (quantity, template) => {
+  const arr = [];
+  let fragment = document.createDocumentFragment();
   for (let i = 0; i < quantity; i++) {
-    renderHtmlPart(container, template, place);
+    arr.push(template);
   }
+  fragment = arr.join(``);
+  return fragment;
 };
 
 const pasteElements = () => {
@@ -38,14 +42,14 @@ const pasteElements = () => {
   const filmsContainer = Nodes.MAIN.querySelector(`.films`);
   const filmsList = Nodes.MAIN.querySelector(`.films-list`);
   const filmsListContainer = Nodes.MAIN.querySelector(`.films-list__container`);
-  renderHtmlParts(Count.CARD, filmsListContainer, createFilmCardTemplate(), `beforeend`);
+  renderHtmlPart(filmsListContainer, renderHtmlParts(Count.CARD, createFilmCardTemplate()), `beforeend`);
   renderHtmlPart(filmsList, createShowMoreButtonTemplate(), `beforeend`);
 
-  renderHtmlParts(Count.EXTRA, filmsContainer, createExtraListTemplate(), `beforeend`);
+  renderHtmlPart(filmsContainer, renderHtmlParts(Count.EXTRA, createExtraListTemplate()), `beforeend`);
 
   const filmListsExtra = filmsContainer.querySelectorAll(`.films-list--extra`);
-  renderHtmlParts(Count.EXTRA_FILMS, filmListsExtra[0].querySelector(`.films-list__container`), createFilmCardTemplate(), `beforeend`);
-  renderHtmlParts(Count.EXTRA_FILMS, filmListsExtra[1].querySelector(`.films-list__container`), createFilmCardTemplate(), `beforeend`);
+  renderHtmlPart(filmListsExtra[0].querySelector(`.films-list__container`), renderHtmlParts(Count.EXTRA_FILMS, createFilmCardTemplate()), `beforeend`);
+  renderHtmlPart(filmListsExtra[1].querySelector(`.films-list__container`), renderHtmlParts(Count.EXTRA_FILMS, createFilmCardTemplate()), `beforeend`);
 
   renderHtmlPart(Nodes.BODY, createFilmPopupTemplate(), `beforeend`);
 };

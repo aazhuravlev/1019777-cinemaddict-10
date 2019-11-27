@@ -35,8 +35,8 @@ const renderHtmlParts = (quantity, template) => {
 };
 */
 
-const renderFilmListExtra = () => {
-  const filmListsExtra = document.querySelectorAll(`.films-list--extra`);
+const renderFilmListExtra = (node) => {
+  const filmListsExtra = node.querySelectorAll(`.films-list--extra`);
   filmListsExtra.forEach((item) => {
     renderHtmlPart(item.querySelector(`.films-list__container`), createFilmCardTemplate().repeat(Count.EXTRA_FILMS), `beforeend`);
   });
@@ -56,7 +56,7 @@ const pasteElements = () => {
 
   renderHtmlPart(filmsContainer, createExtraListTemplate().repeat(Count.EXTRA), `beforeend`);
 
-  renderFilmListExtra();
+  renderFilmListExtra(filmsContainer);
   renderHtmlPart(Nodes.BODY, createFilmPopupTemplate(), `beforeend`);
 };
 

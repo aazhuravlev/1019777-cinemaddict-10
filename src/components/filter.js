@@ -2,7 +2,7 @@ const createFilterMarkup = (filter) => {
   const {name, link, count} = filter;
 
   return (
-    `<a href="#${link}" class="main-navigation__item${name === `All movies` ? ` main-navigation__item--active` : ``}">${name}
+    `<a href="#${link}" class="main-navigation__item${name === `All movies` ? ` main-navigation__item--active` : name === `Stats` ? ` main-navigation__item--additional` : ``}">${name}
     ${
     count !== `` ?
       `<span class="main-navigation__item-count">${count}</span>`

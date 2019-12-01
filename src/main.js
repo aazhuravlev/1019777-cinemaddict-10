@@ -6,6 +6,7 @@ import {createFilmCardTemplate} from './components/film-card.js';
 import {createShowMoreButtonTemplate} from './components/show-more-button.js';
 import {createExtraListTemplate} from './components/extra-list.js';
 import {createFilmPopupTemplate} from './components/film-popup.js';
+import {generateFilters} from './mock.js';
 
 const Count = {
   CARD: 5,
@@ -45,7 +46,7 @@ const renderFilmListExtra = (node) => {
 
 const pasteElements = () => {
   renderHtmlPart(Nodes.HEADER, createProfileStatusTemplate(), `beforeend`);
-  renderHtmlPart(Nodes.MAIN, createFilterTemplate(), `beforeend`);
+  renderHtmlPart(Nodes.MAIN, createFilterTemplate(generateFilters()), `beforeend`);
   renderHtmlPart(Nodes.MAIN, createSortingTemplate(), `beforeend`);
   renderHtmlPart(Nodes.MAIN, createFilmListTemplate(), `beforeend`);
 

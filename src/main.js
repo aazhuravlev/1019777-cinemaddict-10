@@ -58,6 +58,22 @@ const sortingFilmsComments = () => {
   return data;
 };
 
+const loadMoreButtonClickHandler = (node, btn) => {
+  let showingTasksCount = Count.SHOWING_CARDS_ON_START;
+
+  return () => {
+    const prevTasksCount = showingTasksCount;
+    showingTasksCount = showingTasksCount + Count.SHOWING_CARDS_BY_BUTTON;
+
+    cardsData.slice(prevTasksCount, showingTasksCount)
+      .forEach((card) => renderHtmlPart(node, createFilmCardTemplate(card), `beforeend`));
+
+    if (showingTasksCount >= cardsData.length) {
+      btn.remove();
+    }
+  };
+};
+
 const renderFilmListExtra = (node) => {
   const filmListsExtra = node.querySelectorAll(`.films-list--extra`);
   sortingFilmsRating().slice(0, Count.EXTRA_FILMS).forEach((card) => renderHtmlPart(filmListsExtra[0].querySelector(`.films-list__container`), createFilmCardTemplate(card), `beforeend`));
@@ -82,6 +98,9 @@ const pasteElements = () => {
 
   renderFilmListExtra(filmsContainer);
   renderHtmlPart(Nodes.BODY, createFilmPopupTemplate(), `beforeend`);
+
+  const loadMoreButton = filmsList.querySelector(`.films-list__show-more`);
+  loadMoreButton.addEventListener(`click`, loadMoreButtonClickHandler(filmsListContainer, loadMoreButton));
 };
 
 pasteElements();

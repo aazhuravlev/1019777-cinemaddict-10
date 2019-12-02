@@ -1,17 +1,17 @@
-const createFilmCardTemplate = (data) => {
+const createFilmCardTemplate = (data, i) => {
   const {title, image, rating, year, time, genre, description, comments} = data;
 
   return (
-    `<article class="film-card">
+    `<article class="film-card" data-id=${i}>
       <h3 class="film-card__title">${title}</h3>
       <p class="film-card__rating">${rating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${year}</span>
         <span class="film-card__duration">${time}</span>
-        <span class="film-card__genre">${genre}</span>
+        <span class="film-card__genre">${genre[0]}</span>
       </p>
       <img src="./images/posters/${image}" alt="" class="film-card__poster">
-      <p class="film-card__description">${description}</p>
+      <p class="film-card__description">${description.length > 140 ? `${description.slice(0, 139)}...` : description}</p>
       <a class="film-card__comments">${comments} comments</a>
       <form class="film-card__controls">
         <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>

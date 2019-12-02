@@ -42,21 +42,26 @@ const renderHtmlParts = (quantity, template) => {
 };
 */
 
-const filterFilmsData = () => {
+const sortingFilmsRating = () => {
   const data = cardsData.slice();
   data.sort((a, b) => {
-    return b.rating - a.rating
-  })
+    return b.rating - a.rating;
+  });
   return data;
-}
+};
+
+const sortingFilmsComments = () => {
+  const data = cardsData.slice();
+  data.sort((a, b) => {
+    return b.comments - a.comments;
+  });
+  return data;
+};
 
 const renderFilmListExtra = (node) => {
   const filmListsExtra = node.querySelectorAll(`.films-list--extra`);
-  const topRated = filterFilmsData(0, 2);
-  const filmCardTemplate = createFilmCardTemplate(topRated);
-  filmListsExtra.forEach((item) => {
-    renderHtmlPart(item.querySelector(`.films-list__container`), filmCardTemplate, `beforeend`);
-  });
+  sortingFilmsRating().slice(0, Count.EXTRA_FILMS).forEach((card) => renderHtmlPart(filmListsExtra[0].querySelector(`.films-list__container`), createFilmCardTemplate(card), `beforeend`));
+  sortingFilmsComments().slice(0, Count.EXTRA_FILMS).forEach((card) => renderHtmlPart(filmListsExtra[1].querySelector(`.films-list__container`), createFilmCardTemplate(card), `beforeend`));
 };
 
 const pasteElements = () => {

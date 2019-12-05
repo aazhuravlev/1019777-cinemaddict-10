@@ -16,7 +16,9 @@ const Count = {
   EXTRA_FILMS: 2
 };
 
-const ESC_KEYCODE = 27;
+const KeyCode = {
+  ESC: 27
+};
 
 let start = -1;
 let popup;
@@ -38,45 +40,45 @@ const renderHtmlPart = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-/*
-const renderHtmlParts = (quantity, template) => {
+const createHtmlFragment = (data, template, count) => {
   const arr = [];
-  let fragment = document.createDocumentFragment();
-  for (let i = 0; i < quantity; i++) {
-    arr.push(template);
+  if (count === `count`) {
+    data.forEach((card) => {
+      start += 1;
+      arr.push(template(card, start));
+    });
+  } else {
+    data.slice().forEach((card, i) => {
+      arr.push(template(card, i));
+    });
   }
-  fragment = arr.join(``);
-  return fragment;
-};
-*/
-
-const sortingFilmsRating = () => {
-  const data = cardsData.slice();
-  data.sort((a, b) => {
-    return b.rating - a.rating;
-  });
-  return data;
+  const htmlFragment = arr.join(``);
+  return htmlFragment;
 };
 
-const sortingFilmsComments = () => {
+const sortingFilms = (type) => {
   const data = cardsData.slice();
   data.sort((a, b) => {
-    return b.comments - a.comments;
+    return b[type] - a[type];
   });
+  if (data[0][type] === 0) {
+    return ``;
+  }
   return data;
 };
 
 const renderExtraFilmCard = (data, node) => {
-  data.slice(0, Count.EXTRA_FILMS).forEach((card, i) => {
-    renderHtmlPart(node.querySelector(`.films-list__container`), createFilmCardTemplate(card, i), `beforeend`);
-  });
+  const fragment = createHtmlFragment(data, createFilmCardTemplate);
+  renderHtmlPart(node.querySelector(`.films-list__container`), fragment, `beforeend`);
 };
 
 const renderFilmListExtra = (node) => {
+  const ratingSortedFilms = sortingFilms(`rating`).slice(0, Count.EXTRA_FILMS);
+  const commentsSortedFilms = sortingFilms(`comments`).slice(0, Count.EXTRA_FILMS);
   Nodes.FOOTER_STATISTIC.textContent = `${cardsData.length} movies inside`;
   filmListsExtra = node.querySelectorAll(`.films-list--extra`);
-  renderExtraFilmCard(sortingFilmsRating(), filmListsExtra[0]);
-  renderExtraFilmCard(sortingFilmsComments(), filmListsExtra[1]);
+  renderExtraFilmCard(ratingSortedFilms, filmListsExtra[0]);
+  renderExtraFilmCard(commentsSortedFilms, filmListsExtra[1]);
   let firstFilmCard = filmListsExtra[0].querySelector(`.film-card__rating`);
   if (firstFilmCard.textContent === `0`) {
     filmListsExtra[0].remove();
@@ -89,15 +91,12 @@ const renderFilmListExtra = (node) => {
 
 const loadMoreButtonClickHandler = (node, btn) => {
   let showingTasksCount = Count.SHOWING_CARDS_ON_START;
-
   return () => {
     const prevTasksCount = showingTasksCount;
-    showingTasksCount = showingTasksCount + Count.SHOWING_CARDS_BY_BUTTON;
+    showingTasksCount += Count.SHOWING_CARDS_BY_BUTTON;
 
-    cardsData.slice(prevTasksCount, showingTasksCount)
-      .forEach((card) => {
-        renderHtmlPart(node, createFilmCardTemplate(card, (start += 1)), `beforeend`);
-      });
+    const unrenderedCards = cardsData.slice(prevTasksCount, showingTasksCount);
+    renderHtmlPart(node, createHtmlFragment(unrenderedCards, createFilmCardTemplate, `count`), `beforeend`);
 
     if (showingTasksCount >= cardsData.length) {
       btn.remove();
@@ -105,7 +104,7 @@ const loadMoreButtonClickHandler = (node, btn) => {
   };
 };
 
-const cardClickHandler = (data) => {
+const getCardClickHandler = (data) => {
   return (evt) => {
     const idx = evt.target.getAttribute(`data-id`) || evt.target.parentNode.getAttribute(`data-id`);
     if (idx) {
@@ -131,7 +130,7 @@ const removePopupCkickHandler = () => {
 };
 
 const removePopupKeydownHandler = (evt) => {
-  if (evt.keyCode === ESC_KEYCODE) {
+  if (evt.keyCode === KeyCode.ESC) {
     popupRemove();
   }
 };
@@ -146,20 +145,18 @@ const pasteElements = () => {
   const filmsList = Nodes.MAIN.querySelector(`.films-list`);
   const filmsListContainer = Nodes.MAIN.querySelector(`.films-list__container`);
 
-  cardsData.slice(0, Count.SHOWING_CARDS_ON_START).forEach((card) => renderHtmlPart(filmsListContainer, createFilmCardTemplate(card, (start += 1)), `beforeend`));
-
+  const cardsOnStart = cardsData.slice(0, Count.SHOWING_CARDS_ON_START);
+  renderHtmlPart(filmsListContainer, createHtmlFragment(cardsOnStart, createFilmCardTemplate, `count`), `beforeend`);
   renderHtmlPart(filmsList, createShowMoreButtonTemplate(), `beforeend`);
-
   renderHtmlPart(filmsContainer, createExtraListTemplate(), `beforeend`);
-
   renderFilmListExtra(filmsContainer);
 
   const loadMoreButton = filmsList.querySelector(`.films-list__show-more`);
 
   loadMoreButton.addEventListener(`click`, loadMoreButtonClickHandler(filmsListContainer, loadMoreButton));
-  filmsList.addEventListener(`click`, cardClickHandler(cardsData));
-  filmListsExtra[0].addEventListener(`click`, cardClickHandler(sortingFilmsRating()));
-  filmListsExtra[1].addEventListener(`click`, cardClickHandler(sortingFilmsComments()));
+  filmsList.addEventListener(`click`, getCardClickHandler(cardsData));
+  filmListsExtra[0].addEventListener(`click`, getCardClickHandler(sortingFilms(`rating`)));
+  filmListsExtra[1].addEventListener(`click`, getCardClickHandler(sortingFilms(`comments`)));
 };
 
 pasteElements();

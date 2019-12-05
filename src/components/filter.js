@@ -1,10 +1,10 @@
+const withoutCount = {
+  'All movies': ` main-navigation__item--active`,
+  'Stats': ` main-navigation__item--additional`
+};
+
 const decorFilterLink = (name) => {
-  if (name === `All movies`) {
-    return ` main-navigation__item--active`;
-  } else if (name === `Stats`) {
-    return ` main-navigation__item--additional`;
-  }
-  return ``;
+  return withoutCount[name] || ``;
 };
 
 const createFilterMarkup = (filter) => {
@@ -12,8 +12,7 @@ const createFilterMarkup = (filter) => {
 
   return (
     `<a href="#${link}" class="main-navigation__item${decorFilterLink(name)}">${name}
-    ${
-    count !== `` ?
+    ${count !== `` ?
       `<span class="main-navigation__item-count">${count}</span>`
       : ``
     }
@@ -22,7 +21,7 @@ const createFilterMarkup = (filter) => {
 };
 
 const createFilterTemplate = (filters) => {
-  const filtersMarkup = filters.map((item, i) => createFilterMarkup(item, i === 0)).join(`\n`);
+  const filtersMarkup = filters.map((item) => createFilterMarkup(item)).join(`\n`);
 
   return (
     `<nav class="main-navigation">

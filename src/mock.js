@@ -7,7 +7,10 @@ const IMAGES = [`made-for-each-other.png`, `popeye-meets-sinbad.png`, `sagebrush
 const MONTHS = [`January`, `February`, `March`, `April`, `May`, `June`, `July`, `August`, `September`, `October`, `November`, `December`];
 const COUNTRYES = [`Afghanistan`, `Albania`, `Algeria`, `Andorra`, `Angola`, `Argentina`, `Armenia`, `Australia`, `Austria`, `Azerbaijan`, `Bahrain`, `Bangladesh`]
 const NAMES = [`AARON`, `ADAM`, `AIDEN`, `ALBERT`, `ALEX`, `ALEXANDER`, `ALFIE`, `ARCHIE`, `ARTHUR`, `AUSTIN`, `BENJAMIN`, `BLAKE`, `BOBBY`];
+const GENRES = [`Action`, `Adventure`, `Comedy`, `Drama`, `Crime`, `Horror`, `Fantasy`, `Western`, `Thriller`, `Animation`];
 const FILTER_MAX_VALUE = 20;
+
+const sentencesArray = SENTENCE.split(`.`);
 
 const Confines = function (min, max) {
   this.min = min;
@@ -22,33 +25,29 @@ const Minutes = new Confines(0, 59);
 const Comments = new Confines(0, 100);
 const SentencesQuantity = new Confines(1, 3);
 
-const GENRES = [`Action`, `Adventure`, `Comedy`, `Drama`, `Crime`, `Horror`, `Fantasy`, `Western`, `Thriller`, `Animation`];
-
 const getRandomRating = (min, max) => {
   return Math.round(Math.random() * (max - min) + min) + Number(Math.random().toFixed(1));
 };
 
 const generateExceptionsFiltersCount = (item) => {
-  if (item.includes(FILTER_NAMES[0])) {
-    return ``;
-  } else if (item.includes(FILTER_NAMES[4])) {
+  if (item.includes(FILTER_NAMES[0]) || item.includes(FILTER_NAMES[4])) {
     return ``;
   }
   return Math.floor(Math.random() * FILTER_MAX_VALUE);
-}
+};
 
 const generateFilters = () => {
   return FILTER_NAMES.map((item) => {
+    const generateLink = item.slice(0, item.includes(` `) ? item.indexOf(` `) : item.length).toLowerCase();
     return {
       name: item,
-      link: item.slice(0, item.includes(` `) ? item.indexOf(` `) : item.length).toLowerCase(),
+      link: generateLink,
       count: generateExceptionsFiltersCount(item)
     };
   });
 };
 
-const generateDescription = (sentence, quantity) => {
-  const sentencesArray = sentence.split(`.`);
+const generateDescription = (quantity) => {
   let description = [];
   for (let i = 0; i < quantity; i++) {
     description.push(getRandomArrayItem(sentencesArray));
@@ -59,7 +58,7 @@ const generateDescription = (sentence, quantity) => {
 
 const generateFilmCardData = () => {
   const productionYear = getRandomBetween(Year.min, Year.max);
-  const filmDescription = generateDescription(SENTENCE, getRandomBetween(SentencesQuantity.min, SentencesQuantity.max));
+  const filmDescription = generateDescription(getRandomBetween(SentencesQuantity.min, SentencesQuantity.max));
   return {
     title: getRandomArrayItem(FILMS),
     image: getRandomArrayItem(IMAGES),

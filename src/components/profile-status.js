@@ -1,20 +1,13 @@
 import {getRandomBetween} from '../util.js';
 
-const generateUserRank = (max) => {
-  const checkedMovies = getRandomBetween(0, max);
-  let userRank = ``;
-  if (checkedMovies >= 1 && checkedMovies < 11) {
-    userRank = `Novice`;
-  } else if (checkedMovies >= 11 && checkedMovies < 21) {
-    userRank = `Fan`;
-  } else if (checkedMovies >= 21) {
-    userRank = `Movie Buff`;
-  }
-  return userRank;
-};
+const userRanks = [``, `Novice`, `Fan`, `Movie Buff`];
+
+const generateUserRankIndex = (max) => Math.ceil(getRandomBetween(0, max) / 10);
+
+const getUserRank = (max) => userRanks[generateUserRankIndex(max)];
 
 const createProfileStatusTemplate = (max) => {
-  const userRank = generateUserRank(max);
+  const userRank = getUserRank(max);
   return (
     `<section class="header__profile profile">
       <p class="profile__rating">${userRank}</p>

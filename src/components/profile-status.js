@@ -1,4 +1,4 @@
-import {getRandomBetween} from '../util.js';
+import {getRandomBetween, createElement} from '../util.js';
 
 const userRanks = [``, `Novice`, `Fan`, `Movie Buff`];
 
@@ -16,4 +16,25 @@ const createProfileStatusTemplate = (max) => {
   );
 };
 
-export {createProfileStatusTemplate};
+export default class ProfileStatus {
+  constructor(max) {
+    this._max = max;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createProfileStatusTemplate(this._max);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

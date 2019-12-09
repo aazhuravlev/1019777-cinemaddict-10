@@ -156,10 +156,9 @@ const removePopupKeydownHandler = (evt) => {
   }
 };
 
-const createNodesMainFragment = () => {
+const createFragment = (arr) => {
   const fragment = document.createDocumentFragment();
-  const nodesMainElements = [new FilterComponent(filters).getElement(), new SortingComponent().getElement(), new FilmListComponent().getElement()];
-  for (const element of nodesMainElements) {
+  for (const element of arr) {
     fragment.appendChild(element);
   }
   return fragment;
@@ -167,7 +166,7 @@ const createNodesMainFragment = () => {
 
 const pasteElements = () => {
   renderHtmlPart(Nodes.HEADER, new ProfileStatusComponent(cardsData.length).getElement(), RenderPosition.BEFOREEND);
-  renderHtmlPart(Nodes.MAIN, createNodesMainFragment(), RenderPosition.BEFOREEND);
+  renderHtmlPart(Nodes.MAIN, createFragment([new FilterComponent(filters).getElement(), new SortingComponent().getElement(), new FilmListComponent().getElement()]), RenderPosition.BEFOREEND);
 
   const filmsContainer = Nodes.MAIN.querySelector(`.films`);
   const filmsList = Nodes.MAIN.querySelector(`.films-list`);
@@ -178,8 +177,7 @@ const pasteElements = () => {
   renderHtmlPart(filmsListContainer, createFilmHtmlFragment(cardsOnStart, `count`), RenderPosition.BEFOREEND);
 
   renderHtmlPart(filmsList, new ShowMoreButtonComponent().getElement(), RenderPosition.BEFOREEND);
-  renderHtmlPart(filmsContainer, new ExtraListComponent(ExtraTitles.TOP_RATED).getElement(), RenderPosition.BEFOREEND);
-  renderHtmlPart(filmsContainer, new ExtraListComponent(ExtraTitles.MOST_COMMENTED).getElement(), RenderPosition.BEFOREEND);
+  renderHtmlPart(filmsContainer, createFragment([new ExtraListComponent(ExtraTitles.TOP_RATED).getElement(), new ExtraListComponent(ExtraTitles.MOST_COMMENTED).getElement()]), RenderPosition.BEFOREEND);
   renderFilmListExtra(filmsContainer);
 
   const loadMoreButton = filmsList.querySelector(`.films-list__show-more`);

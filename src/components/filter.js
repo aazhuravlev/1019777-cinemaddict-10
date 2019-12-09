@@ -5,19 +5,16 @@ const withoutCount = {
   'Stats': ` main-navigation__item--additional`
 };
 
-const decorFilterLink = (name) => {
-  return withoutCount[name] || ``;
-};
+const decorFilterLink = (name) => withoutCount[name] || ``;
+
+const createCounter = (count) => count !== `` ? `<span class="main-navigation__item-count">${count}</span>` : ``;
 
 const createFilterMarkup = (filter) => {
   const {name, link, count} = filter;
 
   return (
     `<a href="#${link}" class="main-navigation__item${decorFilterLink(name)}">${name}
-    ${count !== `` ?
-      `<span class="main-navigation__item-count">${count}</span>`
-      : ``
-    }
+    ${createCounter(count)}
     </a>`
   );
 };

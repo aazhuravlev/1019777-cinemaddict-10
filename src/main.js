@@ -8,6 +8,16 @@ import ExtraListComponent from './components/extra-list.js';
 import FilmPopupComponent from './components/film-popup.js';
 import {generateFilters, generateFilmCardsData} from './mock.js';
 
+const ExtraTitles = {
+  TOP_RATED: `Top rated`,
+  MOST_COMMENTED: `Most commented`
+};
+
+const TypeOfSorting = {
+  rating: `rating`,
+  comments: `comments`
+};
+
 const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`
@@ -49,9 +59,10 @@ const renderHtmlPart = (container, template, place) => {
     case RenderPosition.BEFOREEND:
       container.append(template);
       break;
-  }};
+  }
+};
 
-const createHtmlFragment = (data, count) => {
+const createFilmHtmlFragment = (data, count) => {
   const fragment = document.createDocumentFragment();
   if (count === `count`) {
     data.forEach((card) => {
@@ -71,32 +82,30 @@ const sortingFilms = (type) => {
   data.sort((a, b) => {
     return b[type] - a[type];
   });
-  if (data[0][type] === 0) {
-    return ``;
-  }
   return data;
 };
 
 const renderExtraFilmCard = (data, node) => {
-  const fragment = createHtmlFragment(data);
-  console.log(fragment)
-  renderHtmlPart(node.querySelector(`.films-list__container`), fragment, RenderPosition.BEFOREEND);
+  renderHtmlPart(node.querySelector(`.films-list__container`), createFilmHtmlFragment(data), RenderPosition.BEFOREEND);
 };
 
 const renderFilmListExtra = (node) => {
-  const ratingSortedFilms = sortingFilms(`rating`).slice(0, Count.EXTRA_FILMS);
-  const commentsSortedFilms = sortingFilms(`comments`).slice(0, Count.EXTRA_FILMS);
-  Nodes.FOOTER_STATISTIC.textContent = `${cardsData.length} movies inside`;
+  const ratingSortedFilms = sortingFilms(TypeOfSorting.rating).slice(0, Count.EXTRA_FILMS);
+  const commentsSortedFilms = sortingFilms(TypeOfSorting.comments).slice(0, Count.EXTRA_FILMS);
+
+  const isFilmsUnRated = ratingSortedFilms.every((film) => film.rating === 0);
+  const isFilmsUnComment = ratingSortedFilms.every((comment) => comment.comments === 0);
+
   filmListsExtra = node.querySelectorAll(`.films-list--extra`);
-  renderExtraFilmCard(ratingSortedFilms, filmListsExtra[0]);
-  renderExtraFilmCard(commentsSortedFilms, filmListsExtra[1]);
-  let firstFilmCard = filmListsExtra[0].querySelector(`.film-card__rating`);
-  if (firstFilmCard.textContent === `0`) {
+  if (isFilmsUnRated) {
     filmListsExtra[0].remove();
+  } else {
+    renderExtraFilmCard(ratingSortedFilms, filmListsExtra[0]);
   }
-  firstFilmCard = filmListsExtra[1].querySelector(`.film-card__comments`);
-  if (firstFilmCard.textContent === `0 comments`) {
+  if (isFilmsUnComment) {
     filmListsExtra[1].remove();
+  } else {
+    renderExtraFilmCard(commentsSortedFilms, filmListsExtra[1]);
   }
 };
 
@@ -107,7 +116,8 @@ const loadMoreButtonClickHandler = (node, btn) => {
     showingTasksCount += Count.SHOWING_CARDS_BY_BUTTON;
 
     const unrenderedCards = cardsData.slice(prevTasksCount, showingTasksCount);
-    renderHtmlPart(node, createHtmlFragment(unrenderedCards, `count`), RenderPosition.BEFOREEND);
+
+    renderHtmlPart(node, createFilmHtmlFragment(unrenderedCards, `count`), RenderPosition.BEFOREEND);
 
     if (showingTasksCount >= cardsData.length) {
       btn.remove();
@@ -146,28 +156,39 @@ const removePopupKeydownHandler = (evt) => {
   }
 };
 
+const createNodesMainFragment = () => {
+  const fragment = document.createDocumentFragment();
+  const nodesMainElements = [new FilterComponent(filters).getElement(), new SortingComponent().getElement(), new FilmListComponent().getElement()];
+  for (const element of nodesMainElements) {
+    fragment.appendChild(element);
+  }
+  return fragment;
+}
+
 const pasteElements = () => {
   renderHtmlPart(Nodes.HEADER, new ProfileStatusComponent(cardsData.length).getElement(), RenderPosition.BEFOREEND);
-  renderHtmlPart(Nodes.MAIN, new FilterComponent(filters).getElement(), RenderPosition.BEFOREEND);
-  renderHtmlPart(Nodes.MAIN, new SortingComponent().getElement(), RenderPosition.BEFOREEND);
-  renderHtmlPart(Nodes.MAIN, new FilmListComponent().getElement(), RenderPosition.BEFOREEND);
+  renderHtmlPart(Nodes.MAIN, createNodesMainFragment(), RenderPosition.BEFOREEND);
 
   const filmsContainer = Nodes.MAIN.querySelector(`.films`);
   const filmsList = Nodes.MAIN.querySelector(`.films-list`);
   const filmsListContainer = Nodes.MAIN.querySelector(`.films-list__container`);
 
   const cardsOnStart = cardsData.slice(0, Count.SHOWING_CARDS_ON_START);
-  renderHtmlPart(filmsListContainer, createHtmlFragment(cardsOnStart, RenderPosition.BEFOREEND));
+
+  renderHtmlPart(filmsListContainer, createFilmHtmlFragment(cardsOnStart, `count`, RenderPosition.BEFOREEND)); // вот эта строчка не работает
+
   renderHtmlPart(filmsList, new ShowMoreButtonComponent().getElement(), RenderPosition.BEFOREEND);
-  renderHtmlPart(filmsContainer, new ExtraListComponent().getElement(), RenderPosition.BEFOREEND);
+  renderHtmlPart(filmsContainer, new ExtraListComponent(ExtraTitles.TOP_RATED).getElement(), RenderPosition.BEFOREEND);
+  renderHtmlPart(filmsContainer, new ExtraListComponent(ExtraTitles.MOST_COMMENTED).getElement(), RenderPosition.BEFOREEND);
   renderFilmListExtra(filmsContainer);
 
   const loadMoreButton = filmsList.querySelector(`.films-list__show-more`);
 
   loadMoreButton.addEventListener(`click`, loadMoreButtonClickHandler(filmsListContainer, loadMoreButton));
-  filmsList.addEventListener(`click`, getCardClickHandler(cardsData));
+  filmsList.addEventListener(`click`, getCardClickHandler(cardsData), true);
   filmListsExtra[0].addEventListener(`click`, getCardClickHandler(sortingFilms(`rating`)));
   filmListsExtra[1].addEventListener(`click`, getCardClickHandler(sortingFilms(`comments`)));
+  Nodes.FOOTER_STATISTIC.textContent = `${cardsData.length} movies inside`;
 };
 
 pasteElements();

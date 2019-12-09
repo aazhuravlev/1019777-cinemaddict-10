@@ -1,8 +1,9 @@
 import {getRandomBetween, createElement} from '../util.js';
 
 const userRanks = [``, `Novice`, `Fan`, `Movie Buff`];
+const devider = 10;
 
-const generateUserRankIndex = (max) => Math.ceil(getRandomBetween(0, max) / 10);
+const generateUserRankIndex = (max) => Math.ceil(getRandomBetween(0, max) / devider);
 
 const getUserRank = (max) => userRanks[generateUserRankIndex(max)];
 

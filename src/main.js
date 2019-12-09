@@ -175,7 +175,7 @@ const pasteElements = () => {
 
   const cardsOnStart = cardsData.slice(0, Count.SHOWING_CARDS_ON_START);
 
-  renderHtmlPart(filmsListContainer, createFilmHtmlFragment(cardsOnStart, `count`, RenderPosition.BEFOREEND)); // вот эта строчка не работает
+  renderHtmlPart(filmsListContainer, createFilmHtmlFragment(cardsOnStart, `count`), RenderPosition.BEFOREEND);
 
   renderHtmlPart(filmsList, new ShowMoreButtonComponent().getElement(), RenderPosition.BEFOREEND);
   renderHtmlPart(filmsContainer, new ExtraListComponent(ExtraTitles.TOP_RATED).getElement(), RenderPosition.BEFOREEND);

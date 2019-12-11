@@ -69,12 +69,12 @@ const createFilmCardFragment = (data) => {
   data.forEach((card) => {
     const filmCardElement = new FilmCardComponent(card);
     const filmPopupElement = new FilmPopupComponent(card);
-
+    const filmTitle = filmCardElement.getElement().querySelector(`h3`);
+    const filmImage = filmCardElement.getElement().querySelector(`img`);
+    const filmComments = filmCardElement.getElement().querySelector(`a`);
     const getCardClickHandler = (evt) => {
-      const filmTitle = filmCardElement.getElement().querySelector(`h3`);
-      const filmImage = filmCardElement.getElement().querySelector(`img`);
-      const filmComments = filmCardElement.getElement().querySelector(`a`);
-      if (evt.target === filmImage || evt.target === filmTitle || evt.target === filmComments) {
+
+      if ([filmTitle, filmImage, filmComments].includes(evt.target)) {
         renderHtmlPart(Nodes.BODY, filmPopupElement.getElement(), RenderPosition.BEFOREEND);
         popup = document.querySelector(`.film-details`);
         closePopupBtn = filmPopupElement.getElement().querySelector(`.film-details__close-btn`);

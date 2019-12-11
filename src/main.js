@@ -1,3 +1,5 @@
+import {ExtraTitles, TypeOfSorting, RenderPosition, Count, KeyCode} from './constants.js';
+import {renderHtmlPart} from './util.js';
 import ProfileStatusComponent from './components/profile-status.js';
 import FilterComponent from './components/filter.js';
 import SortingComponent from './components/sorting.js';
@@ -9,33 +11,6 @@ import ExtraListComponent from './components/extra-list.js';
 import FilmPopupComponent from './components/film-popup.js';
 import {generateFilters, generateFilmCardsData} from './mock.js';
 
-const ExtraTitles = {
-  TOP_RATED: `Top rated`,
-  MOST_COMMENTED: `Most commented`
-};
-
-const TypeOfSorting = {
-  rating: `rating`,
-  comments: `comments`
-};
-
-const RenderPosition = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
-};
-
-const Count = {
-  CARD: 29,
-  SHOWING_CARDS_ON_START: 5,
-  SHOWING_CARDS_BY_BUTTON: 5,
-  EXTRA: 2,
-  EXTRA_FILMS: 2
-};
-
-const KeyCode = {
-  ESC: 27
-};
-
 const cardsData = generateFilmCardsData(Count.CARD);
 
 const Nodes = {
@@ -46,17 +21,6 @@ const Nodes = {
 };
 
 const filters = generateFilters();
-
-const renderHtmlPart = (container, template, place) => {
-  switch (place) {
-    case RenderPosition.AFTERBEGIN:
-      container.prepend(template);
-      break;
-    case RenderPosition.BEFOREEND:
-      container.append(template);
-      break;
-  }
-};
 
 const createFilmCardFragment = (data) => {
   const fragment = document.createDocumentFragment();

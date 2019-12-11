@@ -1,5 +1,7 @@
 import {createElement} from '../util.js';
 
+const generateFilmCardDescription = (description) => description.length > 140 ? `${description.slice(0, 139)}...` : description;
+
 const createFilmCardTemplate = (data) => {
   const {title, image, rating, year, time, genre, description, comments} = data;
   return (
@@ -12,7 +14,7 @@ const createFilmCardTemplate = (data) => {
         <span class="film-card__genre">${genre[0]}</span>
       </p>
       <img src="./images/posters/${image}" alt="" class="film-card__poster">
-      <p class="film-card__description">${description.length > 140 ? `${description.slice(0, 139)}...` : description}</p>
+      <p class="film-card__description">${generateFilmCardDescription(description)}</p>
       <a class="film-card__comments">${comments} comments</a>
       <form class="film-card__controls">
         <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>

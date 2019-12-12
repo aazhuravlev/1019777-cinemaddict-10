@@ -86,6 +86,7 @@ const loadMoreButtonClickHandler = (node, component, data) => {
 
     if (showingTasksCount >= data.length) {
       remove(component);
+      component.removeClickHandler(loadMoreButtonClickHandler(node, component, data));
     }
   };
 };

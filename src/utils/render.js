@@ -9,15 +9,28 @@ const createElement = (template) => {
   return newElement.firstChild;
 };
 
-const renderHtmlPart = (container, template, place) => {
+const renderHtmlPart = (container, component, place) => {
   switch (place) {
     case RenderPosition.AFTERBEGIN:
-      container.prepend(template);
+      container.prepend(component);
       break;
     case RenderPosition.BEFOREEND:
-      container.append(template);
+      container.append(component);
       break;
   }
 };
 
-export {createElement, renderHtmlPart, RenderPosition};
+const createFragment = (arr) => {
+  const fragment = document.createDocumentFragment();
+  for (const element of arr) {
+    fragment.appendChild(element);
+  }
+  return fragment;
+};
+
+const remove = (component) => {
+  component.getElement().remove();
+  component.removeElement();
+};
+
+export {RenderPosition, createElement, renderHtmlPart, createFragment, remove};

@@ -8,11 +8,6 @@ const TypeOfSorting = {
   comments: `comments`
 };
 
-const RenderPosition = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
-};
-
 const Count = {
   CARD: 29,
   SHOWING_CARDS_ON_START: 5,
@@ -25,4 +20,4 @@ const KeyCode = {
   ESC: 27
 };
 
-export {ExtraTitles, TypeOfSorting, RenderPosition, Count, KeyCode};
+export {ExtraTitles, TypeOfSorting, Count, KeyCode};

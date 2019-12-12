@@ -1,5 +1,6 @@
-import {ExtraTitles, TypeOfSorting, RenderPosition, Count, KeyCode} from './constants.js';
-import {renderHtmlPart} from './util.js';
+import {ExtraTitles, TypeOfSorting, Count, KeyCode} from './constants.js';
+import {renderHtmlPart, RenderPosition} from './utils/render.js';
+import {sortingFilms} from './utils/common.js';
 import ProfileStatusComponent from './components/profile-status.js';
 import FilterComponent from './components/filter.js';
 import SortingComponent from './components/sorting.js';
@@ -68,21 +69,13 @@ const createFilmCardFragment = (data) => {
   return fragment;
 };
 
-const sortingFilms = (type) => {
-  const data = cardsData.slice();
-  data.sort((a, b) => {
-    return b[type] - a[type];
-  });
-  return data;
-};
-
 const renderExtraFilmCard = (data, node) => {
   renderHtmlPart(node.querySelector(`.films-list__container`), createFilmCardFragment(data), RenderPosition.BEFOREEND);
 };
 
 const renderFilmListExtra = (node) => {
-  const ratingSortedFilms = sortingFilms(TypeOfSorting.rating).slice(0, Count.EXTRA_FILMS);
-  const commentsSortedFilms = sortingFilms(TypeOfSorting.comments).slice(0, Count.EXTRA_FILMS);
+  const ratingSortedFilms = sortingFilms(cardsData, TypeOfSorting.rating).slice(0, Count.EXTRA_FILMS);
+  const commentsSortedFilms = sortingFilms(cardsData, TypeOfSorting.comments).slice(0, Count.EXTRA_FILMS);
 
   const isFilmsUnRated = ratingSortedFilms.every((film) => film.rating === 0);
   const isFilmsUnComment = ratingSortedFilms.every((comment) => comment.comments === 0);

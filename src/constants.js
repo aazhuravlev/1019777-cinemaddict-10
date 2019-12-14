@@ -23,8 +23,13 @@ const Count = {
   EXTRA_FILMS: 2
 };
 
+const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`
+};
+
 const KeyCode = {
   ESC: 27
 };
 
-export {Nodes, ExtraTitles, TypeOfSorting, Count, KeyCode};
+export {Nodes, ExtraTitles, TypeOfSorting, Count, KeyCode, RenderPosition};

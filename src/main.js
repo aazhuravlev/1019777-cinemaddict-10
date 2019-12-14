@@ -1,5 +1,5 @@
-import {Nodes, Count} from './constants.js';
-import {renderHtmlPart, RenderPosition, createFragment} from './utils/render.js';
+import {Nodes, Count, RenderPosition} from './constants.js';
+import {renderHtmlPart, createFragment} from './utils/render.js';
 import ProfileStatusComponent from './components/profile-status.js';
 import FilterComponent from './components/filter.js';
 import SortingComponent from './components/sorting.js';

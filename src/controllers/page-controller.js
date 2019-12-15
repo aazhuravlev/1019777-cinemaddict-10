@@ -117,7 +117,7 @@ export default class PageController {
             remove(this._showMoreButtonComponent);
             this._showMoreButtonComponent.removeClickHandler(showMoreButtonClickHandler);
           }
-        }
+        };
         this._showMoreButtonComponent.setClickHandler(showMoreButtonClickHandler);
       };
       renderShowMoreButton();
@@ -136,7 +136,7 @@ export default class PageController {
             sortedFilms = sortingFilms(filmsData, SortType.RATING);
             break;
           case SortType.DEFAULT:
-              sortedFilms = filmsData.slice(0, showingTasksCount);
+            sortedFilms = filmsData.slice(0, showingTasksCount);
             break;
         }
         filmsListContainer.innerHTML = ``;

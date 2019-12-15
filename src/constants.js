@@ -10,9 +10,11 @@ const ExtraTitles = {
   MOST_COMMENTED: `Most commented`
 };
 
-const TypeOfSorting = {
-  rating: `rating`,
-  comments: `comments`
+const SortType = {
+  DEFAULT: `default`,
+  DATE: `year`,
+  RATING: `rating`,
+  COMMENTS: `comments`
 };
 
 const Count = {
@@ -32,4 +34,4 @@ const KeyCode = {
   ESC: 27
 };
 
-export {Nodes, ExtraTitles, TypeOfSorting, Count, KeyCode, RenderPosition};
+export {Nodes, ExtraTitles, SortType, Count, KeyCode, RenderPosition};

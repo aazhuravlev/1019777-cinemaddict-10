@@ -72,7 +72,7 @@ const generateFilmCardData = () => {
     writers: `${getRandomArrayItem(NAMES)}, ${getRandomArrayItem(NAMES)}, ${getRandomArrayItem(NAMES)}`,
     actors: `${getRandomArrayItem(NAMES)}, ${getRandomArrayItem(NAMES)}, ${getRandomArrayItem(NAMES)}`,
     releaseDate: `${getRandomBetween(Day.min, Day.max)} ${getRandomArrayItem(MONTHS)} ${productionYear}`,
-    counry: getRandomArrayItem(COUNTRYES)
+    country: getRandomArrayItem(COUNTRYES)
   };
 };
 

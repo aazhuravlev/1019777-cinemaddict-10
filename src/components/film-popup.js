@@ -5,26 +5,26 @@ const generateFilmsDetailsRow = (obj) => {
   const arr = [];
   for (const item of Object.keys(obj)) {
     arr.push(
-    `<tr class="film-details__row">
-      <td class="film-details__term">${item}</td>
-      <td class="film-details__cell">${obj[item]}</td>
-    </tr>`);
+        `<tr class="film-details__row">
+          <td class="film-details__term">${item}</td>
+          <td class="film-details__cell">${obj[item]}</td>
+        </tr>`);
   }
   fragment = arr.join(`\n`);
   return fragment;
-}
+};
 
 const generateFilmDetailsControls = (obj) => {
   let fragment = document.createDocumentFragment();
   const arr = [];
   for (const item of Object.keys(obj)) {
     arr.push(
-    `<input type="checkbox" class="film-details__control-input visually-hidden" id="${item}" name="${item}">
-    <label for="${item}" class="film-details__control-label film-details__control-label--${item}">${obj[item]}</label>`);
+        `<input type="checkbox" class="film-details__control-input visually-hidden" id="${item}" name="${item}">
+        <label for="${item}" class="film-details__control-label film-details__control-label--${item}">${obj[item]}</label>`);
   }
   fragment = arr.join(`\n`);
   return fragment;
-}
+};
 
 const createFilmPopupTemplate = (data) => {
   const {title, image, rating, time, genre, description, comments, director, writers, actors, releaseDate, country} = data;
@@ -39,10 +39,10 @@ const createFilmPopupTemplate = (data) => {
   };
 
   const filmDetailsControls = {
-    watchlist: 'Add to watchlist',
-    watched: 'Already watched',
-    favorite: 'Add to favorites'
-  }
+    watchlist: `Add to watchlist`,
+    watched: `Already watched`,
+    favorite: `Add to favorites`
+  };
 
   return (
     `<section class="film-details">

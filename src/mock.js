@@ -17,7 +17,7 @@ const Confines = function (min, max) {
   this.max = max;
 };
 
-const Rating = new Confines(0, 9);
+const Rating = new Confines(1, 9);
 const Year = new Confines(1900, 2019);
 const Day = new Confines(1, 30);
 const Hour = new Confines(0, 3);

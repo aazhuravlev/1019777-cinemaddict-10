@@ -1,4 +1,6 @@
-import AbstractComponent from './abstract-component.js';
+import AbstractSmartComponent from './abstract-smart-component.js';
+
+const popupRatingLength = 9;
 
 const generateFilmsDetailsRow = (obj) => {
   let fragment = document.createDocumentFragment();
@@ -15,19 +17,67 @@ const generateFilmsDetailsRow = (obj) => {
 };
 
 const generateFilmDetailsControls = (obj) => {
-  let fragment = document.createDocumentFragment();
-  const arr = [];
+  const buttons = [];
   for (const item of Object.keys(obj)) {
-    arr.push(
-        `<input type="checkbox" class="film-details__control-input visually-hidden" id="${item}" name="${item}">
-        <label for="${item}" class="film-details__control-label film-details__control-label--${item}">${obj[item]}</label>`);
+    buttons.push(
+        `<input type="checkbox" class="film-details__control-input visually-hidden" id="${item}" name="${item}"${obj[item][1] ? ` checked` : ``}>
+        <label for="${item}" class="film-details__control-label film-details__control-label--${item}">${obj[item][0]}</label>`);
   }
-  fragment = arr.join(`\n`);
-  return fragment;
+  return buttons.join(`\n`);
+};
+
+const generateRating = (userRating) => {
+  const userRatingMenu = [];
+  for (let i = 0; i < popupRatingLength; i++) {
+    userRatingMenu.push(
+        `<input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${i + 1}" id="rating-${i + 1}"${userRating === i + 1 ? ` checked` : ``}>
+          <label class="film-details__user-rating-label" for="rating-${i + 1}">${i + 1}</label>`
+    );
+  }
+  return userRatingMenu.join(`\n`);
+};
+
+const generateYourSelfFilmRating = (isWatched, title, image, userRating) => {
+  return (
+    isWatched ?
+      `<div class="form-details__middle-container">
+        <section class="film-details__user-rating-wrap">
+          <div class="film-details__user-rating-controls">
+            <button class="film-details__watched-reset" type="button">Undo</button>
+          </div>
+
+          <div class="film-details__user-score">
+            <div class="film-details__user-rating-poster">
+              <img src="./images/posters/${image}" alt="film-poster" class="film-details__user-rating-img">
+            </div>
+
+            <section class="film-details__user-rating-inner">
+              <h3 class="film-details__user-rating-title">${title}</h3>
+
+              <p class="film-details__user-rating-feelings">How you feel it?</p>
+
+              <div class="film-details__user-rating-score">
+                ${generateRating(userRating)}
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>` : ``
+  );
+};
+
+const generateGenres = (genres) => {
+  const genresList = [];
+  for (const genre of genres) {
+    genresList.push(
+        `<span class="film-details__genre">${genre}</span>`
+    );
+  }
+  return genresList.join(`\n`);
 };
 
 const createFilmPopupTemplate = (data) => {
-  const {title, image, rating, time, genre, description, comments, director, writers, actors, releaseDate, country} = data;
+  const {title, image, rating, time, genre, description, comments, director, writers, actors, releaseDate, country, isWatchList, isWatched, isFavorite, userRating} = data;
 
   const FilmsDetailsRow = {
     'Director': director,
@@ -39,9 +89,9 @@ const createFilmPopupTemplate = (data) => {
   };
 
   const filmDetailsControls = {
-    watchlist: `Add to watchlist`,
-    watched: `Already watched`,
-    favorite: `Add to favorites`
+    watchlist: [`Add to watchlist`, isWatchList],
+    watched: [`Already watched`, isWatched],
+    favorite: [`Add to favorites`, isFavorite]
   };
 
   return (
@@ -67,17 +117,17 @@ const createFilmPopupTemplate = (data) => {
 
                 <div class="film-details__rating">
                   <p class="film-details__total-rating">${rating}</p>
+                  ${isWatched ? `<p class="film-details__user-rating">Your rate ${userRating}</p>` : ``}
                 </div>
               </div>
 
               <table class="film-details__table">
                 ${generateFilmsDetailsRow(FilmsDetailsRow)}
                 <tr class="film-details__row">
-                  <td class="film-details__term">Genres</td>
+                  <td class="film-details__term">${genre.length === 1 ? `Genre` : `Genres`}</td>
                   <td class="film-details__cell">
-                    <span class="film-details__genre">${genre[0]}</span>
-                    <span class="film-details__genre">${genre[1]}</span>
-                    <span class="film-details__genre">${genre[2]}</span></td>
+                    ${generateGenres(genre)}
+                  </td>
                 </tr>
               </table>
 
@@ -91,6 +141,8 @@ const createFilmPopupTemplate = (data) => {
             ${generateFilmDetailsControls(filmDetailsControls)}
           </section>
         </div>
+
+        ${generateYourSelfFilmRating(isWatched, title, image, userRating)}
 
         <div class="form-details__bottom-container">
           <section class="film-details__comments-wrap">
@@ -136,14 +188,27 @@ const createFilmPopupTemplate = (data) => {
   );
 };
 
-export default class FilmPopup extends AbstractComponent {
+export default class FilmPopup extends AbstractSmartComponent {
   constructor(data) {
     super();
     this._data = data;
+    this.setClickHandler = this.setClickHandler.bind(this);
+    this.removeClickHandler = this.setClickHandler.bind(this);
+    this.setWatchListButtonClickHandler = this.setClickHandler.bind(this);
+    this.setWatchedButtonClickHandler = this.setClickHandler.bind(this);
+    this.setFavoritesButtonClickHandler = this.setClickHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmPopupTemplate(this._data);
+  }
+
+  recoveryListeners() {
+    this.setClickHandler();
+    this.removeClickHandler();
+    this.setWatchListButtonClickHandler();
+    this.setWatchedButtonClickHandler();
+    this.setFavoritesButtonClickHandler();
   }
 
   setClickHandler(handler) {
@@ -152,5 +217,20 @@ export default class FilmPopup extends AbstractComponent {
 
   removeClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, handler);
+  }
+
+  setWatchListButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, handler);
+  }
+
+  setWatchedButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, handler);
+  }
+
+  setFavoritesButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, handler);
   }
 }

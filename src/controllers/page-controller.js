@@ -4,7 +4,7 @@ import {sortingFilms} from '../utils/common.js';
 import {generateFilters} from '../mock.js';
 import FilterComponent from '../components/filter.js';
 import SortingComponent from '../components/sorting.js';
-import MovieController from '../controllers/movie-сontroller.js'
+import MovieController from '../controllers/movie-сontroller.js';
 import ShowMoreButtonComponent from '../components/show-more-button.js';
 import ExtraListComponent from '../components/extra-list.js';
 
@@ -22,43 +22,43 @@ const createFilmCardFragment = (cardsData, onDataChange) => {
     const movieController = new MovieController(fragment, onDataChange);
     movieController.render(filmData);
 
-  //   const filmCardElement = new FilmCardComponent(card);
-  //   const filmPopupElement = new FilmPopupComponent(card);
+    //   const filmCardElement = new FilmCardComponent(card);
+    //   const filmPopupElement = new FilmPopupComponent(card);
 
-  //   const filmTitle = filmCardElement.getElement().querySelector(`h3`);
-  //   const filmImage = filmCardElement.getElement().querySelector(`img`);
-  //   const filmComments = filmCardElement.getElement().querySelector(`a`);
+    //   const filmTitle = filmCardElement.getElement().querySelector(`h3`);
+    //   const filmImage = filmCardElement.getElement().querySelector(`img`);
+    //   const filmComments = filmCardElement.getElement().querySelector(`a`);
 
-  //   const getCardClickHandler = (evt) => {
-  //     if ([filmTitle, filmImage, filmComments].includes(evt.target)) {
-  //       renderHtmlPart(Nodes.BODY, filmPopupElement.getElement(), RenderPosition.BEFOREEND);
-  //       filmPopupElement.setClickHandler(removePopupCkickHandler);
-  //       document.addEventListener(`keydown`, removePopupKeydownHandler);
-  //     }
-  //   };
+    //   const getCardClickHandler = (evt) => {
+    //     if ([filmTitle, filmImage, filmComments].includes(evt.target)) {
+    //       renderHtmlPart(Nodes.BODY, filmPopupElement.getElement(), RenderPosition.BEFOREEND);
+    //       filmPopupElement.setClickHandler(removePopupCkickHandler);
+    //       document.addEventListener(`keydown`, removePopupKeydownHandler);
+    //     }
+    //   };
 
-  //   const popupRemove = () => {
-  //     if (filmPopupElement.getElement()) {
-  //       remove(filmPopupElement);
-  //       filmPopupElement.removeClickHandler(removePopupCkickHandler);
-  //       document.removeEventListener(`keydown`, removePopupKeydownHandler);
-  //     }
-  //   };
+    //   const popupRemove = () => {
+    //     if (filmPopupElement.getElement()) {
+    //       remove(filmPopupElement);
+    //       filmPopupElement.removeClickHandler(removePopupCkickHandler);
+    //       document.removeEventListener(`keydown`, removePopupKeydownHandler);
+    //     }
+    //   };
 
-  //   const removePopupCkickHandler = () => {
-  //     popupRemove();
-  //   };
+    //   const removePopupCkickHandler = () => {
+    //     popupRemove();
+    //   };
 
-  //   const removePopupKeydownHandler = (evt) => {
-  //     if (evt.keyCode === KeyCode.ESC) {
-  //       popupRemove();
-  //     }
-  //   };
+    //   const removePopupKeydownHandler = (evt) => {
+    //     if (evt.keyCode === KeyCode.ESC) {
+    //       popupRemove();
+    //     }
+    //   };
 
-  //   filmCardElement.setClickHandler(getCardClickHandler);
+    //   filmCardElement.setClickHandler(getCardClickHandler);
 
-  //   fragment.appendChild(filmCardElement.getElement());
-  // });
+    //   fragment.appendChild(filmCardElement.getElement());
+    // });
   });
   return fragment;
 };

@@ -1,4 +1,6 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
+import {remove} from '../utils/render.js';
+
 
 const popupRatingLength = 9;
 
@@ -192,11 +194,13 @@ export default class FilmPopup extends AbstractSmartComponent {
   constructor(data) {
     super();
     this._data = data;
-    this.setClickHandler = this.setClickHandler.bind(this);
-    this.removeClickHandler = this.setClickHandler.bind(this);
+
     this.setWatchListButtonClickHandler = this.setClickHandler.bind(this);
     this.setWatchedButtonClickHandler = this.setClickHandler.bind(this);
     this.setFavoritesButtonClickHandler = this.setClickHandler.bind(this);
+    this.recoveryListeners = this.recoveryListeners.bind(this);
+    this._subscribeOnEvents = this._subscribeOnEvents.bind(this);
+    this._handler = this._handler.bind(this);
   }
 
   getTemplate() {
@@ -204,33 +208,64 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
-    this.setClickHandler();
-    this.removeClickHandler();
-    this.setWatchListButtonClickHandler();
-    this.setWatchedButtonClickHandler();
-    this.setFavoritesButtonClickHandler();
+    this._subscribeOnEvents();
+  }
+
+  _handler() {
+    if (this.getElement()) {
+      remove(this);
+      this.getElement().querySelector(`.film-details__close-btn`)
+        .removeEventListener(`click`, this._handler);
+      document.removeEventListener(`keydown`, this._handler);
+    }
+  }
+
+  _subscribeOnEvents() {
+    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, () => {
+        this._data.isWatchList = !this._data.isWatchList;
+        this.rerender();
+      });
+
+    this.getElement().querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, () => {
+        this._data.isWatched = !this._data.isWatched;
+        this._data.userRating = `0`;
+        this.rerender();
+      });
+
+    this.getElement().querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, () => {
+        this._data.isFavorite = !this._data.isFavorite;
+        this.rerender();
+      });
+
+    this.getElement().querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, this._handler);
   }
 
   setClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-details__close-btn`)
+    .addEventListener(`click`, handler);
   }
 
   removeClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-details__close-btn`)
+    .removeEventListener(`click`, handler);
   }
 
-  setWatchListButtonClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watchlist`)
-      .addEventListener(`click`, handler);
-  }
+  // setWatchListButtonClickHandler(handler) {
+  //   this.getElement().querySelector(`.film-details__control-label--watchlist`)
+  //     .addEventListener(`click`, handler);
+  // }
 
-  setWatchedButtonClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watched`)
-      .addEventListener(`click`, handler);
-  }
+  // setWatchedButtonClickHandler(handler) {
+  //   this.getElement().querySelector(`.film-details__control-label--watched`)
+  //     .addEventListener(`click`, handler);
+  // }
 
-  setFavoritesButtonClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--favorite`)
-      .addEventListener(`click`, handler);
-  }
+  // setFavoritesButtonClickHandler(handler) {
+  //   this.getElement().querySelector(`.film-details__control-label--favorite`)
+  //     .addEventListener(`click`, handler);
+  // }
 }

@@ -24,26 +24,26 @@ export default class MovieController {
     this._filmCardPopupComponent = new FilmPopupComponent(this._cardData);
     this._filmCardComponent.setClickHandler(this._getCardClickHandler);
 
-    this._filmCardComponent.setWatchListButtonClickHandler((evt) => {
-      evt.preventDefault();
-      this._onDataChange(this, this._cardData, Object.assign({}, this._cardData, {
-        isWatchList: !this._cardData.isWatchList,
-      }));
-    });
+    // this._filmCardComponent.setWatchListButtonClickHandler((evt) => {
+    //   evt.preventDefault();
+    //   this._onDataChange(this, this._cardData, Object.assign({}, this._cardData, {
+    //     isWatchList: !this._cardData.isWatchList,
+    //   }));
+    // });
 
-    this._filmCardComponent.setWatchedButtonClickHandler((evt) => {
-      evt.preventDefault();
-      this._onDataChange(this, this._cardData, Object.assign({}, this._cardData, {
-        isWatched: !this._cardData.isWatched,
-      }));
-    });
+    // this._filmCardComponent.setWatchedButtonClickHandler((evt) => {
+    //   evt.preventDefault();
+    //   this._onDataChange(this, this._cardData, Object.assign({}, this._cardData, {
+    //     isWatched: !this._cardData.isWatched,
+    //   }));
+    // });
 
-    this._filmCardComponent.setFavoritesButtonClickHandler((evt) => {
-      evt.preventDefault();
-      this._onDataChange(this, this._cardData, Object.assign({}, this._cardData, {
-        isFavorite: !this._cardData.isFavorite,
-      }));
-    });
+    // this._filmCardComponent.setFavoritesButtonClickHandler((evt) => {
+    //   evt.preventDefault();
+    //   this._onDataChange(this, this._cardData, Object.assign({}, this._cardData, {
+    //     isFavorite: !this._cardData.isFavorite,
+    //   }));
+    // });
 
     this._container.appendChild(this._filmCardComponent.getElement());
   }
@@ -62,26 +62,28 @@ export default class MovieController {
 
       this._filmCardPopupComponent.setClickHandler(this._removePopupCkickHandler);
 
-      this._filmCardPopupComponent.setWatchListButtonClickHandler(() => {
-        this._onDataChange(this, this._cardData, Object.assign({}, this._cardData, {
-          isWatchList: !this._cardData.isWatchList,
-        }));
-        this._filmCardPopupComponent.rerender();
-      });
+      this._filmCardPopupComponent.recoveryListeners();
 
-      this._filmCardPopupComponent.setWatchedButtonClickHandler(() => {
-        this._onDataChange(this, this._cardData, Object.assign({}, this._cardData, {
-          isWatched: !this._cardData.isWatched,
-        }));
-        this._filmCardPopupComponent.rerender();
-      });
+      // this._filmCardPopupComponent.setWatchListButtonClickHandler(() => {
+      //   this._onDataChange(this, this._cardData, Object.assign({}, this._cardData, {
+      //     isWatchList: !this._cardData.isWatchList,
+      //   }));
+      //   this._filmCardPopupComponent.rerender();
+      // });
 
-      this._filmCardPopupComponent.setFavoritesButtonClickHandler(() => {
-        this._onDataChange(this, this._cardData, Object.assign({}, this._cardData, {
-          isFavorite: !this._cardData.isFavorite,
-        }));
-        this._filmCardPopupComponent.rerender();
-      });
+      // this._filmCardPopupComponent.setWatchedButtonClickHandler(() => {
+      //   this._onDataChange(this, this._cardData, Object.assign({}, this._cardData, {
+      //     isWatched: !this._cardData.isWatched,
+      //   }));
+      //   this._filmCardPopupComponent.rerender();
+      // });
+
+      // this._filmCardPopupComponent.setFavoritesButtonClickHandler(() => {
+      //   this._onDataChange(this, this._cardData, Object.assign({}, this._cardData, {
+      //     isFavorite: !this._cardData.isFavorite,
+      //   }));
+      //   this._filmCardPopupComponent.rerender();
+      // });
 
       document.addEventListener(`keydown`, this._removePopupKeydownHandler);
     }

@@ -239,8 +239,6 @@ export default class FilmPopup extends AbstractSmartComponent {
         .addEventListener(`click`, (evt) => {
           if (evt.target.tagName === `LABEL`) {
             this._data.userRating = evt.target.textContent;
-            console.log(this._data.userRating);
-            evt.target.checked = true;
             this.rerender();
           }
         });

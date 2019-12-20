@@ -32,7 +32,7 @@ const generateRating = (userRating) => {
   const userRatingMenu = [];
   for (let i = 0; i < popupRatingLength; i++) {
     userRatingMenu.push(
-        `<input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${i + 1}" id="rating-${i + 1}"${userRating === i + 1 ? ` checked` : ``}>
+        `<input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${i + 1}" id="rating-${i + 1}"${Number(userRating) === (i + 1) ? ` checked` : ``}>
           <label class="film-details__user-rating-label" for="rating-${i + 1}">${i + 1}</label>`
     );
   }
@@ -233,6 +233,18 @@ export default class FilmPopup extends AbstractSmartComponent {
         this._data.userRating = `0`;
         this.rerender();
       });
+
+    if (this.getElement().querySelector(`.film-details__user-rating-score`)) {
+      this.getElement().querySelector(`.film-details__user-rating-score`)
+        .addEventListener(`click`, (evt) => {
+          if (evt.target.tagName === `LABEL`) {
+            this._data.userRating = evt.target.textContent;
+            console.log(this._data.userRating);
+            evt.target.checked = true;
+            this.rerender();
+          }
+        });
+    }
 
     this.getElement().querySelector(`.film-details__control-label--favorite`)
       .addEventListener(`click`, () => {

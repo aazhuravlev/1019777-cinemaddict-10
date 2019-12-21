@@ -1,14 +1,17 @@
-import {Nodes, KeyCode} from '../constants.js';
+import {Nodes, KeyCode, Mode} from '../constants.js';
 import {renderHtmlPart, RenderPosition, remove} from '../utils/render.js';
 import FilmCardComponent from '../components/film-card.js';
 import FilmPopupComponent from '../components/film-popup.js';
 
 export default class MovieController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
-    this._cardData = null;
-    this._parent = document.querySelector(`.films-list__container`);
+    this._onViewChange = onViewChange;
+
+    this._cardData = [];
+
+    this._mode = Mode.DEFAULT;
 
     this._filmCardComponent = null;
     this._filmCardPopupComponent = null;
@@ -49,7 +52,9 @@ export default class MovieController {
   }
 
   setDefaultView() {
-
+    if (this._mode !== Mode.DEFAULT) {
+      this._popupRemove();
+    }
   }
 
   _getCardClickHandler(evt) {
@@ -86,6 +91,7 @@ export default class MovieController {
       // });
 
       document.addEventListener(`keydown`, this._removePopupKeydownHandler);
+      this._mode = Mode.POPUP;
     }
   }
 
@@ -94,6 +100,7 @@ export default class MovieController {
       remove(this._filmCardPopupComponent);
       this._filmCardPopupComponent.removeClickHandler(this._removePopupCkickHandler);
       document.removeEventListener(`keydown`, this._removePopupKeydownHandler);
+      this._mode = Mode.DEFAULT;
     }
   }
 

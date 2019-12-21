@@ -20,8 +20,8 @@ const generateFilmDetailsControls = (filmDetailsControls) => {
   const buttons = [];
   for (const item of Object.keys(filmDetailsControls)) {
     buttons.push(
-        `<input type="checkbox" class="film-details__control-input visually-hidden" id="${item}" name="${item}"${filmDetailsControls[item][1] ? ` checked` : ``}>
-        <label for="${item}" class="film-details__control-label film-details__control-label--${item}">${filmDetailsControls[item][0]}</label>`);
+        `<input type="checkbox" class="film-details__control-input visually-hidden" id="${item.toLowerCase()}" name="${item.toLowerCase()}"${filmDetailsControls[item][1] ? ` checked` : ``}>
+        <label for="${item.toLowerCase()}" class="film-details__control-label film-details__control-label--${item.toLowerCase()}">${filmDetailsControls[item][0]}</label>`);
   }
   return buttons.join(`\n`);
 };
@@ -76,6 +76,13 @@ const generateGenres = (genres) => {
   return genresList.join(`\n`);
 };
 
+const generateYserRatingLabel = (isWatched, userRating) => {
+  if (isWatched && userRating > 0) {
+    return `<p class="film-details__user-rating">Your rate ${userRating}</p>`;
+  }
+  return ``;
+};
+
 const createFilmPopupTemplate = (data) => {
   const {title, image, rating, time, genre, description, comments, director, writers, actors, releaseDate, country, isWatchList, isWatched, isFavorite, userRating} = data;
 
@@ -88,10 +95,10 @@ const createFilmPopupTemplate = (data) => {
     'Country': country
   };
 
-  const filmDetailsControls = {
-    watchlist: [`Add to watchlist`, isWatchList],
-    watched: [`Already watched`, isWatched],
-    favorite: [`Add to favorites`, isFavorite]
+  const FilmDetailsControls = {
+    WATCHLIST: [`Add to watchlist`, isWatchList],
+    WATCHED: [`Already watched`, isWatched],
+    FAVORITE: [`Add to favorites`, isFavorite]
   };
 
   return (
@@ -117,7 +124,7 @@ const createFilmPopupTemplate = (data) => {
 
                 <div class="film-details__rating">
                   <p class="film-details__total-rating">${rating}</p>
-                  ${isWatched ? `<p class="film-details__user-rating">Your rate ${userRating}</p>` : ``}
+                  ${generateYserRatingLabel(isWatched, userRating)}
                 </div>
               </div>
 
@@ -138,7 +145,7 @@ const createFilmPopupTemplate = (data) => {
           </div>
 
           <section class="film-details__controls">
-            ${generateFilmDetailsControls(filmDetailsControls)}
+            ${generateFilmDetailsControls(FilmDetailsControls)}
           </section>
         </div>
 

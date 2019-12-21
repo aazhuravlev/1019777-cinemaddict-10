@@ -4,26 +4,24 @@ import {remove} from '../utils/render.js';
 
 const popupRatingLength = 9;
 
-const generateFilmsDetailsRow = (obj) => {
-  let fragment = document.createDocumentFragment();
-  const arr = [];
-  for (const item of Object.keys(obj)) {
-    arr.push(
+const generateFilmsDetailsRow = (filmsDetailsRow) => {
+  const filmsDetailsRows = [];
+  for (const item of Object.keys(filmsDetailsRow)) {
+    filmsDetailsRows.push(
         `<tr class="film-details__row">
           <td class="film-details__term">${item}</td>
-          <td class="film-details__cell">${obj[item]}</td>
+          <td class="film-details__cell">${filmsDetailsRow[item]}</td>
         </tr>`);
   }
-  fragment = arr.join(`\n`);
-  return fragment;
+  return filmsDetailsRows.join(`\n`);
 };
 
-const generateFilmDetailsControls = (obj) => {
+const generateFilmDetailsControls = (filmDetailsControls) => {
   const buttons = [];
-  for (const item of Object.keys(obj)) {
+  for (const item of Object.keys(filmDetailsControls)) {
     buttons.push(
-        `<input type="checkbox" class="film-details__control-input visually-hidden" id="${item}" name="${item}"${obj[item][1] ? ` checked` : ``}>
-        <label for="${item}" class="film-details__control-label film-details__control-label--${item}">${obj[item][0]}</label>`);
+        `<input type="checkbox" class="film-details__control-input visually-hidden" id="${item}" name="${item}"${filmDetailsControls[item][1] ? ` checked` : ``}>
+        <label for="${item}" class="film-details__control-label film-details__control-label--${item}">${filmDetailsControls[item][0]}</label>`);
   }
   return buttons.join(`\n`);
 };

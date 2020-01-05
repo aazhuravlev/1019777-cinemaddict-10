@@ -8,6 +8,7 @@ const COUNTRYES = [`Afghanistan`, `Albania`, `Algeria`, `Andorra`, `Angola`, `Ar
 const NAMES = [`AARON`, `ADAM`, `AIDEN`, `ALBERT`, `ALEX`, `ALEXANDER`, `ALFIE`, `ARCHIE`, `ARTHUR`, `AUSTIN`, `BENJAMIN`, `BLAKE`, `BOBBY`];
 const GENRES = [`Action`, `Adventure`, `Comedy`, `Drama`, `Crime`, `Horror`, `Fantasy`, `Western`, `Thriller`, `Animation`];
 const FILTER_MAX_VALUE = 20;
+let id = 0;
 
 const sentencesArray = SENTENCE.split(`.`);
 
@@ -57,9 +58,11 @@ const generateDescription = (quantity) => {
 };
 
 const generateFilmCardData = () => {
+  id += 1;
   const isItWatched = Math.random() > 0.5;
   const filmDescription = generateDescription(getRandomBetween(SentencesQuantity.min, SentencesQuantity.max));
   return {
+    id,
     title: getRandomArrayItem(FILMS),
     image: getRandomArrayItem(IMAGES),
     rating: getRandomRating(Rating.min, Rating.max),

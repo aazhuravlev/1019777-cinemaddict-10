@@ -89,10 +89,10 @@ const renderFilmListExtra = (node, data, onDataChange) => {
 };
 
 export default class PageController {
-  constructor(container) {
+  constructor(container, filmModel) {
     this._container = container;
+    this._filmModel = filmModel;
 
-    this._cardsData = [];
     this._nodesMain = Nodes.MAIN;
     this._filmsList = null;
     this._filmsListContainer = null;
@@ -110,27 +110,27 @@ export default class PageController {
     this._sortingComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
-  render(cardsData) {
-    this._cardsData = cardsData;
+  render() {
+    const filmCards = this._filmModel.getMoviesAll();
 
     renderHtmlPart(this._nodesMain, createFragment([this._filterComponent.getElement(), this._sortingComponent.getElement(), this._container]), RenderPosition.BEFOREEND);
 
-    if (this._cardsData.length > 0) {
+    if (filmCards.length > 0) {
       this._filmsList = this._container.querySelector(`.films-list`);
       this._filmsListContainer = this._container.querySelector(`.films-list__container`);
 
-      const cardsOnStart = this._cardsData.slice(0, this._showingTasksCount);
+      const cardsOnStart = filmCards.slice(0, this._showingTasksCount);
       renderHtmlPart(this._filmsListContainer, createFilmCardFragment(cardsOnStart, this._onDataChange, this._onViewChange), RenderPosition.BEFOREEND);
       this._renderShowMoreButton();
 
       renderHtmlPart(this._container, createFragment([new ExtraListComponent(ExtraTitles.TOP_RATED).getElement(), new ExtraListComponent(ExtraTitles.MOST_COMMENTED).getElement()]), RenderPosition.BEFOREEND);
-      renderFilmListExtra(this._container, this._cardsData, this._onDataChange, this._onViewChange);
+      renderFilmListExtra(this._container, filmCards, this._onDataChange, this._onViewChange);
     }
   }
 
   _renderShowMoreButton() {
-
-    if (this._showingTasksCount >= this._cardsData.length) {
+    const filmCards = this._filmModel.getMoviesAll();
+    if (this._showingTasksCount >= filmCards.length) {
       return;
     }
 
@@ -140,11 +140,11 @@ export default class PageController {
       const prevTasksCount = this._showingTasksCount;
       this._showingTasksCount += Count.SHOWING_CARDS_BY_BUTTON;
 
-      const unrenderedCards = this._cardsData.slice(prevTasksCount, this._showingTasksCount);
+      const unrenderedCards = filmCards.slice(prevTasksCount, this._showingTasksCount);
 
       renderHtmlPart(this._filmsListContainer, createFilmCardFragment(unrenderedCards, this._onDataChange, this._onViewChange), RenderPosition.BEFOREEND);
 
-      if (this._showingTasksCount >= this._cardsData.length) {
+      if (this._showingTasksCount >= filmCards.length) {
         remove(this._showMoreButtonComponent);
         this._showMoreButtonComponent.removeClickHandler(showMoreButtonClickHandler);
       }
@@ -153,17 +153,20 @@ export default class PageController {
   }
 
   _onSortTypeChange(sortType) {
+    const filmCards = this._filmModel.getMoviesAll();
     let sortedFilms = [];
+
     this._sortingComponent.getElement().querySelector(`.sort__button--active`).classList.remove(`sort__button--active`);
     const setActiveSortButton = () => this._sortingComponent.getElement().querySelector(`.sort__button[data-sort-type="${sortType}"]`).classList.add(`sort__button--active`);
-    sortedFilms = sortingFilms(this._cardsData, sortType);
+
     if (sortType === SortType.DEFAULT) {
-      sortedFilms = this._cardsData.slice(0, this._showingTasksCount);
+      sortedFilms = filmCards.slice(0, this._showingTasksCount);
+    } else {
+      sortedFilms = sortingFilms(filmCards, sortType);
     }
     setActiveSortButton();
 
     this._filmsListContainer.innerHTML = ``;
-
     renderHtmlPart(this._filmsListContainer, createFilmCardFragment(sortedFilms, this._onDataChange, this._onViewChange), RenderPosition.BEFOREEND);
     this._showedFilmControllers = this._filmsListContainer.querySelectorAll(`.film-card`);
 
@@ -175,15 +178,15 @@ export default class PageController {
   }
 
   _onDataChange(movieController, oldData, newData) {
-    const index = this._cardsData.findIndex((it) => it === oldData);
+    const isSuccess = this._filmModel.updateMovie(oldData.id, newData);
 
-    if (index === -1) {
-      return;
+    if (isSuccess) {
+      movieController.render(newData);
     }
 
-    this._cardsData = [].concat(this._cardsData.slice(0, index), newData, this._cardsData.slice(index + 1));
+    // this._showedTaskControllers = [].concat(filmCards.slice(0, index), newData, this._filmModel.getMoviesAll().slice(index + 1));
 
-    movieController.render(this._cardsData[index]);
+    // movieController.render(filmCards[index]);
   }
 
   _onViewChange() {

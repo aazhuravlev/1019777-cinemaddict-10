@@ -1,7 +1,6 @@
-import {Nodes, Count, ExtraTitles, SortType} from '../constants.js';
+import {Nodes, Count, ExtraTitles, SortType, generateFilters} from '../constants.js';
 import {renderHtmlPart, RenderPosition, createFragment, remove} from '../utils/render.js';
 import {sortingFilms} from '../utils/common.js';
-import {generateFilters} from '../mock.js';
 import FilterComponent from '../components/filter.js';
 import SortingComponent from '../components/sorting.js';
 import MovieController from '../controllers/movie-сontroller.js';

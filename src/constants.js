@@ -1,8 +1,29 @@
+const FILTER_NAMES = [`All movies`, `Watchlist`, `History`, `Favorites`, `Stats`];
+const FILTER_MAX_VALUE = 20;
+
 const Nodes = {
   BODY: document.querySelector(`body`),
   HEADER: document.querySelector(`.header`),
   MAIN: document.querySelector(`.main`),
   FOOTER_STATISTIC: document.querySelector(`.footer__statistics p`)
+};
+
+const generateExceptionsFiltersCount = (item) => {
+  if (item.includes(FILTER_NAMES[0]) || item.includes(FILTER_NAMES[4])) {
+    return ``;
+  }
+  return Math.floor(Math.random() * FILTER_MAX_VALUE);
+};
+
+const generateFilters = () => {
+  return FILTER_NAMES.map((item) => {
+    const generateLink = item.slice(0, item.includes(` `) ? item.indexOf(` `) : item.length).toLowerCase();
+    return {
+      name: item,
+      link: generateLink,
+      count: generateExceptionsFiltersCount(item)
+    };
+  });
 };
 
 const ExtraTitles = {
@@ -39,4 +60,4 @@ const Mode = {
   POPUP: `popup`,
 };
 
-export {Nodes, ExtraTitles, SortType, Count, KeyCode, RenderPosition, Mode};
+export {Nodes, generateFilters, ExtraTitles, SortType, Count, KeyCode, RenderPosition, Mode};

@@ -2,6 +2,7 @@ import {Nodes, KeyCode, Mode} from '../constants.js';
 import {renderHtmlPart, RenderPosition, remove} from '../utils/render.js';
 import FilmCardComponent from '../components/film-card.js';
 import FilmPopupComponent from '../components/film-popup.js';
+import FilmPopupBgComponent from '../components/film-popup-bg.js';
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
@@ -14,6 +15,7 @@ export default class MovieController {
     this._mode = Mode.DEFAULT;
 
     this._filmCardComponent = null;
+    this._filmCardPopupBgComponent = null;
     this._filmCardPopupComponent = null;
 
     this._cardClickHandler = this._cardClickHandler.bind(this);
@@ -27,6 +29,7 @@ export default class MovieController {
   render(filmCardData) {
     this._cardData = filmCardData;
     this._filmCardComponent = new FilmCardComponent(this._cardData);
+    this._filmCardPopupBgComponent = new FilmPopupBgComponent(this._cardData);
     this._filmCardPopupComponent = new FilmPopupComponent(this._cardData);
 
     this._filmCardComponent.setClickHandler(this._cardClickHandler);
@@ -49,12 +52,15 @@ export default class MovieController {
     const filmComments = this._filmCardComponent.getElement().querySelector(`a`);
 
     if ([filmTitle, filmImage, filmComments].includes(evt.target)) {
-      renderHtmlPart(Nodes.BODY, this._filmCardPopupComponent.getElement(), RenderPosition.BEFOREEND);
+      const filmCardPopupBg = this._filmCardPopupBgComponent.getElement();
+
+      renderHtmlPart(Nodes.BODY, filmCardPopupBg, RenderPosition.BEFOREEND);
+      renderHtmlPart(filmCardPopupBg, this._filmCardPopupComponent.getElement(), RenderPosition.BEFOREEND);
 
       this._filmCardPopupComponent.setClickHandler(this._removePopupCkickHandler);
       this._filmCardPopupComponent.recoverListeners();
-
       document.addEventListener(`keydown`, this._removePopupKeydownHandler);
+
       this._mode = Mode.POPUP;
     }
   }
@@ -87,6 +93,7 @@ export default class MovieController {
       this._mode = Mode.DEFAULT;
       this._onDataChange(this, this._cardData, Object.assign({}, this._cardData, this._filmCardPopupComponent.getData()));
       remove(this._filmCardPopupComponent);
+      remove(this._filmCardPopupBgComponent);
     }
   }
 

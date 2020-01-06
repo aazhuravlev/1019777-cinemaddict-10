@@ -41,7 +41,9 @@ export default class Filter extends AbstractComponent {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
       const filterName = evt.target.id;
-      handler(filterName[0].toUpperCase() + filterName.slice(1));
+      if (filterName) {
+        handler(filterName[0].toUpperCase() + filterName.slice(1));
+      }
     });
   }
 }

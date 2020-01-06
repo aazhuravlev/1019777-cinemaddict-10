@@ -41,35 +41,35 @@ const generateDescription = (quantity) => {
 const generateComments = (count) => {
   const comments = [];
   for (let i = 0; i < count; i++) {
-    const day = getRandomBetween(Day.min, Day.max)
+    const day = getRandomBetween(Day.min, Day.max);
     comments.push({
       emoji: getRandomArrayItem(emojiType),
       comment: generateDescription(getRandomBetween(SentencesQuantity.min, SentencesQuantity.max)),
       author: `${getRandomArrayItem(NAMES)} ${getRandomArrayItem(NAMES)}`,
-      date: `2019-12-${day}`,
-      dateForSort: `201912${day}`
+      date: moment(`2019-12-${day} ${getRandomBetween(Hour.min, Hour.max)}:${getRandomBetween(Minutes.min, Minutes.max)}`).toDate()
     });
   }
-  return sortingFilms(comments, `dateForSort`, `reverse`);
+  return sortingFilms(comments, `date`, `reverse`);
 };
 
 const generateFilmCardData = () => {
   id += 1;
   const isItWatched = Math.random() > 0.5;
   const filmDescription = generateDescription(getRandomBetween(SentencesQuantity.min, SentencesQuantity.max));
+  const date = `${getRandomBetween(Year.min, Year.max)}-${getRandomBetween(Months.min, Months.max)}-${getRandomBetween(Day.min, Day.max)} ${getRandomBetween(Hour.min, Hour.max)}:${getRandomBetween(Minutes.min, Minutes.max)}`
   return {
     id,
     title: getRandomArrayItem(FILMS),
     image: getRandomArrayItem(IMAGES),
     rating: getRandomRating(Rating.min, Rating.max),
-    time: `${getRandomBetween(Hour.min, Hour.max)}h ${getRandomBetween(Minutes.min, Minutes.max)}m`,
+    time: date,
     genre: [getRandomArrayItem(GENRES), getRandomArrayItem(GENRES), getRandomArrayItem(GENRES)],
     description: filmDescription,
     comments: generateComments(getRandomRating(Rating.min, Rating.max)),
     director: getRandomArrayItem(NAMES),
     writers: `${getRandomArrayItem(NAMES)}, ${getRandomArrayItem(NAMES)}, ${getRandomArrayItem(NAMES)}`,
     actors: `${getRandomArrayItem(NAMES)}, ${getRandomArrayItem(NAMES)}, ${getRandomArrayItem(NAMES)}`,
-    releaseDate: `${getRandomBetween(Year.min, Year.max)}-${getRandomBetween(Months.min, Months.max)}-${getRandomBetween(Day.min, Day.max)}`,
+    releaseDate: date,
     country: getRandomArrayItem(COUNTRYES),
     isWatchList: Math.random() > 0.5,
     isWatched: isItWatched,

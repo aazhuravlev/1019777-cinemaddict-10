@@ -14,7 +14,7 @@ const createFilmCardTemplate = (data) => {
       <p class="film-card__rating">${rating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${moment(releaseDate).format(`YYYY`)}</span>
-        <span class="film-card__duration">${time}</span>
+        <span class="film-card__duration">${moment(time).format(`h[h] mm[m]`)}</span>
         <span class="film-card__genre">${genre[0]}</span>
       </p>
       <img src="./images/posters/${image}" alt="" class="film-card__poster">

@@ -96,7 +96,7 @@ const generateComment = (comments) => {
     </div>
   </li>`;
   }).join(`\n`);
-}
+};
 
 const createFilmPopupTemplate = (data) => {
   const {title, image, rating, time, genre, description, comments, director, writers, actors, releaseDate, country, isWatchList, isWatched, isFavorite, userRating} = data;
@@ -106,7 +106,7 @@ const createFilmPopupTemplate = (data) => {
     'Writers': writers,
     'Actors': actors,
     'Release Date': moment(releaseDate).format(`D MMMM YYYY`),
-    'Runtime': time,
+    'Runtime': moment(time).format(`h[h] mm[m]`),
     'Country': country
   };
 

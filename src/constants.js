@@ -1,6 +1,6 @@
 const FilterName = {
   ALL: `All movies`,
-  WHATCHLIST: `Watchlist`,
+  WATCHLIST: `Watchlist`,
   HISTORY: `History`,
   FAVORITES: `Favorites`,
   STATS: `Stats`

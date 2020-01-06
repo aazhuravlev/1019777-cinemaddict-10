@@ -222,6 +222,8 @@ export default class FilmPopup extends AbstractSmartComponent {
     this.watchedControlClickHandler = this.watchedControlClickHandler.bind(this);
     this.userRatingScoreClickHandler = this.userRatingScoreClickHandler.bind(this);
     this.emojiClickHandler = this.emojiClickHandler.bind(this);
+    this.commentChangeHandler = this.commentChangeHandler.bind(this);
+    this.deleteClickHandler = this.deleteClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -258,6 +260,12 @@ export default class FilmPopup extends AbstractSmartComponent {
 
     element.querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, this._handler);
+
+    element.querySelector(`.film-details__comment-input`)
+      .addEventListener(`input`, this.commentChangeHandler);
+
+    element.querySelector(`.film-details__comments-list`)
+      .addEventListener(`click`, this.deleteClickHandler);
   }
 
   setClickHandler(handler) {
@@ -267,9 +275,29 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   removeClickHandler(handler) {
-    this._data.userEmoji = undefined;
+    delete this._data.userEmoji;
+    delete this._data.userComment;
     this.getElement().querySelector(`.film-details__close-btn`)
     .removeEventListener(`click`, handler);
+  }
+
+  deleteClickHandler(evt) {
+    evt.preventDefault();
+    if (evt.target.tagName === `BUTTON`) {
+      const commentText = evt.target.closest(`.film-details__comment`).querySelector(`.film-details__comment-text`).textContent;
+      this._data.comments.forEach((comment) => {
+        if (comment.comment === commentText) {
+          const index = this._data.comments.indexOf(comment);
+          this._data.comments = [].concat(this._data.comments.slice(0, index), this._data.comments.slice(index + 1));
+          this.rerender();
+        }
+      });
+    }
+  }
+
+  commentChangeHandler() {
+    const commentArea = this.getElement().querySelector(`.film-details__comment-input`);
+    this._data.userComment = commentArea.value;
   }
 
   watchlistControlClickHandler() {

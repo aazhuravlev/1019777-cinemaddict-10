@@ -149,7 +149,7 @@ export default class PageController {
     }
   }
 
-  _onDataChange(movieController, oldData, newData) { // 111
+  _onDataChange(oldData, newData) {
     const isSuccess = this._filmModel.updateMovie(oldData.id, newData);
 
     if (isSuccess) {

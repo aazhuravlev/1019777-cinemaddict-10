@@ -1,5 +1,6 @@
-import {Nodes, KeyCode, Mode} from '../constants.js';
+import {Nodes, KeyCode, Mode, NAMES} from '../constants.js';
 import {renderHtmlPart, RenderPosition, remove} from '../utils/render.js';
+import {getRandomArrayItem} from '../utils/common.js';
 import FilmCardComponent from '../components/film-card.js';
 import FilmPopupComponent from '../components/film-popup.js';
 import FilmPopupBgComponent from '../components/film-popup-bg.js';
@@ -24,6 +25,7 @@ export default class MovieController {
     this.watchListButtonClickHandler = this.watchListButtonClickHandler.bind(this);
     this.watchedButtonClickHandler = this.watchedButtonClickHandler.bind(this);
     this.favoritesButtonClickHandler = this.favoritesButtonClickHandler.bind(this);
+    this.submitCommentKeydownHandler = this.submitCommentKeydownHandler.bind(this);
   }
 
   render(filmCardData) {
@@ -60,6 +62,7 @@ export default class MovieController {
       this._filmCardPopupComponent.setClickHandler(this._removePopupCkickHandler);
       this._filmCardPopupComponent.recoverListeners();
       document.addEventListener(`keydown`, this._removePopupKeydownHandler);
+      document.addEventListener(`keydown`, this.submitCommentKeydownHandler);
 
       this._mode = Mode.POPUP;
     }
@@ -67,23 +70,42 @@ export default class MovieController {
 
   watchListButtonClickHandler(evt) {
     evt.preventDefault();
-    this._onDataChange(this, this._cardData, Object.assign({}, this._cardData, {
+    this._onDataChange(this._cardData, Object.assign({}, this._cardData, {
       isWatchList: !this._cardData.isWatchList,
     }));
   }
 
   watchedButtonClickHandler(evt) {
     evt.preventDefault();
-    this._onDataChange(this, this._cardData, Object.assign({}, this._cardData, {
+    this._onDataChange(this._cardData, Object.assign({}, this._cardData, {
       isWatched: !this._cardData.isWatched,
     }));
   }
 
   favoritesButtonClickHandler(evt) {
     evt.preventDefault();
-    this._onDataChange(this, this._cardData, Object.assign({}, this._cardData, {
+    this._onDataChange(this._cardData, Object.assign({}, this._cardData, {
       isFavorite: !this._cardData.isFavorite,
     }));
+  }
+
+  submitCommentKeydownHandler(evt) {
+    if (evt.ctrlKey && evt.keyCode === KeyCode.ENTER) {
+      const data = this._filmCardPopupComponent.getData();
+
+      if (data.userEmoji && data.userComment) {
+        data.comments.push({
+          emoji: data.userEmoji,
+          comment: data.userComment,
+          author: `${getRandomArrayItem(NAMES)} ${getRandomArrayItem(NAMES)}`,
+          date: new Date()
+        });
+        delete data.userEmoji;
+        delete data.userComment;
+        this._onDataChange(this._cardData, data);
+        this._filmCardPopupComponent.rerender();
+      }
+    }
   }
 
   _popupRemove() {
@@ -91,7 +113,7 @@ export default class MovieController {
       this._filmCardPopupComponent.removeClickHandler(this._removePopupCkickHandler);
       document.removeEventListener(`keydown`, this._removePopupKeydownHandler);
       this._mode = Mode.DEFAULT;
-      this._onDataChange(this, this._cardData, Object.assign({}, this._cardData, this._filmCardPopupComponent.getData()));
+      this._onDataChange(this._cardData, Object.assign({}, this._cardData, this._filmCardPopupComponent.getData()));
       remove(this._filmCardPopupComponent);
       remove(this._filmCardPopupBgComponent);
     }

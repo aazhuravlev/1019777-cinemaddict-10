@@ -1,4 +1,11 @@
-const FILTER_NAMES = [`All movies`, `Watchlist`, `History`, `Favorites`, `Stats`];
+const FilterName = {
+  ALL: `All movies`,
+  WHATCHLIST: `Watchlist`,
+  HISTORY: `History`,
+  FAVORITES: `Favorites`,
+  STATS: `Stats`
+};
+
 const FILTER_MAX_VALUE = 20;
 
 const Nodes = {
@@ -9,14 +16,14 @@ const Nodes = {
 };
 
 const generateExceptionsFiltersCount = (item) => {
-  if (item.includes(FILTER_NAMES[0]) || item.includes(FILTER_NAMES[4])) {
+  if (item.includes(FilterName.ALL) || item.includes(FilterName.STATS)) {
     return ``;
   }
   return Math.floor(Math.random() * FILTER_MAX_VALUE);
 };
 
 const generateFilters = () => {
-  return FILTER_NAMES.map((item) => {
+  return Object.values(FilterName).map((item) => {
     const generateLink = item.slice(0, item.includes(` `) ? item.indexOf(` `) : item.length).toLowerCase();
     return {
       name: item,
@@ -60,4 +67,4 @@ const Mode = {
   POPUP: `popup`,
 };
 
-export {Nodes, generateFilters, ExtraTitles, SortType, Count, KeyCode, RenderPosition, Mode};
+export {Nodes, generateFilters, ExtraTitles, SortType, Count, KeyCode, RenderPosition, Mode, FilterName};

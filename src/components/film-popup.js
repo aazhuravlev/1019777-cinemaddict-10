@@ -99,7 +99,7 @@ const generateComment = (comments) => {
 };
 
 const createFilmPopupTemplate = (data) => {
-  const {title, image, rating, time, genre, description, comments, director, writers, actors, releaseDate, country, isWatchList, isWatched, isFavorite, userRating} = data;
+  const {title, image, rating, time, genre, description, comments, director, writers, actors, releaseDate, country, isWatchList, isWatched, isFavorite, userRating, userEmoji} = data;
 
   const FilmsDetailsRow = {
     'Director': director,
@@ -117,99 +117,94 @@ const createFilmPopupTemplate = (data) => {
   };
 
   return (
-    `<section class="film-details">
-      <form class="film-details__inner" action="" method="get">
-        <div class="form-details__top-container">
-          <div class="film-details__close">
-            <button class="film-details__close-btn" type="button">close</button>
+    `<form class="film-details__inner" action="" method="get">
+      <div class="form-details__top-container">
+        <div class="film-details__close">
+          <button class="film-details__close-btn" type="button">close</button>
+        </div>
+        <div class="film-details__info-wrap">
+          <div class="film-details__poster">
+            <img class="film-details__poster-img" src="./images/posters/${image}" alt="">
+
+            <p class="film-details__age">18+</p>
           </div>
-          <div class="film-details__info-wrap">
-            <div class="film-details__poster">
-              <img class="film-details__poster-img" src="./images/posters/${image}" alt="">
 
-              <p class="film-details__age">18+</p>
-            </div>
-
-            <div class="film-details__info">
-              <div class="film-details__info-head">
-                <div class="film-details__title-wrap">
-                  <h3 class="film-details__title">${title}</h3>
-                  <p class="film-details__title-original">Original: ${title}</p>
-                </div>
-
-                <div class="film-details__rating">
-                  <p class="film-details__total-rating">${rating}</p>
-                  ${generateUserRatingLabel(isWatched, userRating)}
-                </div>
+          <div class="film-details__info">
+            <div class="film-details__info-head">
+              <div class="film-details__title-wrap">
+                <h3 class="film-details__title">${title}</h3>
+                <p class="film-details__title-original">Original: ${title}</p>
               </div>
 
-              <table class="film-details__table">
-                ${generateFilmsDetailsRow(FilmsDetailsRow)}
-                <tr class="film-details__row">
-                  <td class="film-details__term">${pluralize(genre.length, `Genre`)}</td>
-                  <td class="film-details__cell">
-                    ${generateGenres(genre)}
-                  </td>
-                </tr>
-              </table>
-
-              <p class="film-details__film-description">
-                ${description}
-              </p>
+              <div class="film-details__rating">
+                <p class="film-details__total-rating">${rating}</p>
+                ${generateUserRatingLabel(isWatched, userRating)}
+              </div>
             </div>
-          </div>
 
-          <section class="film-details__controls">
-            ${generateFilmDetailsControls(FilmDetailsControls)}
-          </section>
+            <table class="film-details__table">
+              ${generateFilmsDetailsRow(FilmsDetailsRow)}
+              <tr class="film-details__row">
+                <td class="film-details__term">${pluralize(genre.length, `Genre`)}</td>
+                <td class="film-details__cell">
+                  ${generateGenres(genre)}
+                </td>
+              </tr>
+            </table>
+
+            <p class="film-details__film-description">
+              ${description}
+            </p>
+          </div>
         </div>
 
-        ${generateSelfFilmRating(isWatched, title, image, userRating)}
+        <section class="film-details__controls">
+          ${generateFilmDetailsControls(FilmDetailsControls)}
+        </section>
+      </div>
 
-        <div class="form-details__bottom-container">
-          <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
-            ${comments.length > 0 ?
-      `<ul class="film-details__comments-list">
-        ${generateComment(comments)}
-      </ul>` : ``}
-            <ul class="film-details__comments-list"></ul>
+      ${generateSelfFilmRating(isWatched, title, image, userRating)}
 
-            <div class="film-details__new-comment">
-              <div for="add-emoji" class="film-details__add-emoji-label">
+      <div class="form-details__bottom-container">
+        <section class="film-details__comments-wrap">
+          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
+          ${comments.length > 0 ? `<ul class="film-details__comments-list">${generateComment(comments)}</ul>` : ``}
+          <ul class="film-details__comments-list"></ul>
 
-              </div>
+          <div class="film-details__new-comment">
+            <div for="add-emoji" class="film-details__add-emoji-label">
+              ${userEmoji ? `<img src="images/emoji/${userEmoji}.png" width="55" height="55" alt="emoji">` : ``}
+            </div>
 
-              <label class="film-details__comment-label">
-                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+            <label class="film-details__comment-label">
+              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+            </label>
+
+            <div class="film-details__emoji-list">
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="sleeping">
+              <label class="film-details__emoji-label" for="emoji-smile">
+                <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
               </label>
 
-              <div class="film-details__emoji-list">
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="sleeping">
-                <label class="film-details__emoji-label" for="emoji-smile">
-                  <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-                </label>
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="neutral-face">
+              <label class="film-details__emoji-label" for="emoji-sleeping">
+                <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
+              </label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="neutral-face">
-                <label class="film-details__emoji-label" for="emoji-sleeping">
-                  <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-                </label>
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="grinning">
+              <label class="film-details__emoji-label" for="emoji-puke">
+                <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
+              </label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="grinning">
-                <label class="film-details__emoji-label" for="emoji-gpuke">
-                  <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-                </label>
-
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="grinning">
-                <label class="film-details__emoji-label" for="emoji-angry">
-                  <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-                </label>
-              </div>
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="grinning">
+              <label class="film-details__emoji-label" for="emoji-angry">
+                <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
+              </label>
             </div>
-          </section>
-        </div>
-      </form>
-    </section>`
+          </div>
+        </section>
+      </div>
+    </form>`
   );
 };
 
@@ -226,6 +221,7 @@ export default class FilmPopup extends AbstractSmartComponent {
     this.favoriteControlClickHandler = this.favoriteControlClickHandler.bind(this);
     this.watchedControlClickHandler = this.watchedControlClickHandler.bind(this);
     this.userRatingScoreClickHandler = this.userRatingScoreClickHandler.bind(this);
+    this.emojiClickHandler = this.emojiClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -238,6 +234,42 @@ export default class FilmPopup extends AbstractSmartComponent {
 
   getData() {
     return this._data;
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, this.watchlistControlClickHandler);
+
+    element.querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, this.watchedControlClickHandler);
+
+    if (element.querySelector(`.film-details__user-rating-score`)) {
+      element.querySelector(`.film-details__user-rating-score`)
+        .addEventListener(`click`, this.userRatingScoreClickHandler);
+    }
+
+    element.querySelector(`.film-details__emoji-list`)
+    .addEventListener(`click`, this.emojiClickHandler);
+
+    element.querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, this.favoriteControlClickHandler);
+
+    element.querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, this._handler);
+  }
+
+  setClickHandler(handler) {
+    this._handler = handler;
+    this.getElement().querySelector(`.film-details__close-btn`)
+    .addEventListener(`click`, handler);
+  }
+
+  removeClickHandler(handler) {
+    this._data.userEmoji = undefined;
+    this.getElement().querySelector(`.film-details__close-btn`)
+    .removeEventListener(`click`, handler);
   }
 
   watchlistControlClickHandler() {
@@ -263,35 +295,10 @@ export default class FilmPopup extends AbstractSmartComponent {
     }
   }
 
-  _subscribeOnEvents() {
-    const element = this.getElement();
-
-    element.querySelector(`.film-details__control-label--watchlist`)
-      .addEventListener(`click`, this.watchlistControlClickHandler);
-
-    element.querySelector(`.film-details__control-label--watched`)
-      .addEventListener(`click`, this.watchedControlClickHandler);
-
-    if (element.querySelector(`.film-details__user-rating-score`)) {
-      element.querySelector(`.film-details__user-rating-score`)
-        .addEventListener(`click`, this.userRatingScoreClickHandler);
+  emojiClickHandler(evt) {
+    if (evt.target.tagName === `INPUT` || evt.target.parentNode.tagName === `INPUT`) {
+      this._data.userEmoji = evt.target.id.slice(6);
+      this.rerender();
     }
-
-    element.querySelector(`.film-details__control-label--favorite`)
-      .addEventListener(`click`, this.favoriteControlClickHandler);
-
-    element.querySelector(`.film-details__close-btn`)
-      .addEventListener(`click`, this._handler);
-  }
-
-  setClickHandler(handler) {
-    this._handler = handler;
-    this.getElement().querySelector(`.film-details__close-btn`)
-    .addEventListener(`click`, handler);
-  }
-
-  removeClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__close-btn`)
-    .removeEventListener(`click`, handler);
   }
 }

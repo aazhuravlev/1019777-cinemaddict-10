@@ -2,7 +2,6 @@ import {Nodes, Count, RenderPosition} from './constants.js';
 import {renderHtmlPart} from './utils/render.js';
 import ProfileStatusComponent from './components/profile-status.js';
 import FilterController from './controllers/filter.js';
-
 import FilmListComponent from './components/film-list.js';
 import FilmListTitleComponent from './components/film-list-title.js';
 import MoviesModel from './models/movies.js';

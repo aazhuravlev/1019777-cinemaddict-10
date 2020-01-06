@@ -1,3 +1,5 @@
+const NAMES = [`Aaron`, `Adam`, `Aiden`, `Albert`, `Alex`, `Alexander`, `Alfie`, `Archie`, `Arthur`, `Austin`, `Benjamin`, `Blake`, `Bobby`];
+
 const FilterName = {
   ALL: `All movies`,
   WATCHLIST: `Watchlist`,
@@ -59,7 +61,8 @@ const RenderPosition = {
 };
 
 const KeyCode = {
-  ESC: 27
+  ESC: 27,
+  ENTER: 13
 };
 
 const Mode = {
@@ -67,4 +70,4 @@ const Mode = {
   POPUP: `popup`,
 };
 
-export {Nodes, generateFilters, ExtraTitles, SortType, Count, KeyCode, RenderPosition, Mode, FilterName};
+export {NAMES, Nodes, generateFilters, ExtraTitles, SortType, Count, KeyCode, RenderPosition, Mode, FilterName};

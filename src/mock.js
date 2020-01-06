@@ -1,11 +1,11 @@
 import moment from 'moment';
+import {NAMES} from './constants.js';
 import {getRandomBetween, getRandomArrayItem, sortingFilms} from './utils/common.js';
 
 const SENTENCE = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
 const FILMS = [`The Shawshank Redemption`, `The Godfather`, `The Dark Knight`, `Schindler's List`, `The Lord of the Rings: The Return of the King`, `Pulp Fiction`, `Fight Club`, `Forrest Gump`, `Inception`, `Matrix`, `Goodfellas`, `Se7en`, `Star Wars`, `Sen to Chihiro no kamikakushi`, `Interstellar`];
 const IMAGES = [`made-for-each-other.png`, `popeye-meets-sinbad.png`, `sagebrush-trail.jpg`, `santa-claus-conquers-the-martians.jpg`, `the-dance-of-life.jpg`, `the-great-flamarion.jpg`, `the-man-with-the-golden-arm.jpg`];
 const COUNTRYES = [`Afghanistan`, `Albania`, `Algeria`, `Andorra`, `Angola`, `Argentina`, `Armenia`, `Australia`, `Austria`, `Azerbaijan`, `Bahrain`, `Bangladesh`];
-const NAMES = [`AARON`, `ADAM`, `AIDEN`, `ALBERT`, `ALEX`, `ALEXANDER`, `ALFIE`, `ARCHIE`, `ARTHUR`, `AUSTIN`, `BENJAMIN`, `BLAKE`, `BOBBY`];
 const GENRES = [`Action`, `Adventure`, `Comedy`, `Drama`, `Crime`, `Horror`, `Fantasy`, `Western`, `Thriller`, `Animation`];
 const emojiType = [`smile`, `sleeping`, `puke`, `angry`];
 let id = 0;
@@ -84,4 +84,4 @@ const generateFilmCardsData = (count) => {
     .map(generateFilmCardData);
 };
 
-export {generateFilmCardsData};
+export {generateFilmCardsData, NAMES};

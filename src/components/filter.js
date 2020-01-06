@@ -1,19 +1,17 @@
 import AbstractComponent from './abstract-component.js';
-
-const withoutCount = {
-  'All movies': ` main-navigation__item--active`,
-  'Stats': ` main-navigation__item--additional`
-};
-
-const decorFilterLink = (name) => withoutCount[name] || ``;
+import {FilterName} from '../constants.js';
 
 const createCounter = (count) => count !== `` ? `<span class="main-navigation__item-count">${count}</span>` : ``;
 
 const createFilterMarkup = (filter) => {
-  const {name, link, count} = filter;
+  let {name, link, count, isActive} = filter;
+  if (name === FilterName.ALL || name === FilterName.STATS) {
+    count = ``;
+  }
 
   return (
-    `<a href="#${link}" class="main-navigation__item${decorFilterLink(name)}">${name}
+    // `<a href="#${link}" class="main-navigation__item${decorFilterLink(name, isActive)}">${name}
+    `<a href="#${link.toLowerCase()}" class="main-navigation__item${isActive ? ` main-navigation__item--active` : ``}${name === FilterName.STATS ? ` main-navigation__item--additional` : ``}">${name}
     ${createCounter(count)}
     </a>`
   );
@@ -37,5 +35,13 @@ export default class Filter extends AbstractComponent {
 
   getTemplate() {
     return createFilterTemplate(this._filters);
+  }
+
+  setFilterChangeHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      const filterName = evt.target.href.slice(24);
+      handler(filterName[0].toUpperCase() + filterName.slice(1));
+    });
   }
 }

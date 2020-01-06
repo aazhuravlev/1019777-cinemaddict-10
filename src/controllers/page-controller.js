@@ -162,8 +162,6 @@ export default class PageController {
   }
 
   _onFilterChange() {
-    this._removeCards();
-    this._renderCards(this._filmModel.getMovies().slice(0, Count.SHOWING_CARDS_ON_START));
-    this._renderShowMoreButton();
+    this._updateCards(Count.SHOWING_CARDS_ON_START);
   }
 }

@@ -153,7 +153,7 @@ export default class PageController {
     const prevFilmsCount = this._showingFilmsCount;
     this._showingFilmsCount += Count.SHOWING_CARDS_BY_BUTTON;
 
-    const unrenderedCards = this._filmModel.getMoviesAll().slice(prevFilmsCount, this._showingFilmsCount);
+    const unrenderedCards = this._filmModel.getMovies().slice(prevFilmsCount, this._showingFilmsCount);
 
     renderHtmlPart(this._filmsListContainer, createFilmCardFragment(unrenderedCards, this._onDataChange, this._onViewChange), RenderPosition.BEFOREEND);
 

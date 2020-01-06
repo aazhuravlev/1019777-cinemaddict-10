@@ -24,10 +24,9 @@ export default class FilterController {
         name: filterName,
         link,
         count: getFilmsByFilter(allFilms, filterName).length,
-        isActive: filterName === this._activeFilterName,
+        isActive: filterName.split(` `)[0] === this._activeFilterName.split(` `)[0],
       };
     });
-
     const oldComponent = this._filterComponent;
     this._filterComponent = new FilterComponent(filters);
 
@@ -43,6 +42,7 @@ export default class FilterController {
   _onFilterChange(filterName) {
     this._movieModel.setFilter(filterName);
     this._activeFilterName = filterName;
+    this.render();
   }
 
   _onDataChange() {

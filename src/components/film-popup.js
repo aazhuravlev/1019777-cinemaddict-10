@@ -1,6 +1,5 @@
 import moment from 'moment';
 import AbstractSmartComponent from './abstract-smart-component.js';
-import {remove} from '../utils/render.js';
 import {pluralize} from '../utils/common.js';
 
 const popupRatingLength = 9;

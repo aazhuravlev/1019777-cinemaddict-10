@@ -56,7 +56,7 @@ const generateFilmCardData = () => {
   id += 1;
   const isItWatched = Math.random() > 0.5;
   const filmDescription = generateDescription(getRandomBetween(SentencesQuantity.min, SentencesQuantity.max));
-  const date = `${getRandomBetween(Year.min, Year.max)}-${getRandomBetween(Months.min, Months.max)}-${getRandomBetween(Day.min, Day.max)} ${getRandomBetween(Hour.min, Hour.max)}:${getRandomBetween(Minutes.min, Minutes.max)}`
+  const date = `${getRandomBetween(Year.min, Year.max)}-${getRandomBetween(Months.min, Months.max)}-${getRandomBetween(Day.min, Day.max)} ${getRandomBetween(Hour.min, Hour.max)}:${getRandomBetween(Minutes.min, Minutes.max)}`;
   return {
     id,
     title: getRandomArrayItem(FILMS),

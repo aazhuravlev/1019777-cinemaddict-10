@@ -14,9 +14,9 @@ const getFavoriteFilms = (films) => {
 
 const getFilmsByFilter = (films, filterName) => {
   switch (filterName) {
-    case FilterName.WATCHLIST:
+    case FilterName.WHATCHLIST:
       return getWatchlistFilms(films);
-    case FilterName.WATCHED:
+    case FilterName.HISTORY:
       return getWatchedFilms(films);
     case FilterName.FAVORITES:
       return getFavoriteFilms(films);

@@ -28,13 +28,13 @@ export default class Movies {
   }
 
   updateMovie(id, movie) {
-    const index = this._movie.findIndex((it) => it.id === id);
+    const index = this._movies.findIndex((it) => it.id === id);
 
     if (index === -1) {
       return false;
     }
 
-    this._movie = [].concat(this._movie.slice(0, index), movie, this._movie.slice(index + 1));
+    this._movies = [].concat(this._movies.slice(0, index), movie, this._movies.slice(index + 1));
 
     this._dataChangeHandlers.forEach((handler) => handler());
 

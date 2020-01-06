@@ -11,50 +11,6 @@ const createFilmCardFragment = (cardsData, onDataChange, onViewChange) => {
   cardsData.forEach((filmData) => {
     const movieController = new MovieController(fragment, onDataChange, onViewChange);
     movieController.render(filmData);
-
-    // return cardsData.map((filmData) => {
-    //   const movieController = new MovieController(container);
-    //   movieController.render(filmData);
-    //   return movieController;
-    // });
-
-    //   const filmCardElement = new FilmCardComponent(card);
-    //   const filmPopupElement = new FilmPopupComponent(card);
-
-    //   const filmTitle = filmCardElement.getElement().querySelector(`h3`);
-    //   const filmImage = filmCardElement.getElement().querySelector(`img`);
-    //   const filmComments = filmCardElement.getElement().querySelector(`a`);
-
-    //   const getCardClickHandler = (evt) => {
-    //     if ([filmTitle, filmImage, filmComments].includes(evt.target)) {
-    //       renderHtmlPart(Nodes.BODY, filmPopupElement.getElement(), RenderPosition.BEFOREEND);
-    //       filmPopupElement.setClickHandler(removePopupCkickHandler);
-    //       document.addEventListener(`keydown`, removePopupKeydownHandler);
-    //     }
-    //   };
-
-    //   const popupRemove = () => {
-    //     if (filmPopupElement.getElement()) {
-    //       remove(filmPopupElement);
-    //       filmPopupElement.removeClickHandler(removePopupCkickHandler);
-    //       document.removeEventListener(`keydown`, removePopupKeydownHandler);
-    //     }
-    //   };
-
-    //   const removePopupCkickHandler = () => {
-    //     popupRemove();
-    //   };
-
-    //   const removePopupKeydownHandler = (evt) => {
-    //     if (evt.keyCode === KeyCode.ESC) {
-    //       popupRemove();
-    //     }
-    //   };
-
-    //   filmCardElement.setClickHandler(getCardClickHandler);
-
-    //   fragment.appendChild(filmCardElement.getElement());
-    // });
   });
   return fragment;
 };
@@ -126,6 +82,12 @@ export default class PageController {
     }
   }
 
+  _updateCards(count) {
+    this._removeCards();
+    this._renderCards(this._filmModel.getMovies().slice(0, count));
+    this._renderShowMoreButton();
+  }
+
   _renderCards(films) {
     renderHtmlPart(this._filmsListContainer, createFilmCardFragment(films, this._onDataChange, this._onViewChange), RenderPosition.BEFOREEND);
     this._showedFilmControllers = this._filmsListContainer.querySelectorAll(`.film-card`);
@@ -140,7 +102,7 @@ export default class PageController {
   _renderShowMoreButton() {
     remove(this._showMoreButtonComponent);
 
-    if (this._showingFilmsCount >= this._filmModel.getMoviesAll().length) {
+    if (this._showingFilmsCount >= this._filmModel.getMovies().length) {
       return;
     }
 
@@ -187,16 +149,12 @@ export default class PageController {
     }
   }
 
-  _onDataChange(movieController, oldData, newData) {
+  _onDataChange(movieController, oldData, newData) { // 111
     const isSuccess = this._filmModel.updateMovie(oldData.id, newData);
 
     if (isSuccess) {
-      movieController.render(newData);
+      this._updateCards(this._showingFilmsCount);
     }
-
-    // this._showedTaskControllers = [].concat(filmCards.slice(0, index), newData, this._filmModel.getMoviesAll().slice(index + 1));
-
-    // movieController.render(filmCards[index]);
   }
 
   _onViewChange() {

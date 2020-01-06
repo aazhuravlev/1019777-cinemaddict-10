@@ -218,17 +218,14 @@ export default class FilmPopup extends AbstractSmartComponent {
     super();
     this._data = data;
 
-    this.setWatchListButtonClickHandler = this.setClickHandler.bind(this);
-    this.setWatchedButtonClickHandler = this.setClickHandler.bind(this);
-    this.setFavoritesButtonClickHandler = this.setClickHandler.bind(this);
+    this._handler = null;
+
     this.recoverListeners = this.recoverListeners.bind(this);
     this._subscribeOnEvents = this._subscribeOnEvents.bind(this);
-    this._handler = this._handler.bind(this);
     this.watchlistControlClickHandler = this.watchlistControlClickHandler.bind(this);
     this.favoriteControlClickHandler = this.favoriteControlClickHandler.bind(this);
     this.watchedControlClickHandler = this.watchedControlClickHandler.bind(this);
     this.userRatingScoreClickHandler = this.userRatingScoreClickHandler.bind(this);
-
   }
 
   getTemplate() {
@@ -239,13 +236,8 @@ export default class FilmPopup extends AbstractSmartComponent {
     this._subscribeOnEvents();
   }
 
-  _handler() {
-    if (this.getElement()) {
-      this.getElement().querySelector(`.film-details__close-btn`)
-        .removeEventListener(`click`, this._handler);
-      document.removeEventListener(`keydown`, this._handler);
-      remove(this);
-    }
+  getData() {
+    return this._data;
   }
 
   watchlistControlClickHandler() {
@@ -293,6 +285,7 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   setClickHandler(handler) {
+    this._handler = handler;
     this.getElement().querySelector(`.film-details__close-btn`)
     .addEventListener(`click`, handler);
   }
@@ -301,19 +294,4 @@ export default class FilmPopup extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__close-btn`)
     .removeEventListener(`click`, handler);
   }
-
-  // setWatchListButtonClickHandler(handler) {
-  //   this.getElement().querySelector(`.film-details__control-label--watchlist`)
-  //     .addEventListener(`click`, handler);
-  // }
-
-  // setWatchedButtonClickHandler(handler) {
-  //   this.getElement().querySelector(`.film-details__control-label--watched`)
-  //     .addEventListener(`click`, handler);
-  // }
-
-  // setFavoritesButtonClickHandler(handler) {
-  //   this.getElement().querySelector(`.film-details__control-label--favorite`)
-  //     .addEventListener(`click`, handler);
-  // }
 }

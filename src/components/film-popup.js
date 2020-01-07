@@ -74,10 +74,10 @@ const generateGenres = (genres) => {
 };
 
 const generateUserRatingLabel = (isWatched, userRating) => {
-  if (isWatched && userRating <= 0) {
-    return ``;
+  if (isWatched && userRating > 0) {
+    return `<p class="film-details__user-rating">Your rate ${userRating}</p>`;
   }
-  return `<p class="film-details__user-rating">Your rate ${userRating}</p>`;
+  return ``;
 };
 
 const generateComment = (comments) => {

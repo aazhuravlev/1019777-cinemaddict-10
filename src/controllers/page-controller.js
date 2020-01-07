@@ -19,7 +19,7 @@ const renderExtraFilmCard = (data, node, onDataChange, onViewChange) => {
   renderHtmlPart(node.querySelector(`.films-list__container`), createFilmCardFragment(data, onDataChange, onViewChange), RenderPosition.BEFOREEND);
 };
 
-const renderFilmListExtra = (node, data, onDataChange) => {
+const renderFilmListExtra = (node, data, onDataChange, onViewChange) => {
   const ratingSortedFilms = sortingFilms(data, SortType.RATING).slice(0, Count.EXTRA_FILMS);
   const commentsSortedFilms = sortingFilms(data, SortType.COMMENTS).slice(0, Count.EXTRA_FILMS);
 
@@ -31,12 +31,12 @@ const renderFilmListExtra = (node, data, onDataChange) => {
   if (isFilmsUnRated) {
     filmListsExtra[0].remove();
   } else {
-    renderExtraFilmCard(ratingSortedFilms, filmListsExtra[0], onDataChange);
+    renderExtraFilmCard(ratingSortedFilms, filmListsExtra[0], onDataChange, onViewChange);
   }
   if (isFilmsUnComment) {
     filmListsExtra[1].remove();
   } else {
-    renderExtraFilmCard(commentsSortedFilms, filmListsExtra[1], onDataChange);
+    renderExtraFilmCard(commentsSortedFilms, filmListsExtra[1], onDataChange, onViewChange);
   }
 };
 
@@ -65,7 +65,7 @@ export default class PageController {
   }
 
   render() {
-    const filmCards = this._filmModel.getMoviesAll();
+    const filmCards = this._filmModel.getMovies();
 
     renderHtmlPart(this._nodesMain, createFragment([this._sortingComponent.getElement(), this._container]), RenderPosition.BEFOREEND);
 

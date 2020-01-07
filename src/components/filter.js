@@ -46,4 +46,8 @@ export default class Filter extends AbstractComponent {
       }
     });
   }
+
+  setShowStatisticHandler(handler) {
+    this.getElement().addEventListener(`click`, handler);
+  }
 }

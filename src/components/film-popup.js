@@ -27,42 +27,43 @@ const generateFilmDetailsControls = (filmDetailsControls) => {
 
 const generateRating = (userRating) => {
   const userRatingMenu = [];
-  for (let i = 0; i < popupRatingLength; i++) {
-    const index = i + 1;
+  for (let i = 1; i <= popupRatingLength; i++) {
     userRatingMenu.push(
-        `<input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${index}" id="rating-${index}"${Number(userRating) === (index) ? ` checked` : ``}>
-         <label class="film-details__user-rating-label" for="rating-${index}">${index}</label>`
+        `<input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${i}" id="rating-${i}"${Number(userRating) === (i) ? ` checked` : ``}>
+         <label class="film-details__user-rating-label" for="rating-${i}">${i}</label>`
     );
   }
   return userRatingMenu.join(`\n`);
 };
 
 const generateSelfFilmRating = (isWatched, title, image, userRating) => {
+  if (!isWatched) {
+    return ``;
+  }
   return (
-    isWatched ?
-      `<div class="form-details__middle-container">
-        <section class="film-details__user-rating-wrap">
-          <div class="film-details__user-rating-controls">
-            <button class="film-details__watched-reset" type="button">Undo</button>
+    `<div class="form-details__middle-container">
+      <section class="film-details__user-rating-wrap">
+        <div class="film-details__user-rating-controls">
+          <button class="film-details__watched-reset" type="button">Undo</button>
+        </div>
+
+        <div class="film-details__user-score">
+          <div class="film-details__user-rating-poster">
+            <img src="./images/posters/${image}" alt="film-poster" class="film-details__user-rating-img">
           </div>
 
-          <div class="film-details__user-score">
-            <div class="film-details__user-rating-poster">
-              <img src="./images/posters/${image}" alt="film-poster" class="film-details__user-rating-img">
+          <section class="film-details__user-rating-inner">
+            <h3 class="film-details__user-rating-title">${title}</h3>
+
+            <p class="film-details__user-rating-feelings">How you feel it?</p>
+
+            <div class="film-details__user-rating-score">
+              ${generateRating(userRating)}
             </div>
-
-            <section class="film-details__user-rating-inner">
-              <h3 class="film-details__user-rating-title">${title}</h3>
-
-              <p class="film-details__user-rating-feelings">How you feel it?</p>
-
-              <div class="film-details__user-rating-score">
-                ${generateRating(userRating)}
-              </div>
-            </section>
-          </div>
-        </section>
-      </div>` : ``
+          </section>
+        </div>
+      </section>
+    </div>`
   );
 };
 
@@ -73,10 +74,10 @@ const generateGenres = (genres) => {
 };
 
 const generateUserRatingLabel = (isWatched, userRating) => {
-  if (isWatched && userRating > 0) {
-    return `<p class="film-details__user-rating">Your rate ${userRating}</p>`;
+  if (isWatched && userRating <= 0) {
+    return ``;
   }
-  return ``;
+  return `<p class="film-details__user-rating">Your rate ${userRating}</p>`;
 };
 
 const generateComment = (comments) => {
@@ -97,17 +98,32 @@ const generateComment = (comments) => {
   }).join(`\n`);
 };
 
+const objKeysUppercaseFirstLetter = (obj) => {
+  const newObj = {};
+  Object.entries(obj).map(([key, property]) => {
+    let lowerKey = key[0].toUpperCase() + key.slice(1).toLowerCase();
+    if (key.includes(`_`)) {
+      const firstPart = key.split(`_`)[0];
+      const secondPart = key.split(`_`)[1];
+      lowerKey = `${firstPart[0].toUpperCase() + firstPart.slice(1).toLowerCase()} ${secondPart[0].toUpperCase() + secondPart.slice(1).toLowerCase()}`;
+    }
+    newObj[lowerKey] = property;
+  });
+  return newObj;
+};
+
 const createFilmPopupTemplate = (data) => {
   const {title, image, rating, time, genre, description, comments, director, writers, actors, releaseDate, country, isWatchList, isWatched, isFavorite, userRating, userEmoji} = data;
 
   const FilmsDetailsRow = {
-    'Director': director,
-    'Writers': writers,
-    'Actors': actors,
-    'Release Date': moment(releaseDate).format(`D MMMM YYYY`),
-    'Runtime': moment(time).format(`h[h] mm[m]`),
-    'Country': country
+    'DIRECTOR': director,
+    'WRITERS': writers,
+    'ACTORS': actors,
+    'RELEASE_DATE': moment(releaseDate).format(`D MMMM YYYY`),
+    'RUNTIME': moment(time).format(`h[h] mm[m]`),
+    'COUNTRY': country
   };
+  const popupFilmsDetailsRow = objKeysUppercaseFirstLetter(FilmsDetailsRow);
 
   const FilmDetailsControls = {
     WATCHLIST: [`Add to watchlist`, isWatchList],
@@ -142,7 +158,7 @@ const createFilmPopupTemplate = (data) => {
             </div>
 
             <table class="film-details__table">
-              ${generateFilmsDetailsRow(FilmsDetailsRow)}
+              ${generateFilmsDetailsRow(popupFilmsDetailsRow)}
               <tr class="film-details__row">
                 <td class="film-details__term">${pluralize(genre.length, `Genre`)}</td>
                 <td class="film-details__cell">

@@ -1,4 +1,5 @@
 import moment from 'moment';
+import he from 'he';
 import AbstractSmartComponent from './abstract-smart-component.js';
 import {pluralize} from '../utils/common.js';
 
@@ -312,7 +313,7 @@ export default class FilmPopup extends AbstractSmartComponent {
 
   commentChangeHandler() {
     const commentArea = this.getElement().querySelector(`.film-details__comment-input`);
-    this._data.userComment = commentArea.value;
+    this._data.userComment = he.encode(commentArea.value);
   }
 
   watchlistControlClickHandler() {

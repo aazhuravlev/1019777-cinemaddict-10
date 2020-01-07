@@ -42,7 +42,7 @@ const ExtraTitles = {
 
 const SortType = {
   DEFAULT: `default`,
-  DATE: `year`,
+  DATE: `releaseDate`,
   RATING: `rating`,
   COMMENTS: `comments`
 };

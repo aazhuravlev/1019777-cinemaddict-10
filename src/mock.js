@@ -69,7 +69,7 @@ const generateFilmCardData = () => {
     director: getRandomArrayItem(NAMES),
     writers: `${getRandomArrayItem(NAMES)}, ${getRandomArrayItem(NAMES)}, ${getRandomArrayItem(NAMES)}`,
     actors: `${getRandomArrayItem(NAMES)}, ${getRandomArrayItem(NAMES)}, ${getRandomArrayItem(NAMES)}`,
-    releaseDate: date,
+    releaseDate: moment(date).toDate(),
     country: getRandomArrayItem(COUNTRYES),
     isWatchList: Math.random() > 0.5,
     isWatched: isItWatched,

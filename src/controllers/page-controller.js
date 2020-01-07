@@ -64,21 +64,31 @@ export default class PageController {
     this._filmModel.setFilterChangeHandler(this._onFilterChange);
   }
 
+  hide() {
+    this._container.hide();
+    this._sortingComponent.hide();
+  }
+
+  show() {
+    this._container.show();
+    this._sortingComponent.show();
+  }
+
   render() {
     const filmCards = this._filmModel.getMovies();
 
-    renderHtmlPart(this._nodesMain, createFragment([this._sortingComponent.getElement(), this._container]), RenderPosition.BEFOREEND);
+    renderHtmlPart(this._nodesMain, createFragment([this._sortingComponent.getElement(), this._container.getElement()]), RenderPosition.BEFOREEND);
 
     if (filmCards.length > 0) {
-      this._filmsList = this._container.querySelector(`.films-list`);
-      this._filmsListContainer = this._container.querySelector(`.films-list__container`);
+      this._filmsList = this._container.getElement().querySelector(`.films-list`);
+      this._filmsListContainer = this._container.getElement().querySelector(`.films-list__container`);
 
       const cardsOnStart = filmCards.slice(0, this._showingFilmsCount);
       renderHtmlPart(this._filmsListContainer, createFilmCardFragment(cardsOnStart, this._onDataChange, this._onViewChange), RenderPosition.BEFOREEND);
       this._renderShowMoreButton();
 
-      renderHtmlPart(this._container, createFragment([new ExtraListComponent(ExtraTitles.TOP_RATED).getElement(), new ExtraListComponent(ExtraTitles.MOST_COMMENTED).getElement()]), RenderPosition.BEFOREEND);
-      renderFilmListExtra(this._container, filmCards, this._onDataChange, this._onViewChange);
+      renderHtmlPart(this._container.getElement(), createFragment([new ExtraListComponent(ExtraTitles.TOP_RATED).getElement(), new ExtraListComponent(ExtraTitles.MOST_COMMENTED).getElement()]), RenderPosition.BEFOREEND);
+      renderFilmListExtra(this._container.getElement(), filmCards, this._onDataChange, this._onViewChange);
     }
   }
 

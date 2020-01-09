@@ -78,8 +78,7 @@ export default class MovieController {
   watchedButtonClickHandler(evt) {
     evt.preventDefault();
     this._onDataChange(this._cardData, Object.assign({}, this._cardData, {
-      isWatched: !this._cardData.isWatched,
-      isWatchedDate: !this._cardData.isWatched ? new Date() : false
+      isWatched: this._cardData.isWatched ? !this._cardData.isWatched : new Date()
     }));
   }
 

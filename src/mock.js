@@ -53,7 +53,7 @@ const generateComments = (count) => {
 
 const generateFilmCardData = () => {
   id += 1;
-  const isItWatched = Math.random() > 0.5;
+  const isItWatched = Math.random() > 0.5 ? getRandomDate() : false;
   const filmDescription = generateDescription(getRandomBetween(SentencesQuantity.min, SentencesQuantity.max));
   const date = moment(`${getRandomBetween(Year.min, Year.max)}-${getRandomBetween(Months.min, Months.max)}-${getRandomBetween(Day.min, Day.max)} ${getRandomBetween(Hour.min, Hour.max)}:${getRandomBetween(Minutes.min, Minutes.max)}`).toDate();
   return {
@@ -72,7 +72,6 @@ const generateFilmCardData = () => {
     country: getRandomArrayItem(COUNTRYES),
     isWatchList: Math.random() > 0.5,
     isWatched: isItWatched,
-    isWatchedDate: isItWatched ? getRandomDate() : false,
     isFavorite: Math.random() > 0.5,
     userRating: isItWatched ? Math.floor(getRandomRating(Rating.min, Rating.max)) : null
   };

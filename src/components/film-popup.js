@@ -327,8 +327,7 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   watchedControlClickHandler() {
-    this._data.isWatched = !this._data.isWatched;
-    this._data.isWatchedDate = this._data.isWatched ? new Date() : false;
+    this._data.isWatched = this._data.isWatched ? !this._data.isWatched : new Date();
     this._data.userRating = `0`;
     this.rerender();
   }

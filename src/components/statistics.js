@@ -89,7 +89,7 @@ const geFilteredFilmsByDate = (films, days) => {
       return date;
     })();
     return films.filter((film) => {
-      return film.isWatchedDate >= dateFrom;
+      return film.isWatched >= dateFrom;
     });
   }
   return films;

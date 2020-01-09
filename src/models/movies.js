@@ -14,6 +14,10 @@ export default class Movies {
     return getFilmsByFilter(this._movies, this._activeFilterName);
   }
 
+  getHistoryMovies() {
+    return getFilmsByFilter(this._movies, FilterName.HISTORY);
+  }
+
   getMoviesAll() {
     return this._movies;
   }
@@ -35,7 +39,6 @@ export default class Movies {
     }
 
     this._movies = [].concat(this._movies.slice(0, index), movie, this._movies.slice(index + 1));
-
     this._dataChangeHandlers.forEach((handler) => handler());
 
     return true;

@@ -28,7 +28,7 @@ moviesModel.setMovies(cardsData);
 const pasteElements = () => {
   const filmListComponent = new FilmListComponent(cardsData);
   const pageController = new PageController(filmListComponent, moviesModel);
-  const statisticsComponent = new StatisticsComponent();
+  const statisticsComponent = new StatisticsComponent(moviesModel);
 
   renderHtmlPart(Nodes.HEADER, new ProfileStatusComponent(cardsData.length).getElement(), RenderPosition.BEFOREEND);
 

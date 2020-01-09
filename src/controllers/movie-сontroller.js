@@ -79,6 +79,7 @@ export default class MovieController {
     evt.preventDefault();
     this._onDataChange(this._cardData, Object.assign({}, this._cardData, {
       isWatched: !this._cardData.isWatched,
+      isWatchedDate: !this._cardData.isWatched ? new Date() : false
     }));
   }
 
@@ -112,6 +113,8 @@ export default class MovieController {
     if (this._filmCardPopupComponent.getElement()) {
       this._filmCardPopupComponent.removeClickHandler(this._removePopupCkickHandler);
       document.removeEventListener(`keydown`, this._removePopupKeydownHandler);
+      document.removeEventListener(`keydown`, this.submitCommentKeydownHandler);
+
       this._mode = Mode.DEFAULT;
       this._onDataChange(this._cardData, Object.assign({}, this._cardData, this._filmCardPopupComponent.getData()));
       remove(this._filmCardPopupComponent);

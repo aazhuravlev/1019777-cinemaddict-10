@@ -22,7 +22,15 @@ const sortingFilms = (data, type, reverse) => {
   return newData;
 };
 
+const getRandomDate = () => {
+  const targetDate = new Date();
+  const diffValue = -getRandomBetween(0, 7);
+
+  targetDate.setDate(targetDate.getDate() + diffValue);
+  return targetDate;
+};
+
 const pluralize = (count, noun, suffix = `s`) =>
   `${noun}${count !== 1 ? suffix : ``}`;
 
-export {getRandomBetween, getRandomArrayItem, sortingFilms, pluralize};
+export {getRandomDate, getRandomBetween, getRandomArrayItem, sortingFilms, pluralize};

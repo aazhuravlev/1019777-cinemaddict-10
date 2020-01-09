@@ -24,7 +24,7 @@ const sortingFilms = (data, type, reverse) => {
 
 const getRandomDate = () => {
   const targetDate = new Date();
-  const diffValue = -getRandomBetween(0, 7);
+  const diffValue = -getRandomBetween(0, 60);
 
   targetDate.setDate(targetDate.getDate() + diffValue);
   return targetDate;

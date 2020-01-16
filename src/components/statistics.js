@@ -2,6 +2,7 @@ import AbstractSmartComponent from './abstract-smart-component.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
+import {GenreIndex} from '../constants.js';
 
 const InputValue = {
   ALL_TIME: `all-time`,
@@ -26,12 +27,6 @@ const DAYS_COUNT = {
   YEAR: 365
 };
 
-const GenreIndex = {
-  NAME: 0,
-  VALUE: 1,
-  TOP_GENRE: 0
-};
-
 const TimeIndex = {
   HOUR: 0,
   MINUTE: 1
@@ -48,24 +43,6 @@ const ChartParameter = {
 };
 
 const MINUTES_IN_HOUR = 60;
-
-const getGenresData = (filmsData) => {
-  const genres = [];
-  const genresData = new Map();
-
-  filmsData.forEach((film) => film.genre.forEach((it) => genres.push(it)));
-
-  genres.forEach((it) => {
-    if (genresData.has(it)) {
-      const value = genresData.get(it);
-      genresData.set(it, value + 1);
-    } else {
-      genresData.set(it, 1);
-    }
-  });
-
-  return genresData;
-};
 
 const getTotalDuration = (films) => {
   const totalWatchedTime = films.map((film) => moment(film.time).format(`h:mm`).split(`:`));
@@ -95,22 +72,14 @@ const geFilteredFilmsByDate = (films, days) => {
   return films;
 };
 
-const renderChart = (ctx, watchedFilmsData) => {
-  const genresData = getGenresData(watchedFilmsData);
-  const sortedGenresData = new Map([...genresData].sort((a, b) => b[GenreIndex.VALUE] - a[GenreIndex.VALUE]));
-
-  const genresLabels = [...sortedGenresData.keys()];
-  const genresValues = [...sortedGenresData.values()];
-
-  ctx.height = 50 * genresLabels.length;
-
+const renderNewChart = (ctx, labelNames, chartData) => {
   return new Chart(ctx, {
     plugins: [ChartDataLabels],
     type: ChartParameter.TYPE,
     data: {
-      labels: genresLabels,
+      labels: labelNames,
       datasets: [{
-        data: genresValues,
+        data: chartData,
         backgroundColor: ChartParameter.BAR_COLOR,
         categoryPercentage: ChartParameter.BAR_WIDTH
       }]
@@ -150,6 +119,15 @@ const renderChart = (ctx, watchedFilmsData) => {
       }
     }
   });
+};
+
+const renderChart = (ctx, sortedGenresData) => {
+  const genresLabels = [...sortedGenresData.keys()];
+  const genresValues = [...sortedGenresData.values()];
+
+  ctx.height = 50 * genresLabels.length;
+
+  return renderNewChart(ctx, genresLabels, genresValues);
 };
 
 const generateLabels = (target) => {
@@ -206,7 +184,7 @@ export default class Statistics extends AbstractSmartComponent {
     this._filmsData = filmsData;
     this.watchedFilms = this._filmsData.getHistoryMovies();
 
-    this.target = InputValue.ALL_TIME;
+    this._target = InputValue.ALL_TIME;
     this.genresData = null;
     this.sortedGenresData = null;
     this.totalDuration = null;
@@ -218,12 +196,9 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    this.genresData = getGenresData(this.watchedFilms);
-    this.sortedGenresData = [...this.genresData].sort((a, b) => b[GenreIndex.VALUE] - a[GenreIndex.VALUE]);
     this.totalDuration = getTotalDuration(this.watchedFilms);
-    this.topGenre = this.sortedGenresData.length !== 0 ? this.sortedGenresData[GenreIndex.TOP_GENRE][GenreIndex.NAME] : this.sortedGenresData.length;
 
-    return createStatisticsTemplate(this.watchedFilms, this.totalDuration, this.topGenre, this.target);
+    return createStatisticsTemplate(this.watchedFilms, this.totalDuration, this._filmsData.getTopGenre(), this._target);
   }
 
   show() {
@@ -234,7 +209,7 @@ export default class Statistics extends AbstractSmartComponent {
 
   hide() {
     super.hide();
-    this.target = InputValue.ALL_TIME;
+    this._target = InputValue.ALL_TIME;
     this.getElement().querySelector(`.statistic__filters`)
       .removeEventListener(`change`, this.handler);
   }
@@ -256,7 +231,7 @@ export default class Statistics extends AbstractSmartComponent {
 
   handler(evt) {
     if (evt.target.tagName === `INPUT`) {
-      this.target = evt.target.value;
+      this._target = evt.target.value;
       const filteredFilmsByDate = geFilteredFilmsByDate(this._filmsData.getHistoryMovies(), DAYS_COUNT[(evt.target.value).toUpperCase()]);
       this.rerender(filteredFilmsByDate);
     }
@@ -267,7 +242,7 @@ export default class Statistics extends AbstractSmartComponent {
   _renderChart() {
     const ctx = this.getElement().querySelector(`.statistic__chart`);
     this._resetChart();
-    this._chart = renderChart(ctx, this.watchedFilms);
+    this._chart = renderChart(ctx, this.filmsData.sortedGenresData());
 
     this.getElement().querySelector(`.statistic__filters`)
       .addEventListener(`change`, this.handler);

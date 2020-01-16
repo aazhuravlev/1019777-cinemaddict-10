@@ -1,6 +1,6 @@
 import {Nodes, Count, ExtraTitles, SortType} from '../constants.js';
 import {renderHtmlPart, RenderPosition, createFragment, remove} from '../utils/render.js';
-import {sortingFilms} from '../utils/common.js';
+import {sortFilms} from '../utils/common.js';
 import SortingComponent from '../components/sorting.js';
 import MovieController from '../controllers/movie-сontroller.js';
 import ShowMoreButtonComponent from '../components/show-more-button.js';
@@ -20,8 +20,8 @@ const renderExtraFilmCard = (data, node, onDataChange, onViewChange) => {
 };
 
 const renderFilmListExtra = (node, data, onDataChange, onViewChange) => {
-  const ratingSortedFilms = sortingFilms(data, SortType.RATING).slice(0, Count.EXTRA_FILMS);
-  const commentsSortedFilms = sortingFilms(data, SortType.COMMENTS).slice(0, Count.EXTRA_FILMS);
+  const ratingSortedFilms = sortFilms(data, SortType.RATING).slice(0, Count.EXTRA_FILMS);
+  const commentsSortedFilms = sortFilms(data, SortType.COMMENTS).slice(0, Count.EXTRA_FILMS);
 
   const isFilmsUnRated = ratingSortedFilms.every((film) => film.rating === 0);
   const isFilmsUnComment = ratingSortedFilms.every((comment) => comment.comments === 0);
@@ -145,7 +145,7 @@ export default class PageController {
     if (sortType === SortType.DEFAULT) {
       sortedFilms = filmCards.slice(0, this._showingFilmsCount);
     } else {
-      sortedFilms = sortingFilms(filmCards, sortType);
+      sortedFilms = sortFilms(filmCards, sortType);
     }
     setActiveSortButton();
 

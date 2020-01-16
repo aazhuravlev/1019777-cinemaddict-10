@@ -1,10 +1,13 @@
 import {getFilmsByFilter} from '../utils/filter.js';
-import {FilterName} from '../constants.js';
+import {FilterName, GenreIndex} from '../constants.js';
 
 export default class Movies {
   constructor() {
     this._movies = [];
     this._activeFilterName = FilterName.ALL;
+    this.genresData = null;
+    this.sortedGenresData = null;
+    this.topGenre = null;
 
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
@@ -20,6 +23,18 @@ export default class Movies {
 
   getMoviesAll() {
     return this._movies;
+  }
+
+  getWatchedSortedGenres() {
+    this.sortedGenresData = new Map([...this.getGenresData()].sort((a, b) => b[GenreIndex.VALUE] - a[GenreIndex.VALUE]));
+    return this.sortedGenresData;
+  }
+
+  getTopGenre() {
+    const sortedGenresData = this.getWatchedSortedGenres();
+    console.log(sortedGenresData, sortedGenresData[0])
+    this.topGenre = sortedGenresData.length !== 0 ? sortedGenresData[GenreIndex.TOP_GENRE][GenreIndex.NAME] : sortedGenresData.length;
+    return this.topGenre;
   }
 
   setMovies(movies) {
@@ -50,5 +65,25 @@ export default class Movies {
 
   setDataChangeHandler(handler) {
     this._dataChangeHandlers.push(handler);
+  }
+
+  countUniqueData(newData, type) {
+    type.forEach((it) => {
+      if (newData.has(it)) {
+        const value = newData.get(it);
+        newData.set(it, value + 1);
+      } else {
+        newData.set(it, 1);
+      }
+    });
+  }
+
+  getGenresData() {
+    this.genresData = new Map();
+
+    const genres = this.getHistoryMovies().map((film) => film.genre).flat();
+    this.countUniqueData(this.genresData, genres);
+
+    return this.genresData;
   }
 }

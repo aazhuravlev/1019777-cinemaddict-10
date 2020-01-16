@@ -9,9 +9,11 @@ import MoviesModel from './models/movies.js';
 import {generateFilmCardsData} from './mock.js';
 import PageController from './controllers/page-controller.js';
 
+const mainNavigationAdditionalItemClassName = `main-navigation__item--additional`;
+
 const showStatisticHandler = (pageController, statisticsComponent) => {
   return (evt) => {
-    if (evt.target.className.includes(`main-navigation__item--additional`)) {
+    if (evt.target.className.includes(mainNavigationAdditionalItemClassName)) {
       pageController.hide();
       statisticsComponent.show();
     } else {

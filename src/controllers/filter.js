@@ -1,6 +1,7 @@
 import FilterComponent from '../components/filter.js';
 import {FilterName} from '../constants.js';
 import {renderHtmlPart, RenderPosition, replace} from '../utils/render.js';
+import {bindAll} from '../utils/common.js';
 import {getFilmsByFilter} from '../utils/filter.js';
 
 export default class FilterController {
@@ -12,6 +13,7 @@ export default class FilterController {
     this._activeFilterName = FilterName.ALL;
     this._filterComponent = null;
 
+    // bindAll(this, [this._onDataChange, this._onFilterChange]);
     this._onDataChange = this._onDataChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
 

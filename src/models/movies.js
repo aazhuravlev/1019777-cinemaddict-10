@@ -5,6 +5,8 @@ export default class Movies {
   constructor() {
     this._movies = [];
     this._activeFilterName = FilterName.ALL;
+    this._allWatchedMovies = null;
+    this._watchedMovies = null;
     this.genresData = null;
     this.sortedGenresData = null;
     this.topGenre = null;
@@ -18,7 +20,8 @@ export default class Movies {
   }
 
   getHistoryMovies() {
-    return getFilmsByFilter(this._movies, FilterName.HISTORY);
+    this._allWatchedMovies = getFilmsByFilter(this._movies, FilterName.HISTORY);
+    return this._allWatchedMovies;
   }
 
   getMoviesAll() {
@@ -26,19 +29,26 @@ export default class Movies {
   }
 
   getWatchedSortedGenres() {
-    this.sortedGenresData = new Map([...this.getGenresData()].sort((a, b) => b[GenreIndex.VALUE] - a[GenreIndex.VALUE]));
+    this.sortedGenresData = [...this.getGenresData()].sort((a, b) => b[GenreIndex.VALUE] - a[GenreIndex.VALUE]);
     return this.sortedGenresData;
+  }
+
+  getWatchedSortedGenresForChart() {
+    return new Map(this.getWatchedSortedGenres());
   }
 
   getTopGenre() {
     const sortedGenresData = this.getWatchedSortedGenres();
-    console.log(sortedGenresData, sortedGenresData[0])
     this.topGenre = sortedGenresData.length !== 0 ? sortedGenresData[GenreIndex.TOP_GENRE][GenreIndex.NAME] : sortedGenresData.length;
     return this.topGenre;
   }
 
   setMovies(movies) {
     this._movies = Array.from(movies);
+  }
+
+  setWatchedMovies(movies) {
+    this._watchedMovies = Array.from(movies);
   }
 
   setFilter(filterName) {
@@ -80,10 +90,8 @@ export default class Movies {
 
   getGenresData() {
     this.genresData = new Map();
-
-    const genres = this.getHistoryMovies().map((film) => film.genre).flat();
+    const genres = this._watchedMovies.map((film) => film.genre).flat();
     this.countUniqueData(this.genresData, genres);
-
     return this.genresData;
   }
 }

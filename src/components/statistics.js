@@ -2,7 +2,6 @@ import AbstractSmartComponent from './abstract-smart-component.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
-import {GenreIndex} from '../constants.js';
 
 const InputValue = {
   ALL_TIME: `all-time`,
@@ -196,6 +195,7 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   getTemplate() {
+    this._filmsData.setWatchedMovies(this.watchedFilms);
     this.totalDuration = getTotalDuration(this.watchedFilms);
 
     return createStatisticsTemplate(this.watchedFilms, this.totalDuration, this._filmsData.getTopGenre(), this._target);
@@ -242,7 +242,7 @@ export default class Statistics extends AbstractSmartComponent {
   _renderChart() {
     const ctx = this.getElement().querySelector(`.statistic__chart`);
     this._resetChart();
-    this._chart = renderChart(ctx, this.filmsData.sortedGenresData());
+    this._chart = renderChart(ctx, this._filmsData.getWatchedSortedGenresForChart());
 
     this.getElement().querySelector(`.statistic__filters`)
       .addEventListener(`change`, this.handler);

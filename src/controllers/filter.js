@@ -13,9 +13,7 @@ export default class FilterController {
     this._activeFilterName = FilterName.ALL;
     this._filterComponent = null;
 
-    // bindAll(this, [this._onDataChange, this._onFilterChange]);
-    this._onDataChange = this._onDataChange.bind(this);
-    this._onFilterChange = this._onFilterChange.bind(this);
+    bindAll(this, [`_onDataChange`, `_onFilterChange`]);
 
     this._movieModel.setDataChangeHandler(this._onDataChange);
   }

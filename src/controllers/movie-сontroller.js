@@ -4,6 +4,7 @@ import {getRandomArrayItem} from '../utils/common.js';
 import FilmCardComponent from '../components/film-card.js';
 import FilmPopupComponent from '../components/film-popup.js';
 import FilmPopupBgComponent from '../components/film-popup-bg.js';
+import {bindAll} from '../utils/common.js';
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
@@ -19,13 +20,14 @@ export default class MovieController {
     this._filmCardPopupBgComponent = null;
     this._filmCardPopupComponent = null;
 
-    this._cardClickHandler = this._cardClickHandler.bind(this);
-    this._removePopupCkickHandler = this._removePopupCkickHandler.bind(this);
-    this._removePopupKeydownHandler = this._removePopupKeydownHandler.bind(this);
-    this.watchListButtonClickHandler = this.watchListButtonClickHandler.bind(this);
-    this.watchedButtonClickHandler = this.watchedButtonClickHandler.bind(this);
-    this.favoritesButtonClickHandler = this.favoritesButtonClickHandler.bind(this);
-    this.submitCommentKeydownHandler = this.submitCommentKeydownHandler.bind(this);
+    bindAll(this, [`_cardClickHandler`, `_removePopupCkickHandler`, `_removePopupKeydownHandler`, `watchListButtonClickHandler`, `watchedButtonClickHandler`, `favoritesButtonClickHandler`, `submitCommentKeydownHandler`]);
+    // this._cardClickHandler = this._cardClickHandler.bind(this);
+    // this._removePopupCkickHandler = this._removePopupCkickHandler.bind(this);
+    // this._removePopupKeydownHandler = this._removePopupKeydownHandler.bind(this);
+    // this.watchListButtonClickHandler = this.watchListButtonClickHandler.bind(this);
+    // this.watchedButtonClickHandler = this.watchedButtonClickHandler.bind(this);
+    // this.favoritesButtonClickHandler = this.favoritesButtonClickHandler.bind(this);
+    // this.submitCommentKeydownHandler = this.submitCommentKeydownHandler.bind(this);
   }
 
   render(filmCardData) {

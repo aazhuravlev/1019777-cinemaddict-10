@@ -5,6 +5,7 @@ import SortingComponent from '../components/sorting.js';
 import MovieController from '../controllers/movie-сontroller.js';
 import ShowMoreButtonComponent from '../components/show-more-button.js';
 import ExtraListComponent from '../components/extra-list.js';
+import {bindAll} from '../utils/common.js';
 
 const createFilmCardFragment = (cardsData, onDataChange, onViewChange) => {
   const fragment = document.createDocumentFragment();
@@ -54,11 +55,7 @@ export default class PageController {
     this._sortingComponent = new SortingComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
 
-    this._onDataChange = this._onDataChange.bind(this);
-    this._onSortTypeChange = this._onSortTypeChange.bind(this);
-    this._onViewChange = this._onViewChange.bind(this);
-    this._onFilterChange = this._onFilterChange.bind(this);
-    this.showMoreButtonClickHandler = this.showMoreButtonClickHandler.bind(this);
+    bindAll(this, [`_onDataChange`, `_onSortTypeChange`, `_onViewChange`, `_onFilterChange`, `showMoreButtonClickHandler`]);
 
     this._sortingComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     this._filmModel.setFilterChangeHandler(this._onFilterChange);

@@ -42,9 +42,10 @@ const renderFilmListExtra = (node, data, onDataChange, onViewChange) => {
 };
 
 export default class PageController {
-  constructor(container, filmModel) {
+  constructor(container, filmModel, api) {
     this._container = container;
     this._filmModel = filmModel;
+    this._api = api;
 
     this._nodesMain = Nodes.MAIN;
     this._filmsList = null;
@@ -157,11 +158,15 @@ export default class PageController {
   }
 
   _onDataChange(oldData, newData) {
-    const isSuccess = this._filmModel.updateMovie(oldData.id, newData);
+    this._api.updateFilm(oldData.id, newData)
+      .then((filmModel) => {
+        // console.log(filmModel)
+        const isSuccess = this._filmModel.updateMovie(oldData.id, filmModel);
 
-    if (isSuccess) {
-      this._updateCards(this._showingFilmsCount);
-    }
+        if (isSuccess) {
+          this._updateCards(this._showingFilmsCount);
+        }
+      });
   }
 
   _onViewChange() {

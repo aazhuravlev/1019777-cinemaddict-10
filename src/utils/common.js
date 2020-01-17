@@ -39,4 +39,6 @@ const bindAll = (ctx, props) => {
   });
 };
 
-export {getRandomDate, getRandomBetween, getRandomArrayItem, sortFilms, pluralize, bindAll};
+const calculateRunTime = (time) => `${Math.floor(time / 60)}h ${time % 60}m`;
+
+export {getRandomDate, calculateRunTime, getRandomBetween, getRandomArrayItem, sortFilms, pluralize, bindAll};

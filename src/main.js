@@ -1,5 +1,5 @@
 import API from './api.js';
-import {Nodes, Count, RenderPosition} from './constants.js';
+import {Nodes, RenderPosition} from './constants.js';
 import {renderHtmlPart} from './utils/render.js';
 import ProfileStatusComponent from './components/profile-status.js';
 import FilterController from './controllers/filter.js';

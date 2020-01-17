@@ -254,7 +254,7 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    console.log('popup', this._data)
+    // console.log(`popup`, this._data);
     return createFilmPopupTemplate(this._data);
   }
 

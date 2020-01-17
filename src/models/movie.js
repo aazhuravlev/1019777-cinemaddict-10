@@ -3,7 +3,7 @@ export default class Movie {
     this.id = data[`id`];
     this.comments = data[`comments`];
     this.title = data[`film_info`][`title`];
-    this.alternativeTitle = data[`film_info`][`alternative_title`]
+    this.alternativeTitle = data[`film_info`][`alternative_title`];
     this.totalRating = data[`film_info`][`total_rating`];
     this.poster = data[`film_info`][`poster`];
     this.ageRating = data[`film_info`][`age_rating`];

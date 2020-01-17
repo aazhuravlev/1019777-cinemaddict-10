@@ -241,16 +241,6 @@ export default class FilmPopup extends AbstractSmartComponent {
     this._handler = null;
 
     bindAll(this, [`recoverListeners`, `_subscribeOnEvents`, `watchlistControlClickHandler`, `favoriteControlClickHandler`, `watchedControlClickHandler`, `userRatingScoreClickHandler`, `emojiClickHandler`, `commentChangeHandler`, `deleteClickHandler`]);
-
-    this.recoverListeners = this.recoverListeners.bind(this);
-    this._subscribeOnEvents = this._subscribeOnEvents.bind(this);
-    this.watchlistControlClickHandler = this.watchlistControlClickHandler.bind(this);
-    this.favoriteControlClickHandler = this.favoriteControlClickHandler.bind(this);
-    this.watchedControlClickHandler = this.watchedControlClickHandler.bind(this);
-    this.userRatingScoreClickHandler = this.userRatingScoreClickHandler.bind(this);
-    this.emojiClickHandler = this.emojiClickHandler.bind(this);
-    this.commentChangeHandler = this.commentChangeHandler.bind(this);
-    this.deleteClickHandler = this.deleteClickHandler.bind(this);
   }
 
   getTemplate() {

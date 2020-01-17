@@ -333,7 +333,7 @@ export default class FilmPopup extends AbstractSmartComponent {
     newFilm.isWatchlist = !newFilm.isWatchlist;
 
     this._onDataChange(this._data, newFilm);
-    setTimeout(() => this.rerender(), 5000);
+    this.rerender();
   }
 
   favoriteControlClickHandler() {

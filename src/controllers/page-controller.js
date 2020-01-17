@@ -55,6 +55,7 @@ export default class PageController {
     this._showingFilmsCount = Count.SHOWING_CARDS_ON_START;
     this._sortingComponent = new SortingComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
+    this._extraListComponents = null;
 
     bindAll(this, [`_onDataChange`, `_onSortTypeChange`, `_onViewChange`, `_onFilterChange`, `showMoreButtonClickHandler`]);
 
@@ -86,26 +87,38 @@ export default class PageController {
       this._renderShowMoreButton();
 
       renderHtmlPart(this._container.getElement(), createFragment([new ExtraListComponent(ExtraTitles.TOP_RATED).getElement(), new ExtraListComponent(ExtraTitles.MOST_COMMENTED).getElement()]), RenderPosition.BEFOREEND);
-
       renderFilmListExtra(this._container.getElement(), filmCards, this._onDataChange, this._onViewChange);
+
+      this._extraListComponents = this._container.getElement().querySelectorAll(`.films-list--extra`);
     }
   }
 
   _updateCards(count) {
     this._removeCards();
-    this._renderCards(this._filmModel.getMovies().slice(0, count));
     this._renderShowMoreButton();
+    this._renderCards(this._filmModel.getMovies().slice(0, count));
   }
 
   _renderCards(films) {
     renderHtmlPart(this._filmsListContainer, createFilmCardFragment(films, this._onDataChange, this._onViewChange), RenderPosition.BEFOREEND);
     this._showedFilmControllers = this._filmsListContainer.querySelectorAll(`.film-card`);
+    renderHtmlPart(this._container.getElement(), createFragment([new ExtraListComponent(ExtraTitles.TOP_RATED).getElement(), new ExtraListComponent(ExtraTitles.MOST_COMMENTED).getElement()]), RenderPosition.BEFOREEND);
+
+    renderFilmListExtra(this._container.getElement(), films, this._onDataChange, this._onViewChange);
     this._showingFilmsCount = this._showedFilmControllers.length;
+    this._extraListComponents = this._container.getElement().querySelectorAll(`.films-list--extra`);
   }
 
   _removeCards() {
     this._filmsListContainer.innerHTML = ``;
     this._showedFilmControllers = [];
+    if (this._extraListComponents.length > 0) {
+      this._extraListComponents.forEach((component) => {
+        component.innerHTML = ``;
+        component.remove();
+      });
+      this._extraListComponents = null;
+    }
   }
 
   _renderShowMoreButton() {

@@ -75,12 +75,12 @@ export default class MovieController {
   watchedButtonClickHandler(evt) {
     evt.preventDefault();
     const newFilm = MovieModel.clone(this._cardData);
-    // console.log(newFilm.isWatched, newFilm.personalRating, newFilm.watchingDate)
     newFilm.isWatched = !newFilm.isWatched;
-    newFilm.personalRating = `0`;
-    newFilm.watchingDate = newFilm.isWatched ? new Date() : ``;
+    newFilm.personalRating = 0;
+    newFilm.watchingDate = newFilm.isWatched ? new Date() : newFilm.watchingDate;
 
     this._onDataChange(this._cardData, newFilm);
+
   }
 
   favoritesButtonClickHandler(evt) {
@@ -117,8 +117,7 @@ export default class MovieController {
       document.removeEventListener(`keydown`, this.submitCommentKeydownHandler);
 
       this._mode = Mode.DEFAULT;
-      // console.log(this._cardData, this._filmCardPopupComponent.getData())
-      // this._onDataChange(this._cardData, this._filmCardPopupComponent.getData());
+
       remove(this._filmCardPopupComponent);
       remove(this._filmCardPopupBgComponent);
     }

@@ -31,7 +31,6 @@ const API = class {
   // }
 
   updateFilm(id, data) {
-    console.log(id, data)
     return this._load({
       url: `movies/${id}`,
       method: Method.PUT,

@@ -24,7 +24,7 @@ const renderFilmListExtra = (node, data, onDataChange, onViewChange) => {
   const ratingSortedFilms = sortFilms(data, SortType.RATING).slice(0, Count.EXTRA_FILMS);
   const commentsSortedFilms = sortFilms(data, SortType.COMMENTS).slice(0, Count.EXTRA_FILMS);
 
-  const isFilmsUnRated = ratingSortedFilms.every((film) => film.rating === 0);
+  const isFilmsUnRated = ratingSortedFilms.every((film) => film.totalRating === 0);
   const isFilmsUnComment = ratingSortedFilms.every((comment) => comment.comments === 0);
 
   const filmListsExtra = node.querySelectorAll(`.films-list--extra`);
@@ -86,6 +86,7 @@ export default class PageController {
       this._renderShowMoreButton();
 
       renderHtmlPart(this._container.getElement(), createFragment([new ExtraListComponent(ExtraTitles.TOP_RATED).getElement(), new ExtraListComponent(ExtraTitles.MOST_COMMENTED).getElement()]), RenderPosition.BEFOREEND);
+
       renderFilmListExtra(this._container.getElement(), filmCards, this._onDataChange, this._onViewChange);
     }
   }
@@ -160,7 +161,6 @@ export default class PageController {
   _onDataChange(oldData, newData) {
     this._api.updateFilm(oldData.id, newData)
       .then((filmModel) => {
-        // console.log(filmModel)
         const isSuccess = this._filmModel.updateMovie(oldData.id, filmModel);
 
         if (isSuccess) {

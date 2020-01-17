@@ -2,7 +2,7 @@ import moment from 'moment';
 import he from 'he';
 import AbstractSmartComponent from './abstract-smart-component.js';
 import MovieModel from '../models/movie';
-import {pluralize, calculateRunTime} from '../utils/common.js';
+import {pluralize, calculateRunTime, bindAll} from '../utils/common.js';
 
 const popupRatingLength = 9;
 
@@ -150,7 +150,7 @@ const createFilmPopupTemplate = (data) => {
           <div class="film-details__poster">
             <img class="film-details__poster-img" src="${poster}" alt="">
 
-            <p class="film-details__age">${ageRating}</p>
+            <p class="film-details__age">${ageRating}+</p>
           </div>
 
           <div class="film-details__info">
@@ -240,6 +240,8 @@ export default class FilmPopup extends AbstractSmartComponent {
 
     this._handler = null;
 
+    bindAll(this, [`recoverListeners`, `_subscribeOnEvents`, `watchlistControlClickHandler`, `favoriteControlClickHandler`, `watchedControlClickHandler`, `userRatingScoreClickHandler`, `emojiClickHandler`, `commentChangeHandler`, `deleteClickHandler`]);
+
     this.recoverListeners = this.recoverListeners.bind(this);
     this._subscribeOnEvents = this._subscribeOnEvents.bind(this);
     this.watchlistControlClickHandler = this.watchlistControlClickHandler.bind(this);
@@ -252,6 +254,7 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   getTemplate() {
+    console.log('popup', this._data)
     return createFilmPopupTemplate(this._data);
   }
 
@@ -330,7 +333,7 @@ export default class FilmPopup extends AbstractSmartComponent {
     newFilm.isWatchlist = !newFilm.isWatchlist;
 
     this._onDataChange(this._data, newFilm);
-    this.rerender();
+    setTimeout(() => this.rerender(), 5000);
   }
 
   favoriteControlClickHandler() {
@@ -344,8 +347,9 @@ export default class FilmPopup extends AbstractSmartComponent {
   watchedControlClickHandler() {
     const newFilm = MovieModel.clone(this._data);
     newFilm.isWatched = !newFilm.isWatched;
-    newFilm.personalRating = `0`;
-    newFilm.watchingDate = newFilm.isWatched ? new Date() : ``;
+    newFilm.personalRating = 0;
+    newFilm.watchingDate = newFilm.isWatched ? new Date() : newFilm.watchingDate;
+
     this._onDataChange(this._data, newFilm);
     this.rerender();
   }
@@ -353,10 +357,9 @@ export default class FilmPopup extends AbstractSmartComponent {
   userRatingScoreClickHandler(evt) {
     if (evt.target.tagName === `LABEL`) {
       const newFilm = MovieModel.clone(this._data);
-      newFilm.personalRating = evt.target.textContent;
+      newFilm.personalRating = Number(evt.target.textContent);
 
       this._onDataChange(this._data, newFilm);
-
       this.rerender();
     }
   }

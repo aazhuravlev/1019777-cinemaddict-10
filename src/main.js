@@ -11,7 +11,7 @@ import MoviesModel from './models/movies.js';
 import PageController from './controllers/page-controller.js';
 
 const AUTHORIZATION = `Basic dXNlckBwYZFad28yAo=`;
-const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict/`;
+const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 
 const mainNavigationAdditionalItemClassName = `main-navigation__item--additional`;
 

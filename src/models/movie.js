@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export default class Movie {
   constructor(data) {
     this.id = data[`id`];
@@ -10,7 +12,7 @@ export default class Movie {
     this.director = data[`film_info`][`director`];
     this.writers = data[`film_info`][`writers`];
     this.actors = data[`film_info`][`actors`];
-    this.releaseDate = data[`film_info`][`release`][`date`];
+    this.releaseDate = moment(data[`film_info`][`release`][`date`]).toDate();
     this.releaseCountry = data[`film_info`][`release`][`release_country`];
     this.runtime = data[`film_info`][`runtime`];
     this.genre = data[`film_info`][`genre`];

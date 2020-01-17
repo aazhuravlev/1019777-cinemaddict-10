@@ -22,7 +22,7 @@ const renderExtraFilmCard = (data, node, onDataChange, onViewChange) => {
 
 const renderFilmListExtra = (node, data, onDataChange, onViewChange) => {
   const ratingSortedFilms = sortFilms(data, SortType.RATING).slice(0, Count.EXTRA_FILMS);
-  const commentsSortedFilms = sortFilms(data, SortType.COMMENTS).slice(0, Count.EXTRA_FILMS);
+  const commentsSortedFilms = sortFilms(data, SortType.COMMENTS, `length`).slice(0, Count.EXTRA_FILMS);
 
   const isFilmsUnRated = ratingSortedFilms.every((film) => film.totalRating === 0);
   const isFilmsUnComment = ratingSortedFilms.every((comment) => comment.comments === 0);

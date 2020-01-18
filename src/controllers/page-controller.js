@@ -7,7 +7,8 @@ import ShowMoreButtonComponent from '../components/show-more-button.js';
 import ExtraListComponent from '../components/extra-list.js';
 import {bindAll} from '../utils/common.js';
 
-const createFilmCardFragment = (cardsData, onDataChange, onViewChange, moviesModel) => {
+// const createFilmCardFragment = (cardsData, onDataChange, onViewChange, moviesModel) => {
+const createFilmCardFragment = (cardsData, onDataChange, onViewChange) => {
   const fragment = document.createDocumentFragment();
   // const comments = moviesModel.getComments();
   cardsData.forEach((filmData) => {

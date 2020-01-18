@@ -1,4 +1,4 @@
-import {Nodes, KeyCode, Mode, NAMES} from '../constants.js';
+import {Nodes, KeyCode, Mode} from '../constants.js';
 import {renderHtmlPart, RenderPosition, remove} from '../utils/render.js';
 import MovieModel from '../models/movie';
 import FilmCardComponent from '../components/film-card.js';

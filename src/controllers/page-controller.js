@@ -9,10 +9,9 @@ import {bindAll} from '../utils/common.js';
 
 const createFilmCardFragment = (cardsData, onDataChange, onViewChange, moviesModel) => {
   const fragment = document.createDocumentFragment();
-  const comments = moviesModel.getComments();
-
+  // const comments = moviesModel.getComments();
   cardsData.forEach((filmData) => {
-    filmData.comments = comments[filmData[`id`]];
+    // filmData.comments = comments[filmData[`id`]];
     const movieController = new MovieController(fragment, onDataChange, onViewChange);
 
     movieController.render(filmData);
@@ -108,7 +107,7 @@ export default class PageController {
     this._showedFilmControllers = this._filmsListContainer.querySelectorAll(`.film-card`);
     renderHtmlPart(this._container.getElement(), createFragment([new ExtraListComponent(ExtraTitles.TOP_RATED).getElement(), new ExtraListComponent(ExtraTitles.MOST_COMMENTED).getElement()]), RenderPosition.BEFOREEND);
 
-    renderFilmListExtra(this._container.getElement(), films, this._onDataChange, this._onViewChange, this._filmModel);
+    renderFilmListExtra(this._container.getElement(), this._filmModel.getMovies(), this._onDataChange, this._onViewChange, this._filmModel);
     this._showingFilmsCount = this._showedFilmControllers.length;
     this._extraListComponents = this._container.getElement().querySelectorAll(`.films-list--extra`);
   }
@@ -175,13 +174,16 @@ export default class PageController {
     }
   }
 
-  _onDataChange(oldData, newData) {
+  _onDataChange(oldData, newData, cb) {
     this._api.updateFilm(oldData.id, newData)
       .then((filmModel) => {
         const isSuccess = this._filmModel.updateMovie(oldData.id, filmModel);
 
         if (isSuccess) {
           this._updateCards(this._showingFilmsCount);
+          if (cb !== undefined) {
+            cb(newData);
+          }
         }
       });
   }

@@ -1,6 +1,5 @@
 import {Nodes, KeyCode, Mode, NAMES} from '../constants.js';
 import {renderHtmlPart, RenderPosition, remove} from '../utils/render.js';
-import {getRandomArrayItem} from '../utils/common.js';
 import MovieModel from '../models/movie';
 import FilmCardComponent from '../components/film-card.js';
 import FilmPopupComponent from '../components/film-popup.js';
@@ -96,15 +95,18 @@ export default class MovieController {
       const data = this._filmCardPopupComponent.getData();
 
       if (data.userEmoji && data.userComment) {
-        data.comments.push({
-          emoji: data.userEmoji,
-          comment: data.userComment,
-          author: `${getRandomArrayItem(NAMES)} ${getRandomArrayItem(NAMES)}`,
-          date: new Date()
+        this._cardData.comments.push({
+          emotion: String(data.userEmoji),
+          comment: String(data.userComment),
+          date: String(new Date())
         });
         delete data.userEmoji;
         delete data.userComment;
-        this._onDataChange(this._cardData, data);
+
+        const newFilm = MovieModel.clone(this._cardData);
+        newFilm.comments = data.comments;
+
+        this._onDataChange(this._cardData, newFilm);
         this._filmCardPopupComponent.rerender();
       }
     }

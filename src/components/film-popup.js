@@ -321,26 +321,24 @@ export default class FilmPopup extends AbstractSmartComponent {
     const newFilm = MovieModel.clone(this._data);
     newFilm.isWatchlist = !newFilm.isWatchlist;
 
-    this._onDataChange(this._data, newFilm);
-    this.rerender();
+    this._onDataChange(this._data, newFilm, this.rerender);
   }
 
   favoriteControlClickHandler() {
     const newFilm = MovieModel.clone(this._data);
     newFilm.isFavorite = !newFilm.isFavorite;
 
-    this._onDataChange(this._data, newFilm);
-    this.rerender();
+    this._onDataChange(this._data, newFilm, this.rerender);
   }
 
   watchedControlClickHandler() {
     const newFilm = MovieModel.clone(this._data);
     newFilm.isWatched = !newFilm.isWatched;
+
     newFilm.personalRating = 0;
     newFilm.watchingDate = newFilm.isWatched ? new Date() : newFilm.watchingDate;
 
-    this._onDataChange(this._data, newFilm);
-    this.rerender();
+    this._onDataChange(this._data, newFilm, this.rerender);
   }
 
   userRatingScoreClickHandler(evt) {
@@ -348,8 +346,7 @@ export default class FilmPopup extends AbstractSmartComponent {
       const newFilm = MovieModel.clone(this._data);
       newFilm.personalRating = Number(evt.target.textContent);
 
-      this._onDataChange(this._data, newFilm);
-      this.rerender();
+      this._onDataChange(this._data, newFilm, this.rerender);
     }
   }
 

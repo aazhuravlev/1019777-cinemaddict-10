@@ -224,7 +224,6 @@ export default class Statistics extends AbstractSmartComponent {
       this._target = evt.target.value;
 
       const filteredFilmsByDate = getFilteredFilmsByDate(this._filmsData.getHistoryMovies(), DAYS_COUNT[(evt.target.value).toUpperCase()]);
-      // console.log(this._filmsData.getHistoryMovies(), filteredFilmsByDate)
 
       this.rerender(filteredFilmsByDate);
     }

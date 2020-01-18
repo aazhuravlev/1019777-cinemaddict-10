@@ -32,7 +32,7 @@ const API = class {
       .then((response) => response.json());
   }
 
-  // createTask(task) {
+  // addComment(comment) {
   // }
 
   updateFilm(id, data) {
@@ -46,7 +46,7 @@ const API = class {
       .then(Movie.parseMovie);
   }
 
-  // deleteTask(id) {
+  // deleteComment(id) {
   // }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

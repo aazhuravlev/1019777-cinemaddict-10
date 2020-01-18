@@ -27,6 +27,11 @@ const API = class {
       .then(Movie.parseMovies);
   }
 
+  getComments(commentId) {
+    return this._load({url: `comments/${commentId}`})
+      .then((response) => response.json());
+  }
+
   // createTask(task) {
   // }
 

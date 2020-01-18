@@ -47,12 +47,15 @@ const pasteElements = () => {
       filterController.render();
 
       renderHtmlPart(filmListComponent.getElement().querySelector(`.films-list`), new FilmListTitleComponent(moviesModel.getMoviesAll()).getElement(), RenderPosition.AFTERBEGIN);
-
-      pageController.render();
       renderHtmlPart(Nodes.MAIN, statisticsComponent.getElement(), RenderPosition.BEFOREEND);
       statisticsComponent.hide();
-
       Nodes.FOOTER_STATISTIC.textContent = `${moviesModel.getMoviesAll().length} movies inside`;
+
+      const arrayOfPromises = films.map((film) => api.getComments(film[`id`]).then((comments) => comments));
+      Promise.all(arrayOfPromises).then((comments) => {
+        moviesModel.setComments(comments);
+        pageController.render();
+      });
     });
 };
 

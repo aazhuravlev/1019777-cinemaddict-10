@@ -300,15 +300,20 @@ export default class FilmPopup extends AbstractSmartComponent {
 
   deleteClickHandler(evt) {
     evt.preventDefault();
+    let commentId;
     if (evt.target.tagName === `BUTTON`) {
       const commentText = evt.target.closest(`.film-details__comment`).querySelector(`.film-details__comment-text`).textContent;
+      const newFilm = MovieModel.clone(this._data);
+
       this._data.comments.forEach((comment) => {
+
         if (comment.comment === commentText) {
           const index = this._data.comments.indexOf(comment);
           this._data.comments = [].concat(this._data.comments.slice(0, index), this._data.comments.slice(index + 1));
-          this.rerender();
+          commentId = newFilm.comments[index];
         }
       });
+      this._onDataChange(this._data, newFilm, this.rerender, null, commentId, this._data);
     }
   }
 

@@ -56,7 +56,7 @@ const API = class {
   }
 
   deleteComment(commentId) {
-    return this._load({url: `tasks/${commentId}`, method: Method.DELETE});
+    return this._load({url: `comments/${commentId}`, method: Method.DELETE});
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

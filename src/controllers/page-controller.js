@@ -184,7 +184,7 @@ export default class PageController {
     }
   }
 
-  _onDataChange(oldData, newData, cb, newComment) {
+  _onDataChange(oldData, newData, cb, newComment, commentId, newDataFromPopup) {
     if (newComment) {
       this._api.addComment(oldData.id, newComment)
       .then((filmModel) => {
@@ -196,6 +196,20 @@ export default class PageController {
 
           if (cb) {
             cb(filmModel);
+          }
+        }
+      });
+    } else if (commentId) {
+      this._api.deleteComment(commentId)
+      .then(() => {
+        const isSuccess = this._filmModel.updateMovie(newDataFromPopup.id, newDataFromPopup);
+
+        if (isSuccess) {
+          this._updateCards(this._showingFilmsCount);
+          this._filmModel.updateComments(oldData.id, newDataFromPopup.comments);
+
+          if (cb) {
+            cb(newDataFromPopup);
           }
         }
       });

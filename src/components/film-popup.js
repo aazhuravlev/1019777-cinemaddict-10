@@ -5,8 +5,14 @@ import MovieModel from '../models/movie';
 import {pluralize, calculateRunTime, bindAll} from '../utils/common.js';
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
-const popupRatingLength = 9;
-
+const POPUP_RATING_LENGTH = 9;
+const Color = {
+  ERROR: `red`,
+  DISABLED: `#999`,
+  BG_COMMENT_AREA: `#f6f6f6`,
+  BORDER_COMMENT_AREA: `#979797`,
+  RATING_LABEL: `#d8d8d8`
+};
 
 const generateFilmsDetailsRow = (filmsDetailsRow) => {
   return Object.entries(filmsDetailsRow).map(([key, name]) => {
@@ -31,7 +37,7 @@ const generateFilmDetailsControls = (filmDetailsControls) => {
 
 const generateRating = (userRating) => {
   const userRatingMenu = [];
-  for (let i = 1; i <= popupRatingLength; i++) {
+  for (let i = 1; i <= POPUP_RATING_LENGTH; i++) {
     userRatingMenu.push(
         `<input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${i}" id="rating-${i}"${Number(userRating) === (i) ? ` checked` : ``}>
          <label class="film-details__user-rating-label" for="rating-${i}">${i}</label>`
@@ -240,6 +246,8 @@ export default class FilmPopup extends AbstractSmartComponent {
     this._data = data;
     this._onDataChange = onDataChange;
 
+    this.clickedRatingIcon = null;
+
     this._handler = null;
 
     bindAll(this, [`recoverListeners`, `_subscribeOnEvents`, `watchlistControlClickHandler`, `favoriteControlClickHandler`, `watchedControlClickHandler`, `userRatingScoreClickHandler`, `userRatingScoreResetClickHandler`, `emojiClickHandler`, `commentChangeHandler`, `deleteClickHandler`]);
@@ -351,9 +359,14 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   userRatingScoreClickHandler(evt) {
+    if (evt.target.tagName === `LABEL`) {
+      this.clickedRatingIcon = evt.target;
+    }
     if (evt.target.tagName === `INPUT`) {
       const newFilm = MovieModel.clone(this._data);
-      newFilm.personalRating = Number(evt.target.textContent);
+      newFilm.personalRating = Number(evt.target.value);
+
+      this.addRatingStyles();
 
       this._onDataChange(this._data, newFilm, this);
     }
@@ -373,23 +386,48 @@ export default class FilmPopup extends AbstractSmartComponent {
     }
   }
 
-  shake() {
-    const commentArea = this.getElement().querySelector(`.film-details__comment-input`);
-    commentArea.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
-    commentArea.style.border = `#red`;
+  shake(element) {
+    element.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    element.style.border = Color.ERROR;
 
     setTimeout(() => {
-      commentArea.style.animation = ``;
+      element.style.animation = ``;
     }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  addRatingStyles() {
+    const ratingIcons = this.getElement().querySelectorAll(`.film-details__user-rating-input`);
+    this.getElement().querySelector(`.film-details__watched-reset`).disabled = true;
+    ratingIcons.forEach((icon) => {
+      if (icon.checked !== true) {
+        icon.labels[0].style.backgroundColor = Color.DISABLED;
+      }
+
+      icon.disabled = true;
+    });
+  }
+
+  removeRatingStyles() {
+    const ratingIcons = this.getElement().querySelectorAll(`.film-details__user-rating-input`);
+    this.getElement().querySelector(`.film-details__watched-reset`).disabled = false;
+    ratingIcons.forEach((icon) => {
+      if (icon.labels[0] !== this.clickedRatingIcon) {
+        icon.labels[0].style.backgroundColor = Color.RATING_LABEL;
+      }
+
+      icon.disabled = false;
+    });
+    this.clickedRatingIcon.style.backgroundColor = Color.ERROR;
+    this.clickedRatingIcon = null;
   }
 
   addCommentStyles() {
     const popupCommentArea = this.getElement().querySelector(`.film-details__comment-input`);
     const emotionsIcons = this.getElement().querySelectorAll(`.film-details__emoji-item`);
 
-    popupCommentArea.style.borderColor = `#979797`;
+    popupCommentArea.style.borderColor = Color.BORDER_COMMENT_AREA;
     popupCommentArea.readOnly = true;
-    popupCommentArea.style.backgroundColor = `#999`;
+    popupCommentArea.style.backgroundColor = Color.DISABLED;
     emotionsIcons.forEach((icon) => {
       icon.disabled = true;
     });
@@ -400,10 +438,10 @@ export default class FilmPopup extends AbstractSmartComponent {
     const emotionsIcons = this.getElement().querySelectorAll(`.film-details__emoji-item`);
 
     popupCommentArea.readOnly = false;
-    popupCommentArea.style.backgroundColor = `#f6f6f6`;
+    popupCommentArea.style.backgroundColor = Color.BG_COMMENT_AREA;
     emotionsIcons.forEach((icon) => {
       icon.disabled = false;
     });
-    popupCommentArea.style.borderColor = `red`;
+    popupCommentArea.style.borderColor = Color.ERROR;
   }
 }

@@ -184,51 +184,35 @@ export default class PageController {
     }
   }
 
-  _onDataChange(oldData, newData, filmPopup, newComment, commentId, newDataFromPopup) {
+  _onDataChange(oldData, newData, filmPopup, newComment, deleteCommentId, newDataFromPopup) {
     if (newComment) {
       this._api.addComment(oldData.id, newComment)
-      .then((filmModel) => {
-        const isSuccess = this._filmModel.updateMovie(filmModel.id, filmModel);
-
-        if (isSuccess) {
-          this._updateCards(this._showingFilmsCount);
-          this._filmModel.updateComments(oldData.id, filmModel.comments);
-
-          if (filmPopup) {
-            filmPopup.rerender(filmModel);
-          }
-        }
-      })
-      .catch(() => {
-        filmPopup.removeCommentStyles();
-        filmPopup.shake();
-
-      });
-    } else if (commentId) {
-      this._api.deleteComment(commentId)
-      .then(() => {
-        const isSuccess = this._filmModel.updateMovie(newDataFromPopup.id, newDataFromPopup);
-
-        if (isSuccess) {
-          this._updateCards(this._showingFilmsCount);
-          this._filmModel.updateComments(oldData.id, newDataFromPopup.comments);
-          if (filmPopup) {
-            filmPopup.rerender(newDataFromPopup);
-          }
-        }
-      });
+        .then((filmModel) => this._updateCommentsData(filmModel, filmPopup))
+        .catch(() => {
+          filmPopup.removeCommentStyles();
+          filmPopup.shake(filmPopup.getElement().querySelector(`.film-details__comment-input`));
+        });
+    } else if (deleteCommentId) {
+      this._api.deleteComment(deleteCommentId)
+        .then(this._updateCommentsData(newDataFromPopup, filmPopup));
     } else {
       this._api.updateFilm(oldData.id, newData)
-      .then((filmModel) => {
-        const isSuccess = this._filmModel.updateMovie(oldData.id, filmModel);
+        .then((filmModel) => {
+          const isSuccess = this._filmModel.updateMovie(oldData.id, filmModel);
 
-        if (isSuccess) {
-          this._updateCards(this._showingFilmsCount);
-          if (filmPopup) {
-            filmPopup.rerender(filmModel);
+          if (isSuccess) {
+            this._updateCards(this._showingFilmsCount);
+            if (filmPopup) {
+              filmPopup.rerender(filmModel);
+            }
           }
-        }
-      });
+        })
+        .catch(() => {
+          if (filmPopup.clickedRatingIcon) {
+            filmPopup.shake(filmPopup.getElement().querySelector(`.film-details__user-score`));
+            filmPopup.removeRatingStyles();
+          }
+        });
     }
   }
 
@@ -238,5 +222,17 @@ export default class PageController {
 
   _onFilterChange() {
     this._updateCards(Count.SHOWING_CARDS_ON_START);
+  }
+
+  _updateCommentsData(data, filmPopup) {
+    const isSuccess = this._filmModel.updateMovie(data.id, data);
+
+    if (isSuccess) {
+      this._updateCards(this._showingFilmsCount);
+      this._filmModel.updateComments(data.id, data.comments);
+      if (filmPopup) {
+        filmPopup.rerender(data);
+      }
+    }
   }
 }

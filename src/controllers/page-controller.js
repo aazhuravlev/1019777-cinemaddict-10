@@ -8,10 +8,20 @@ import ExtraListComponent from '../components/extra-list.js';
 import {bindAll} from '../utils/common.js';
 
 const createFilmCardFragment = (cardsData, onDataChange, onViewChange, moviesModel) => {
+
+  let comments;
+
   const fragment = document.createDocumentFragment();
-  const comments = moviesModel.getComments();
+
+  if (typeof cardsData[0].comments[0] === 'string') {
+    comments = moviesModel.getComments();
+  }
   cardsData.forEach((filmData) => {
-    filmData.comments = comments[filmData[`id`]];
+
+    if (comments) {
+      filmData.comments = comments[filmData[`id`]];
+    }
+
     const movieController = new MovieController(fragment, onDataChange, onViewChange);
 
     movieController.render(filmData);
@@ -97,10 +107,8 @@ export default class PageController {
   }
 
   _updateCards(count) {
-    debugger
     this._removeCards();
     this._renderShowMoreButton();
-    console.log('this._filmModel.getMovies()', this._filmModel.getMovies())
     this._renderCards(this._filmModel.getMovies().slice(0, count));
   }
 
@@ -139,7 +147,6 @@ export default class PageController {
   }
 
   showMoreButtonClickHandler() {
-    debugger
     const prevFilmsCount = this._showingFilmsCount;
     this._showingFilmsCount += Count.SHOWING_CARDS_BY_BUTTON;
 
@@ -185,6 +192,7 @@ export default class PageController {
 
         if (isSuccess) {
           this._updateCards(this._showingFilmsCount);
+          this._filmModel.updateComments(oldData.id, filmModel.comments)
 
           if (cb) {
             cb(filmModel);
@@ -199,7 +207,7 @@ export default class PageController {
         if (isSuccess) {
           this._updateCards(this._showingFilmsCount);
           if (cb) {
-            cb(newData);
+            cb(filmModel);
           }
         }
       });

@@ -1,6 +1,5 @@
 import moment from 'moment';
 
-let counter = 0;
 export default class Movie {
   constructor(data) {
     this.id = data[`id`];
@@ -26,9 +25,8 @@ export default class Movie {
   }
 
   getCommentsId() {
-    counter += 1;
-    if (counter === 2) {
-      counter = 0;
+
+    if (typeof this.comments[0] === `object`) {
       return this.comments.map((comment) => comment.id);
     }
     return this.comments;

@@ -24,11 +24,50 @@ export default class Comment {
     this.isFavorite = Boolean(data[`movie`][`user_details`][`favorite`]);
   }
 
+  getCommentsId() {
+    return this.comments.map((comment) => comment.id);
+  }
+
+  toRAW() {
+    return {
+      'id': this.id,
+      'comments': this.getCommentsId(),
+      'film_info': {
+        'title': this.title,
+        'alternative_title': this.alternativeTitle,
+        'total_rating': this.totalRating,
+        'poster': this.poster,
+        'age_rating': this.ageRating,
+        'director': this.director,
+        'writers': this.writers,
+        'actors': this.actors,
+        'release': {
+          'date': this.releaseDate,
+          'release_country': this.releaseCountry
+        },
+        'runtime': this.runtime,
+        'genre': this.genre,
+        'description': this.description
+      },
+      'user_details': {
+        'personal_rating': this.personalRating,
+        'watchlist': this.isWatchlist,
+        'already_watched': this.isWatched,
+        'watching_date': this.watchingDate,
+        'favorite': this.isFavorite
+      }
+    };
+  }
+
   static parseComment(data) {
     return new Comment(data);
   }
 
   static parseComments(data) {
     return data.map(Comment.parseComment);
+  }
+
+  static clone(data) {
+    return new Comment(data.toRAW());
   }
 }

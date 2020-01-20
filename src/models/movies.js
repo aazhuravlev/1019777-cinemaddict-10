@@ -17,8 +17,6 @@ export default class Movies {
   }
 
   getMovies() {
-    debugger
-    console.log('templ', this._movies)
     return getFilmsByFilter(this._movies, this._activeFilterName);
   }
 
@@ -62,6 +60,11 @@ export default class Movies {
   setComments(cards) {
     this._filmsComments = Array.from(cards);
   }
+
+  updateComments(id, comments) {
+    this._filmsComments[id] = comments;
+  }
+
   getComments() {
     return this._filmsComments;
   }
@@ -69,16 +72,11 @@ export default class Movies {
   updateMovie(id, movie) {
     const index = this._movies.findIndex((it) => it.id === id);
 
-    const newMovie = Object.assign({}, movie);
     if (index === -1) {
       return false;
     }
-console.log(movie, newMovie)
-console.log('this._movies bef', this._movies)
     this._movies = [].concat(this._movies.slice(0, index), movie, this._movies.slice(index + 1));
-    // console.log('this._movies', this._movies)
     this._dataChangeHandlers.forEach((handler) => handler());
-    console.log('this._movies aft', this._movies)
     return true;
   }
 

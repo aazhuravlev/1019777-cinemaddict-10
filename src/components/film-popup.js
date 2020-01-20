@@ -240,7 +240,7 @@ export default class FilmPopup extends AbstractSmartComponent {
 
     this._handler = null;
 
-    bindAll(this, [`recoverListeners`, `_subscribeOnEvents`, `watchlistControlClickHandler`, `favoriteControlClickHandler`, `watchedControlClickHandler`, `userRatingScoreClickHandler`, `emojiClickHandler`, `commentChangeHandler`, `deleteClickHandler`]);
+    bindAll(this, [`recoverListeners`, `_subscribeOnEvents`, `watchlistControlClickHandler`, `favoriteControlClickHandler`, `watchedControlClickHandler`, `userRatingScoreClickHandler`, `userRatingScoreResetClickHandler`, `emojiClickHandler`, `commentChangeHandler`, `deleteClickHandler`]);
   }
 
   getTemplate() {
@@ -267,6 +267,8 @@ export default class FilmPopup extends AbstractSmartComponent {
     if (element.querySelector(`.film-details__user-rating-score`)) {
       element.querySelector(`.film-details__user-rating-score`)
         .addEventListener(`click`, this.userRatingScoreClickHandler);
+      element.querySelector(`.film-details__watched-reset`)
+        .addEventListener(`click`, this.userRatingScoreResetClickHandler);
     }
 
     element.querySelector(`.film-details__emoji-list`)
@@ -353,6 +355,13 @@ export default class FilmPopup extends AbstractSmartComponent {
 
       this._onDataChange(this._data, newFilm, this.rerender);
     }
+  }
+
+  userRatingScoreResetClickHandler() {
+    const newFilm = MovieModel.clone(this._data);
+    newFilm.personalRating = 0;
+
+    this._onDataChange(this._data, newFilm, this.rerender);
   }
 
   emojiClickHandler(evt) {

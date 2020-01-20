@@ -7,12 +7,11 @@ import ShowMoreButtonComponent from '../components/show-more-button.js';
 import ExtraListComponent from '../components/extra-list.js';
 import {bindAll} from '../utils/common.js';
 
-// const createFilmCardFragment = (cardsData, onDataChange, onViewChange, moviesModel) => {
-const createFilmCardFragment = (cardsData, onDataChange, onViewChange) => {
+const createFilmCardFragment = (cardsData, onDataChange, onViewChange, moviesModel) => {
   const fragment = document.createDocumentFragment();
-  // const comments = moviesModel.getComments();
+  const comments = moviesModel.getComments();
   cardsData.forEach((filmData) => {
-    // filmData.comments = comments[filmData[`id`]];
+    filmData.comments = comments[filmData[`id`]];
     const movieController = new MovieController(fragment, onDataChange, onViewChange);
 
     movieController.render(filmData);
@@ -175,18 +174,39 @@ export default class PageController {
     }
   }
 
-  _onDataChange(oldData, newData, cb) {
-    this._api.updateFilm(oldData.id, newData)
+  _onDataChange(oldData, newData, cb, newComment) {
+    if (newComment) {
+      debugger
+      this._api.addComment(oldData.id, newComment)
+      .then((filmModel) => {
+        // console.log('1', filmModel)
+        const isSuccess = this._filmModel.updateMovie(filmModel.id, filmModel);
+// console.log('2', filmModel)
+        if (isSuccess) {
+          // console.log('3', filmModel)
+
+          if (cb) {
+            cb(filmModel);
+          }
+          this._updateCards(this._showingFilmsCount);
+          // console.log('4', filmModel)
+// console.log(this._filmModel.getMoviesAll())
+        }
+      });
+    } else {
+      console.log(111)
+      this._api.updateFilm(oldData.id, newData)
       .then((filmModel) => {
         const isSuccess = this._filmModel.updateMovie(oldData.id, filmModel);
 
         if (isSuccess) {
           this._updateCards(this._showingFilmsCount);
-          if (cb !== undefined) {
+          if (cb) {
             cb(newData);
           }
         }
       });
+    }
   }
 
   _onViewChange() {

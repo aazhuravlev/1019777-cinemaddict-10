@@ -95,19 +95,14 @@ export default class MovieController {
       const data = this._filmCardPopupComponent.getData();
 
       if (data.userEmoji && data.userComment) {
-        this._cardData.comments.push({
+        this._cardData.newComment = {
           emotion: String(data.userEmoji),
           comment: String(data.userComment),
           date: String(new Date())
-        });
+        };
         delete data.userEmoji;
         delete data.userComment;
-
-        const newFilm = MovieModel.clone(this._cardData);
-        newFilm.comments = data.comments;
-
-        this._onDataChange(this._cardData, newFilm);
-        this._filmCardPopupComponent.rerender();
+        this._onDataChange(this._cardData, null, this._filmCardPopupComponent.rerender, this._cardData.newComment);
       }
     }
   }

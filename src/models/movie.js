@@ -1,5 +1,6 @@
 import moment from 'moment';
 
+let counter = 0;
 export default class Movie {
   constructor(data) {
     this.id = data[`id`];
@@ -24,10 +25,19 @@ export default class Movie {
     this.isFavorite = Boolean(data[`user_details`][`favorite`]);
   }
 
+  getCommentsId() {
+    counter += 1;
+    if (counter === 2) {
+      counter = 0;
+      return this.comments.map((comment) => comment.id);
+    }
+    return this.comments;
+  }
+
   toRAW() {
     return {
       'id': this.id,
-      'comments': this.comments,
+      'comments': this.getCommentsId(),
       'film_info': {
         'title': this.title,
         'alternative_title': this.alternativeTitle,

@@ -13,7 +13,7 @@ const createFilmCardFragment = (cardsData, onDataChange, onViewChange, moviesMod
 
   const fragment = document.createDocumentFragment();
 
-  if (typeof cardsData[0].comments[0] === 'string') {
+  if (typeof cardsData[0].comments[0] === `string`) {
     comments = moviesModel.getComments();
   }
   cardsData.forEach((filmData) => {
@@ -192,7 +192,7 @@ export default class PageController {
 
         if (isSuccess) {
           this._updateCards(this._showingFilmsCount);
-          this._filmModel.updateComments(oldData.id, filmModel.comments)
+          this._filmModel.updateComments(oldData.id, filmModel.comments);
 
           if (cb) {
             cb(filmModel);

@@ -184,7 +184,7 @@ export default class PageController {
     }
   }
 
-  _onDataChange(oldData, newData, cb, newComment, commentId, newDataFromPopup) {
+  _onDataChange(oldData, newData, filmPopup, newComment, commentId, newDataFromPopup) {
     if (newComment) {
       this._api.addComment(oldData.id, newComment)
       .then((filmModel) => {
@@ -194,10 +194,15 @@ export default class PageController {
           this._updateCards(this._showingFilmsCount);
           this._filmModel.updateComments(oldData.id, filmModel.comments);
 
-          if (cb) {
-            cb(filmModel);
+          if (filmPopup) {
+            filmPopup.rerender(filmModel);
           }
         }
+      })
+      .catch(() => {
+        filmPopup.removeCommentStyles();
+        filmPopup.shake();
+
       });
     } else if (commentId) {
       this._api.deleteComment(commentId)
@@ -207,9 +212,8 @@ export default class PageController {
         if (isSuccess) {
           this._updateCards(this._showingFilmsCount);
           this._filmModel.updateComments(oldData.id, newDataFromPopup.comments);
-
-          if (cb) {
-            cb(newDataFromPopup);
+          if (filmPopup) {
+            filmPopup.rerender(newDataFromPopup);
           }
         }
       });
@@ -220,8 +224,8 @@ export default class PageController {
 
         if (isSuccess) {
           this._updateCards(this._showingFilmsCount);
-          if (cb) {
-            cb(filmModel);
+          if (filmPopup) {
+            filmPopup.rerender(filmModel);
           }
         }
       });

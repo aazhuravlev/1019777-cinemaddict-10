@@ -4,7 +4,9 @@ import AbstractSmartComponent from './abstract-smart-component.js';
 import MovieModel from '../models/movie';
 import {pluralize, calculateRunTime, bindAll} from '../utils/common.js';
 
+const SHAKE_ANIMATION_TIMEOUT = 600;
 const popupRatingLength = 9;
+
 
 const generateFilmsDetailsRow = (filmsDetailsRow) => {
   return Object.entries(filmsDetailsRow).map(([key, name]) => {
@@ -205,22 +207,22 @@ const createFilmPopupTemplate = (data) => {
             </label>
 
             <div class="film-details__emoji-list">
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="sleeping">
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="sleeping"${userEmoji === `smile` ? ` checked` : ``}>
               <label class="film-details__emoji-label" for="emoji-smile">
                 <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
               </label>
 
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="neutral-face">
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="neutral-face"${userEmoji === `sleeping` ? ` checked` : ``}>
               <label class="film-details__emoji-label" for="emoji-sleeping">
                 <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
               </label>
 
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="grinning">
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="grinning"${userEmoji === `puke` ? ` checked` : ``}>
               <label class="film-details__emoji-label" for="emoji-puke">
                 <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
               </label>
 
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="grinning">
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="grinning"${userEmoji === `angry` ? ` checked` : ``}>
               <label class="film-details__emoji-label" for="emoji-angry">
                 <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
               </label>
@@ -315,7 +317,7 @@ export default class FilmPopup extends AbstractSmartComponent {
           commentId = newFilm.comments[index];
         }
       });
-      this._onDataChange(this._data, newFilm, this.rerender, null, commentId, this._data);
+      this._onDataChange(this._data, newFilm, this, null, commentId, this._data);
     }
   }
 
@@ -328,14 +330,14 @@ export default class FilmPopup extends AbstractSmartComponent {
     const newFilm = MovieModel.clone(this._data);
     newFilm.isWatchlist = !newFilm.isWatchlist;
 
-    this._onDataChange(this._data, newFilm, this.rerender);
+    this._onDataChange(this._data, newFilm, this);
   }
 
   favoriteControlClickHandler() {
     const newFilm = MovieModel.clone(this._data);
     newFilm.isFavorite = !newFilm.isFavorite;
 
-    this._onDataChange(this._data, newFilm, this.rerender);
+    this._onDataChange(this._data, newFilm, this);
   }
 
   watchedControlClickHandler() {
@@ -345,15 +347,15 @@ export default class FilmPopup extends AbstractSmartComponent {
     newFilm.personalRating = 0;
     newFilm.watchingDate = newFilm.isWatched ? new Date() : newFilm.watchingDate;
 
-    this._onDataChange(this._data, newFilm, this.rerender);
+    this._onDataChange(this._data, newFilm, this);
   }
 
   userRatingScoreClickHandler(evt) {
-    if (evt.target.tagName === `LABEL`) {
+    if (evt.target.tagName === `INPUT`) {
       const newFilm = MovieModel.clone(this._data);
       newFilm.personalRating = Number(evt.target.textContent);
 
-      this._onDataChange(this._data, newFilm, this.rerender);
+      this._onDataChange(this._data, newFilm, this);
     }
   }
 
@@ -361,7 +363,7 @@ export default class FilmPopup extends AbstractSmartComponent {
     const newFilm = MovieModel.clone(this._data);
     newFilm.personalRating = 0;
 
-    this._onDataChange(this._data, newFilm, this.rerender);
+    this._onDataChange(this._data, newFilm, this);
   }
 
   emojiClickHandler(evt) {
@@ -369,5 +371,39 @@ export default class FilmPopup extends AbstractSmartComponent {
       this._data.userEmoji = evt.target.id.slice(6);
       this.rerender();
     }
+  }
+
+  shake() {
+    const commentArea = this.getElement().querySelector(`.film-details__comment-input`);
+    commentArea.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    commentArea.style.border = `#red`;
+
+    setTimeout(() => {
+      commentArea.style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  addCommentStyles() {
+    const popupCommentArea = this.getElement().querySelector(`.film-details__comment-input`);
+    const emotionsIcons = this.getElement().querySelectorAll(`.film-details__emoji-item`);
+
+    popupCommentArea.style.borderColor = `#979797`;
+    popupCommentArea.readOnly = true;
+    popupCommentArea.style.backgroundColor = `#999`;
+    emotionsIcons.forEach((icon) => {
+      icon.disabled = true;
+    });
+  }
+
+  removeCommentStyles() {
+    const popupCommentArea = this.getElement().querySelector(`.film-details__comment-input`);
+    const emotionsIcons = this.getElement().querySelectorAll(`.film-details__emoji-item`);
+
+    popupCommentArea.readOnly = false;
+    popupCommentArea.style.backgroundColor = `#f6f6f6`;
+    emotionsIcons.forEach((icon) => {
+      icon.disabled = false;
+    });
+    popupCommentArea.style.borderColor = `red`;
   }
 }

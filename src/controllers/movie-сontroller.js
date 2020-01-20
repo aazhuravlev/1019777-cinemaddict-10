@@ -92,17 +92,21 @@ export default class MovieController {
 
   submitCommentKeydownHandler(evt) {
     if (evt.ctrlKey && evt.keyCode === KeyCode.ENTER) {
-      const data = this._filmCardPopupComponent.getData();
+      this._filmCardPopupComponent.addCommentStyles();
 
+      const data = this._filmCardPopupComponent.getData();
       if (data.userEmoji && data.userComment) {
         this._cardData.newComment = {
           emotion: String(data.userEmoji),
           comment: String(data.userComment),
           date: String(new Date())
         };
+
+        this._onDataChange(this._cardData, null, this._filmCardPopupComponent, this._cardData.newComment);
+
         delete data.userEmoji;
         delete data.userComment;
-        this._onDataChange(this._cardData, null, this._filmCardPopupComponent.rerender, this._cardData.newComment);
+        delete this._cardData.newComment;
       }
     }
   }

@@ -13,6 +13,8 @@ const getFavoriteFilms = (films) => {
 };
 
 const getFilmsByFilter = (films, filterName) => {
+  debugger
+  console.log('filter', films)
   switch (filterName) {
     case FilterName.WATCHLIST:
       return getWatchlistFilms(films);

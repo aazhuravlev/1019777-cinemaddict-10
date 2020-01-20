@@ -97,8 +97,10 @@ export default class PageController {
   }
 
   _updateCards(count) {
+    debugger
     this._removeCards();
     this._renderShowMoreButton();
+    console.log('this._filmModel.getMovies()', this._filmModel.getMovies())
     this._renderCards(this._filmModel.getMovies().slice(0, count));
   }
 
@@ -107,7 +109,7 @@ export default class PageController {
     this._showedFilmControllers = this._filmsListContainer.querySelectorAll(`.film-card`);
     renderHtmlPart(this._container.getElement(), createFragment([new ExtraListComponent(ExtraTitles.TOP_RATED).getElement(), new ExtraListComponent(ExtraTitles.MOST_COMMENTED).getElement()]), RenderPosition.BEFOREEND);
 
-    renderFilmListExtra(this._container.getElement(), this._filmModel.getMovies(), this._onDataChange, this._onViewChange, this._filmModel);
+    renderFilmListExtra(this._container.getElement(), films, this._onDataChange, this._onViewChange, this._filmModel);
     this._showingFilmsCount = this._showedFilmControllers.length;
     this._extraListComponents = this._container.getElement().querySelectorAll(`.films-list--extra`);
   }
@@ -137,6 +139,7 @@ export default class PageController {
   }
 
   showMoreButtonClickHandler() {
+    debugger
     const prevFilmsCount = this._showingFilmsCount;
     this._showingFilmsCount += Count.SHOWING_CARDS_BY_BUTTON;
 
@@ -144,7 +147,7 @@ export default class PageController {
 
     renderHtmlPart(this._filmsListContainer, createFilmCardFragment(unrenderedCards, this._onDataChange, this._onViewChange, this._filmModel), RenderPosition.BEFOREEND);
 
-    if (this._showingFilmsCount >= this._filmModel.getMoviesAll().length) {
+    if (this._showingFilmsCount >= this._filmModel.getMovies().length) {
       remove(this._showMoreButtonComponent);
       this._showMoreButtonComponent.removeClickHandler(this.showMoreButtonClickHandler);
     }
@@ -176,25 +179,19 @@ export default class PageController {
 
   _onDataChange(oldData, newData, cb, newComment) {
     if (newComment) {
-      debugger
       this._api.addComment(oldData.id, newComment)
       .then((filmModel) => {
-        // console.log('1', filmModel)
         const isSuccess = this._filmModel.updateMovie(filmModel.id, filmModel);
-// console.log('2', filmModel)
+
         if (isSuccess) {
-          // console.log('3', filmModel)
+          this._updateCards(this._showingFilmsCount);
 
           if (cb) {
             cb(filmModel);
           }
-          this._updateCards(this._showingFilmsCount);
-          // console.log('4', filmModel)
-// console.log(this._filmModel.getMoviesAll())
         }
       });
     } else {
-      console.log(111)
       this._api.updateFilm(oldData.id, newData)
       .then((filmModel) => {
         const isSuccess = this._filmModel.updateMovie(oldData.id, filmModel);

@@ -92,22 +92,21 @@ export default class MovieController {
 
   submitCommentKeydownHandler(evt) {
     if (evt.ctrlKey && evt.keyCode === KeyCode.ENTER) {
-      const data = this._filmCardPopupComponent.getData();
+      this._filmCardPopupComponent.addCommentStyles();
 
+      const data = this._filmCardPopupComponent.getData();
       if (data.userEmoji && data.userComment) {
-        this._cardData.comments.push({
+        this._cardData.newComment = {
           emotion: String(data.userEmoji),
           comment: String(data.userComment),
           date: String(new Date())
-        });
+        };
+
+        this._onDataChange(this._cardData, null, this._filmCardPopupComponent, this._cardData.newComment);
+
         delete data.userEmoji;
         delete data.userComment;
-
-        const newFilm = MovieModel.clone(this._cardData);
-        newFilm.comments = data.comments;
-
-        this._onDataChange(this._cardData, newFilm);
-        this._filmCardPopupComponent.rerender();
+        delete this._cardData.newComment;
       }
     }
   }

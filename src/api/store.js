@@ -14,6 +14,7 @@ export default class Store {
 
   setItem(key, value) {
     const store = this.getAll();
+
     this._storage.setItem(
         this._storeKey,
         JSON.stringify(
@@ -22,10 +23,11 @@ export default class Store {
     );
   }
 
-  removeItem(key) {
+  removeItem(dataId, key) {
     const store = this.getAll();
+    const commentIndex = store[dataId].comments.indexOf(key);
 
-    delete store[key];
+    delete store[dataId].comments[commentIndex];
 
     this._storage.setItem(
         this._storeKey,

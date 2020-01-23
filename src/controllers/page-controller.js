@@ -7,21 +7,10 @@ import ShowMoreButtonComponent from '../components/show-more-button.js';
 import ExtraListComponent from '../components/extra-list.js';
 import {bindAll} from '../utils/common.js';
 
-const createFilmCardFragment = (cardsData, onDataChange, onViewChange, moviesModel) => {
-
-  let comments;
-
+const createFilmCardFragment = (cardsData, onDataChange, onViewChange) => {
   const fragment = document.createDocumentFragment();
 
-  if (typeof cardsData[0].comments[0] === `string`) {
-    comments = moviesModel.getComments();
-  }
   cardsData.forEach((filmData) => {
-
-    if (comments) {
-      filmData.comments = comments[filmData[`id`]];
-    }
-
     const movieController = new MovieController(fragment, onDataChange, onViewChange);
 
     movieController.render(filmData);
@@ -29,11 +18,11 @@ const createFilmCardFragment = (cardsData, onDataChange, onViewChange, moviesMod
   return fragment;
 };
 
-const renderExtraFilmCard = (data, node, onDataChange, onViewChange, moviesModel) => {
-  renderHtmlPart(node.querySelector(`.films-list__container`), createFilmCardFragment(data, onDataChange, onViewChange, moviesModel), RenderPosition.BEFOREEND);
+const renderExtraFilmCard = (data, node, onDataChange, onViewChange) => {
+  renderHtmlPart(node.querySelector(`.films-list__container`), createFilmCardFragment(data, onDataChange, onViewChange), RenderPosition.BEFOREEND);
 };
 
-const renderFilmListExtra = (node, data, onDataChange, onViewChange, moviesModel) => {
+const renderFilmListExtra = (node, data, onDataChange, onViewChange) => {
   const ratingSortedFilms = sortFilms(data, SortType.RATING).slice(0, Count.EXTRA_FILMS);
   const commentsSortedFilms = sortFilms(data, SortType.COMMENTS, `length`).slice(0, Count.EXTRA_FILMS);
 
@@ -45,12 +34,12 @@ const renderFilmListExtra = (node, data, onDataChange, onViewChange, moviesModel
   if (isFilmsUnRated) {
     filmListsExtra[0].remove();
   } else {
-    renderExtraFilmCard(ratingSortedFilms, filmListsExtra[0], onDataChange, onViewChange, moviesModel);
+    renderExtraFilmCard(ratingSortedFilms, filmListsExtra[0], onDataChange, onViewChange);
   }
   if (isFilmsUnComment) {
     filmListsExtra[1].remove();
   } else {
-    renderExtraFilmCard(commentsSortedFilms, filmListsExtra[1], onDataChange, onViewChange, moviesModel);
+    renderExtraFilmCard(commentsSortedFilms, filmListsExtra[1], onDataChange, onViewChange);
   }
 };
 
@@ -96,7 +85,7 @@ export default class PageController {
       this._filmsListContainer = this._container.getElement().querySelector(`.films-list__container`);
 
       const cardsOnStart = filmCards.slice(0, this._showingFilmsCount);
-      renderHtmlPart(this._filmsListContainer, createFilmCardFragment(cardsOnStart, this._onDataChange, this._onViewChange, this._filmModel), RenderPosition.BEFOREEND);
+      renderHtmlPart(this._filmsListContainer, createFilmCardFragment(cardsOnStart, this._onDataChange, this._onViewChange), RenderPosition.BEFOREEND);
       this._renderShowMoreButton();
 
       renderHtmlPart(this._container.getElement(), createFragment([new ExtraListComponent(ExtraTitles.TOP_RATED).getElement(), new ExtraListComponent(ExtraTitles.MOST_COMMENTED).getElement()]), RenderPosition.BEFOREEND);
@@ -113,7 +102,7 @@ export default class PageController {
   }
 
   _renderCards(films) {
-    renderHtmlPart(this._filmsListContainer, createFilmCardFragment(films, this._onDataChange, this._onViewChange, this._filmModel), RenderPosition.BEFOREEND);
+    renderHtmlPart(this._filmsListContainer, createFilmCardFragment(films, this._onDataChange, this._onViewChange), RenderPosition.BEFOREEND);
     this._showedFilmControllers = this._filmsListContainer.querySelectorAll(`.film-card`);
     renderHtmlPart(this._container.getElement(), createFragment([new ExtraListComponent(ExtraTitles.TOP_RATED).getElement(), new ExtraListComponent(ExtraTitles.MOST_COMMENTED).getElement()]), RenderPosition.BEFOREEND);
 
@@ -193,7 +182,7 @@ export default class PageController {
           filmPopup.shake(filmPopup.getElement().querySelector(`.film-details__comment-input`));
         });
     } else if (deleteCommentId) {
-      this._api.deleteComment(deleteCommentId)
+      this._api.deleteComment(oldData.id, deleteCommentId)
         .then(this._updateCommentsData(newDataFromPopup, filmPopup));
     } else {
       this._api.updateFilm(oldData.id, newData)

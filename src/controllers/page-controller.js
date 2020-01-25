@@ -106,7 +106,7 @@ export default class PageController {
     this._showedFilmControllers = this._filmsListContainer.querySelectorAll(`.film-card`);
     renderHtmlPart(this._container.getElement(), createFragment([new ExtraListComponent(ExtraTitles.TOP_RATED).getElement(), new ExtraListComponent(ExtraTitles.MOST_COMMENTED).getElement()]), RenderPosition.BEFOREEND);
 
-    renderFilmListExtra(this._container.getElement(), films, this._onDataChange, this._onViewChange, this._filmModel);
+    renderFilmListExtra(this._container.getElement(), this._filmModel.getMovies(), this._onDataChange, this._onViewChange, this._filmModel);
     this._showingFilmsCount = this._showedFilmControllers.length;
     this._extraListComponents = this._container.getElement().querySelectorAll(`.films-list--extra`);
   }

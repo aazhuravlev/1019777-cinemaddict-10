@@ -2,7 +2,7 @@ import moment from 'moment';
 import he from 'he';
 import AbstractSmartComponent from './abstract-smart-component.js';
 import MovieModel from '../models/movie';
-import {pluralize, calculateRunTime, bindAll} from '../utils/common.js';
+import {pluralize, calculateRunTime, bindAll, sortFilms} from '../utils/common.js';
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
 const POPUP_RATING_LENGTH = 9;
@@ -97,8 +97,9 @@ const generateUserRatingLabel = (isWatched, userRating) => {
 };
 
 const generateComment = (comments) => {
+  const sortedComments = sortFilms(comments, `date`, `reverse`)
 
-  return comments.map((comment) => {
+  return sortedComments.map((comment) => {
     return `<li class="film-details__comment">
     <span class="film-details__comment-emoji">
       <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji">

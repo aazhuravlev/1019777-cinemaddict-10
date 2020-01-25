@@ -175,8 +175,16 @@ export default class PageController {
 
   _onDataChange(oldData, newData, filmPopup, newComment, deleteCommentId, newDataFromPopup) {
     if (newComment) {
+      let film;
       this._api.addComment(oldData.id, newComment)
-        .then((filmModel) => this._updateCommentsData(filmModel, filmPopup))
+        .then((filmModel) => {
+          film = filmModel;
+        })
+        .then(() => this._api.getComments(film.id))
+        .then((comments) => {
+          film.comments = comments;
+          return this._updateCommentsData(film, filmPopup);
+        })
         .catch(() => {
           filmPopup.removeCommentStyles();
           filmPopup.shake(filmPopup.getElement().querySelector(`.film-details__comment-input`));
@@ -185,14 +193,20 @@ export default class PageController {
       this._api.deleteComment(oldData.id, deleteCommentId)
         .then(this._updateCommentsData(newDataFromPopup, filmPopup));
     } else {
+      let film;
       this._api.updateFilm(oldData.id, newData)
         .then((filmModel) => {
-          const isSuccess = this._filmModel.updateMovie(oldData.id, filmModel);
+          film = filmModel;
+        })
+        .then(() => this._api.getComments(film.id))
+        .then((comments) => {
+          film.comments = comments;
+          const isSuccess = this._filmModel.updateMovie(oldData.id, film);
 
           if (isSuccess) {
             this._updateCards(this._showingFilmsCount);
             if (filmPopup) {
-              filmPopup.rerender(filmModel);
+              filmPopup.rerender(film);
             }
           }
         })

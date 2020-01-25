@@ -11,9 +11,10 @@ import StatisticsComponent from './components/statistics.js';
 import MoviesModel from './models/movies.js';
 import PageController from './controllers/page-controller.js';
 
-const STORE_PREFIX = `cinemaddict-localstorage`;
-const STORE_VER = `v1`;
-const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+const StoreName = {
+  MOVIES: `cinemaddict-movies-localstorage-v1`,
+  COMMENTS: `cinemaddict-comments-localstorage-v1`
+};
 const AUTHORIZATION = `Basic dXNlckBwYZFad28yAo=`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 
@@ -35,8 +36,9 @@ const moviesModel = new MoviesModel();
 
 const pasteElements = () => {
   const api = new Api(END_POINT, AUTHORIZATION);
-  const store = new Store(STORE_NAME, window.localStorage);
-  const apiWithProvider = new Provider(api, store);
+  const moviesStore = new Store(StoreName.MOVIES, window.localStorage);
+  const commentsStore = new Store(StoreName.COMMENTS, window.localStorage);
+  const apiWithProvider = new Provider(api, moviesStore, commentsStore);
 
   apiWithProvider.getFilms()
     .then((films) => {

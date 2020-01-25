@@ -97,6 +97,7 @@ const generateUserRatingLabel = (isWatched, userRating) => {
 };
 
 const generateComment = (comments) => {
+
   return comments.map((comment) => {
     return `<li class="film-details__comment">
     <span class="film-details__comment-emoji">

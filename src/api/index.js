@@ -30,7 +30,8 @@ export default class Api {
 
   getComments(id) {
     return this._load({url: `comments/${id}`})
-      .then((response) => response.json());
+      .then((response) => response.json())
+      .then(Comment.parseComments);
   }
 
   addComment(id, comment) {
@@ -41,7 +42,8 @@ export default class Api {
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then((response) => response.json())
-      .then(Comment.parseComment);
+      .then((result) => result.comments)
+      .then(Comment.parseComments);
   }
 
   updateFilm(id, data) {

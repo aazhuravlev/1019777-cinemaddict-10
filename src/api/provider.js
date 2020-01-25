@@ -1,12 +1,16 @@
 import Movie from "../models/movie.js";
 import Comment from "../models/comment.js";
+import nanoid from 'nanoid';
+import {getRandomArrayItem} from "../utils/common.js";
+import {NAMES} from "../constants.js";
 
 const getSyncedFilms = (items) => items.filter(({success}) => success).map(({payload}) => payload.film);
 
 export default class Provider {
-  constructor(api, store) {
+  constructor(api, storeMovies, storeComments) {
     this._api = api;
-    this._store = store;
+    this._storeMovies = storeMovies;
+    this._storeComments = storeComments;
     this._isSynchronized = true;
   }
 
@@ -15,33 +19,32 @@ export default class Provider {
       return this._api.getFilms().then(
           (films) => {
             films.forEach((film) => {
-              this._api.getComments(film.id)
-              .then((comments) => {
-                film.comments = comments;
-                this._store.setItem(film.id, film);
-              });
+              this._storeMovies.setItem(film.id, film.toRAW());
             });
-
             return films;
           }
       );
     }
     this._isSynchronized = false;
 
-    const storeFilms = Object.values(this._store.getAll());
+    const storeFilms = Object.values(this._storeMovies.getAll());
 
-    return Promise.resolve(storeFilms);
+    return Promise.resolve(Movie.parseMovies(storeFilms));
   }
 
   getComments(id) {
     if (this._isOnLine()) {
-      return this._api.getComments(id);
+      return this._api.getComments(id)
+        .then((comments) => {
+          this._storeComments.setItem(id, comments);
+          return comments;
+        });
     }
     this._isSynchronized = false;
 
-    const storeFilmComments = this._store.getAll()[id].comments;
+    const storeFilmComments = this._storeComments.getAll()[id];
 
-    return Promise.resolve(storeFilmComments);
+    return Promise.resolve(Comment.parseComments(storeFilmComments));
   }
 
   addComment(id, comment) {
@@ -58,45 +61,77 @@ export default class Provider {
     if (this._isOnLine()) {
       return this._api.updateFilm(id, film).then(
           (newFilm) => {
-            this._store.setItem(newFilm.id, newFilm.toRAW());
+            this._storeMovies.setItem(newFilm.id, newFilm.toRAW());
             return newFilm;
           }
       );
     }
     this._isSynchronized = false;
 
-    const fakeUpdatedFilm = Movie.parseMovie(Object.assign({}, film.toRAW(), {id}));
+    const fakeUpdatedFilm = Movie.parseMovie(Object.assign({}, film.toRAW()));
 
-    this._store.setItem(id, Object.assign({}, fakeUpdatedFilm.toRAW(), {offline: true}));
+    this._storeMovies.setItem(id, Object.assign({}, fakeUpdatedFilm.toRAW(), {offline: true}));
 
     return Promise.resolve(fakeUpdatedFilm);
+  }
+
+  addComment(id, comment) {
+    if (this._isOnLine()) {
+      return this._api.addComment(id, comment)
+        .then((comments) => {
+          this._storeMovies.setComments(id, comments, `storeMovies`);
+          this._storeComments.setComments(id, comments);
+
+          return Movie.parseMovie(this._storeMovies.getAll()[id]);
+        });
+    }
+    this._isSynchronized = false;
+
+    const fakeNewCommentId = nanoid();
+    const fakeNewCommentAuthor = getRandomArrayItem(NAMES);
+
+    const newComment = comment;
+    newComment.id = fakeNewCommentId;
+    newComment.author = fakeNewCommentAuthor;
+
+    const comments = this._storeComments.getAll()[id];
+    comments.push(newComment);
+
+    this._storeMovies.setComments(id, comments, `storeMovies`);
+    this._storeComments.setComments(id, comments);
+
+    return Promise.resolve(Movie.parseMovie(this._storeMovies.getAll()[id]));
   }
 
   deleteComment(dataId, commentId) {
     if (this._isOnLine()) {
       return this._api.deleteComment(commentId).then(
           () => {
-            this._store.removeItem(dataId, commentId);
+            this._storeComments.removeComment(dataId, commentId);
+            this._storeMovies.removeComment(dataId, commentId, `storeMovies`);
           }
       );
     }
     this._isSynchronized = false;
 
-    this._store.removeItem(dataId, commentId);
+    this._storeComments.removeComment(dataId, commentId);
+    this._storeMovies.removeComment(dataId, commentId, `storeMovies`);
 
-    return Promise.resolve(this._store[dataId]); // проблема в этой строке
+    return Promise.resolve();
   }
 
   sync() {
     if (this._isOnLine()) {
-      const storeMovies = Object.values(this._store.getAll());
-
+      const storeMovies = Object.values(this._storeMovies.getAll());
+console.log(storeMovies)
       return this._api.sync(storeMovies)
         .then((response) => {
+          console.log(response)
           // Удаляем из хранилища задачи, что были созданы
           // или изменены в оффлайне. Они нам больше не нужны
           storeMovies.filter((movie) => movie.offline).forEach((movie) => {
-            this._store.removeItem(movie.id);
+            console.log(movie)
+            this._storeMovies.removeItem(movie.id);
           });
 
           // Забираем из ответа синхронизированные задачи
@@ -107,7 +142,7 @@ export default class Provider {
           // Хранилище должно быть актуальным в любой момент,
           // вдруг сеть пропадёт
           [...createdFilms, ...updatedFilms].forEach((movie) => {
-            this._store.setItem(movie.id, movie);
+            this._storeMovies.setItem(movie.id, movie);
           });
 
           // Помечаем, что всё синхронизировано

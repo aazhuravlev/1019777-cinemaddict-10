@@ -5,6 +5,14 @@ import MovieModel from '../models/movie';
 import {ButtonStatus} from '../constants.js';
 import {pluralize, calculateRunTime, bindAll, sortFilms} from '../utils/common.js';
 
+const TimeInSeconds = {
+  MILLISECONDS: 0.001,
+  MINUTE: 59,
+  THREE_MINUTES: 180,
+  HOUR: 3540,
+  TWO_HOURS: 7140,
+  DAY: 86340
+};
 const SHAKE_ANIMATION_TIMEOUT = 600;
 const POPUP_RATING_LENGTH = 9;
 const Color = {
@@ -97,10 +105,29 @@ const generateUserRatingLabel = (isWatched, userRating) => {
   return ``;
 };
 
+const setDateFromNow = (commentDate, dateNow) => {
+  const dateDifferenceSeconds = (dateNow - commentDate) * TimeInSeconds.MILLISECONDS;
+  if (dateDifferenceSeconds <= TimeInSeconds.MINUTE) {
+    return `now`;
+  } else if (dateDifferenceSeconds > TimeInSeconds.MINUTE && dateDifferenceSeconds <= TimeInSeconds.THREE_MINUTES) {
+    return `a minute ago`;
+  } else if (dateDifferenceSeconds > TimeInSeconds.THREE_MINUTES && dateDifferenceSeconds <= TimeInSeconds.HOUR) {
+    return `a few minutes ago`;
+  } else if (dateDifferenceSeconds > TimeInSeconds.HOUR && dateDifferenceSeconds <= TimeInSeconds.TWO_HOURS) {
+    return `a hour ago`;
+  } else if (dateDifferenceSeconds > TimeInSeconds.TWO_HOURS && dateDifferenceSeconds <= TimeInSeconds.DAY) {
+    return `a few hours ago`;
+  }
+  return moment(commentDate).fromNow();
+};
+
 const generateComment = (comments) => {
   const sortedComments = sortFilms(comments, `date`, `reverse`)
+  const nowDate = Date.now();
 
   return sortedComments.map((comment) => {
+    const commentDate = new Date(comment.date);
+
     return `<li class="film-details__comment">
     <span class="film-details__comment-emoji">
       <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji">
@@ -109,7 +136,7 @@ const generateComment = (comments) => {
       <p class="film-details__comment-text">${comment.comment}</p>
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${comment.author}</span>
-        <span class="film-details__comment-day">${moment(comment.date).fromNow()}</span>
+        <span class="film-details__comment-day">${setDateFromNow(commentDate, nowDate)}</span>
         <button class="film-details__comment-delete">Delete</button>
       </p>
     </div>

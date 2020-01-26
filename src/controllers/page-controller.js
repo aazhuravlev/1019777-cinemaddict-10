@@ -192,7 +192,8 @@ export default class PageController {
         });
     } else if (deleteCommentId) {
       this._api.deleteComment(oldData.id, deleteCommentId)
-        .then(this._updateCommentsData(newDataFromPopup, filmPopup));
+        .then(() => this._updateCommentsData(newDataFromPopup, filmPopup))
+        .catch(() => filmPopup.unSetDisabledDeleteButton());
     } else {
       let film;
       this._api.updateFilm(oldData.id, newData)
@@ -230,6 +231,7 @@ export default class PageController {
   }
 
   _updateCommentsData(data, filmPopup) {
+    console.log(123)
     const isSuccess = this._filmModel.updateMovie(data.id, data);
 
     if (isSuccess) {

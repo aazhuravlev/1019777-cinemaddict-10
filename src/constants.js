@@ -82,4 +82,9 @@ const ContainerTitle = {
   TEXT_CONTENT: `All movies. Upcoming`
 };
 
-export {NAMES, GenreIndex, Nodes, generateFilters, ExtraTitles, SortType, Count, KeyCode, RenderPosition, Mode, FilterName, ContainerTitle};
+const ButtonStatus = {
+  DELETING: `Deleting...`,
+  DELETE: `Delete`
+};
+
+export {NAMES, GenreIndex, Nodes, generateFilters, ExtraTitles, SortType, Count, KeyCode, RenderPosition, Mode, FilterName, ContainerTitle, ButtonStatus};

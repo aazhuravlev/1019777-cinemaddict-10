@@ -2,6 +2,7 @@ import moment from 'moment';
 import he from 'he';
 import AbstractSmartComponent from './abstract-smart-component.js';
 import MovieModel from '../models/movie';
+import {ButtonStatus} from '../constants.js';
 import {pluralize, calculateRunTime, bindAll, sortFilms} from '../utils/common.js';
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
@@ -249,6 +250,7 @@ export default class FilmPopup extends AbstractSmartComponent {
     this._onDataChange = onDataChange;
 
     this.clickedRatingIcon = null;
+    this._clickedDeleteButton = null;
 
     this._handler = null;
 
@@ -316,6 +318,9 @@ export default class FilmPopup extends AbstractSmartComponent {
     evt.preventDefault();
     let commentId;
     if (evt.target.tagName === `BUTTON`) {
+      this._clickedDeleteButton = evt.target;
+      this.setDisabledDeleteButton();
+
       const commentText = evt.target.closest(`.film-details__comment`).querySelector(`.film-details__comment-text`).textContent;
       const newFilm = MovieModel.clone(this._data);
 
@@ -329,6 +334,16 @@ export default class FilmPopup extends AbstractSmartComponent {
       });
       this._onDataChange(this._data, newFilm, this, null, commentId, this._data);
     }
+  }
+
+  setDisabledDeleteButton() {
+    this._clickedDeleteButton.textContent = ButtonStatus.DELETING;
+    this._clickedDeleteButton.disabled = true;
+  }
+
+  unSetDisabledDeleteButton() {
+    this._clickedDeleteButton.textContent = ButtonStatus.DELETE;
+    this._clickedDeleteButton.disabled = false;
   }
 
   commentChangeHandler() {

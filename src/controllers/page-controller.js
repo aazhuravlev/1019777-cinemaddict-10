@@ -224,6 +224,7 @@ export default class PageController {
   }
 
   _onFilterChange() {
+    this._showingFilmsCount = Count.SHOWING_CARDS_ON_START;
     this._updateCards(Count.SHOWING_CARDS_ON_START);
   }
 

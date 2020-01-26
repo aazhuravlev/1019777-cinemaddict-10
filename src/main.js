@@ -2,9 +2,10 @@ import Api from './api/index.js';
 import Store from './api/store.js';
 import Provider from './api/provider.js';
 import {Nodes, RenderPosition} from './constants.js';
-import {renderHtmlPart} from './utils/render.js';
+import {renderHtmlPart, createFragment} from './utils/render.js';
 import ProfileStatusComponent from './components/profile-status.js';
 import FilterController from './controllers/filter.js';
+import SortingComponent from './components/sorting.js';
 import FilmListComponent from './components/film-list.js';
 import FilmListTitleComponent from './components/film-list-title.js';
 import StatisticsComponent from './components/statistics.js';
@@ -44,7 +45,8 @@ const pasteElements = () => {
     .then((films) => {
       moviesModel.setMovies(films);
       const filmListComponent = new FilmListComponent(moviesModel.getMoviesAll());
-      const pageController = new PageController(filmListComponent, moviesModel, apiWithProvider);
+      const sortingComponent = new SortingComponent();
+      const pageController = new PageController(filmListComponent, sortingComponent, moviesModel, apiWithProvider);
       const statisticsComponent = new StatisticsComponent(moviesModel);
 
       renderHtmlPart(Nodes.HEADER, new ProfileStatusComponent(moviesModel.getMoviesAll().length).getElement(), RenderPosition.BEFOREEND);
@@ -53,8 +55,10 @@ const pasteElements = () => {
       filterController.render();
 
       renderHtmlPart(filmListComponent.getElement().querySelector(`.films-list`), new FilmListTitleComponent(moviesModel.getMoviesAll()).getElement(), RenderPosition.AFTERBEGIN);
+      renderHtmlPart(Nodes.MAIN, createFragment([sortingComponent.getElement(), filmListComponent.getElement()]), RenderPosition.BEFOREEND);
       renderHtmlPart(Nodes.MAIN, statisticsComponent.getElement(), RenderPosition.BEFOREEND);
       statisticsComponent.hide();
+
       Nodes.FOOTER_STATISTIC.textContent = `${moviesModel.getMoviesAll().length} movies inside`;
 
       const arrayOfPromises = films.map((film) => apiWithProvider.getComments(film[`id`]).then((comments) => comments));

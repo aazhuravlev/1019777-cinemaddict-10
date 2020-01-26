@@ -77,4 +77,9 @@ const Mode = {
   POPUP: `popup`,
 };
 
-export {NAMES, GenreIndex, Nodes, generateFilters, ExtraTitles, SortType, Count, KeyCode, RenderPosition, Mode, FilterName};
+const ContainerTitle = {
+  CLASS: `visually-hidden`,
+  TEXT_CONTENT: `All movies. Upcoming`
+};
+
+export {NAMES, GenreIndex, Nodes, generateFilters, ExtraTitles, SortType, Count, KeyCode, RenderPosition, Mode, FilterName, ContainerTitle};

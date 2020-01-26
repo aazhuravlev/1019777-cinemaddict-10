@@ -1,7 +1,6 @@
-import {Nodes, Count, ExtraTitles, SortType} from '../constants.js';
+import {Nodes, Count, ExtraTitles, SortType, ContainerTitle} from '../constants.js';
 import {renderHtmlPart, RenderPosition, createFragment, remove} from '../utils/render.js';
 import {sortFilms} from '../utils/common.js';
-import SortingComponent from '../components/sorting.js';
 import MovieController from '../controllers/movie-сontroller.js';
 import ShowMoreButtonComponent from '../components/show-more-button.js';
 import ExtraListComponent from '../components/extra-list.js';
@@ -44,7 +43,7 @@ const renderFilmListExtra = (node, data, onDataChange, onViewChange) => {
 };
 
 export default class PageController {
-  constructor(container, filmModel, api) {
+  constructor(container, sortingComponent, filmModel, api) {
     this._container = container;
     this._filmModel = filmModel;
     this._api = api;
@@ -55,7 +54,7 @@ export default class PageController {
 
     this._showedFilmControllers = [];
     this._showingFilmsCount = Count.SHOWING_CARDS_ON_START;
-    this._sortingComponent = new SortingComponent();
+    this._sortingComponent = sortingComponent;
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
     this._extraListComponents = null;
 
@@ -78,11 +77,13 @@ export default class PageController {
   render() {
     const filmCards = this._filmModel.getMovies();
 
-    renderHtmlPart(this._nodesMain, createFragment([this._sortingComponent.getElement(), this._container.getElement()]), RenderPosition.BEFOREEND);
-
     if (filmCards.length > 0) {
+      const containerTitle = this._container.getElement().querySelector(`.films-list__title`);
       this._filmsList = this._container.getElement().querySelector(`.films-list`);
       this._filmsListContainer = this._container.getElement().querySelector(`.films-list__container`);
+
+      containerTitle.classList.add(ContainerTitle.CLASS);
+      containerTitle.textContent = ContainerTitle.TEXT_CONTENT;
 
       const cardsOnStart = filmCards.slice(0, this._showingFilmsCount);
       renderHtmlPart(this._filmsListContainer, createFilmCardFragment(cardsOnStart, this._onDataChange, this._onViewChange), RenderPosition.BEFOREEND);

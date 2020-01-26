@@ -63,7 +63,9 @@ const ContainerTitle = {
 
 const ButtonStatus = {
   DELETING: `Deleting...`,
-  DELETE: `Delete`
+  DELETE: `Delete`,
+  UNDOING: `Undoing...`,
+  UNDO: `Undo`
 };
 
 export {NAMES, GenreIndex, Nodes, ExtraTitles, SortType, Count, KeyCode, RenderPosition, Mode, FilterName, ContainerTitle, ButtonStatus};

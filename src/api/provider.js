@@ -123,14 +123,11 @@ export default class Provider {
   sync() {
     if (this._isOnLine()) {
       const storeMovies = Object.values(this._storeMovies.getAll());
-      console.log(storeMovies);
       return this._api.sync(storeMovies)
         .then((response) => {
-          console.log(response);
           // Удаляем из хранилища задачи, что были созданы
           // или изменены в оффлайне. Они нам больше не нужны
           storeMovies.filter((movie) => movie.offline).forEach((movie) => {
-            console.log(movie);
             this._storeMovies.removeItem(movie.id);
           });
 

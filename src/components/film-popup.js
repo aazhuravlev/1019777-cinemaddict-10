@@ -282,6 +282,7 @@ export default class FilmPopup extends AbstractSmartComponent {
 
     this.clickedRatingIcon = null;
     this._clickedDeleteButton = null;
+    this._clickedUndoButton = null;
 
     this._handler = null;
 
@@ -420,11 +421,25 @@ export default class FilmPopup extends AbstractSmartComponent {
     }
   }
 
-  userRatingScoreResetClickHandler() {
+  userRatingScoreResetClickHandler(evt) {
+    this._clickedUndoButton = evt.target;
+    this.setDisabledUndoButton();
+    this.addRatingStyles();
+
     const newFilm = MovieModel.clone(this._data);
     newFilm.personalRating = 0;
 
     this._onDataChange(this._data, newFilm, this);
+  }
+
+  setDisabledUndoButton() {
+    this._clickedUndoButton.textContent = ButtonStatus.UNDOING;
+    this._clickedUndoButton.disabled = true;
+  }
+
+  unSetDisabledUndoButton() {
+    this._clickedUndoButton.textContent = ButtonStatus.UNDO;
+    this._clickedUndoButton.disabled = false;
   }
 
   emojiClickHandler(evt) {

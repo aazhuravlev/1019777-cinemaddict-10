@@ -217,6 +217,7 @@ export default class PageController {
           if (filmPopup.clickedRatingIcon) {
             filmPopup.shake(filmPopup.getElement().querySelector(`.film-details__user-score`));
             filmPopup.removeRatingStyles();
+            filmPopup.unSetDisabledUndoButton();
           }
         });
     }

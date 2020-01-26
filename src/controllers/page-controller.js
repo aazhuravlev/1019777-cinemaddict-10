@@ -18,24 +18,25 @@ const createFilmCardFragment = (cardsData, onDataChange, onViewChange) => {
 };
 
 const renderExtraFilmCard = (data, node, onDataChange, onViewChange) => {
-  renderHtmlPart(node.querySelector(`.films-list__container`), createFilmCardFragment(data, onDataChange, onViewChange), RenderPosition.BEFOREEND);
+  const createdFragment = createFilmCardFragment(data, onDataChange, onViewChange);
+  renderHtmlPart(node.querySelector(`.films-list__container`), createdFragment, RenderPosition.BEFOREEND);
 };
 
 const renderFilmListExtra = (node, data, onDataChange, onViewChange) => {
   const ratingSortedFilms = sortFilms(data, SortType.RATING).slice(0, Count.EXTRA_FILMS);
   const commentsSortedFilms = sortFilms(data, SortType.COMMENTS, `length`).slice(0, Count.EXTRA_FILMS);
 
-  const isFilmsUnRated = ratingSortedFilms.every((film) => film.totalRating === 0);
-  const isFilmsUnComment = ratingSortedFilms.every((comment) => comment.comments === 0);
+  const isUnRated = ratingSortedFilms.every((film) => film.totalRating === 0);
+  const isUnComment = ratingSortedFilms.every((comment) => comment.comments === 0);
 
   const filmListsExtra = node.querySelectorAll(`.films-list--extra`);
 
-  if (isFilmsUnRated) {
+  if (isUnRated) {
     filmListsExtra[0].remove();
   } else {
     renderExtraFilmCard(ratingSortedFilms, filmListsExtra[0], onDataChange, onViewChange);
   }
-  if (isFilmsUnComment) {
+  if (isUnComment) {
     filmListsExtra[1].remove();
   } else {
     renderExtraFilmCard(commentsSortedFilms, filmListsExtra[1], onDataChange, onViewChange);
@@ -78,9 +79,9 @@ export default class PageController {
     const filmCards = this._filmModel.getMovies();
 
     if (filmCards.length > 0) {
-      const containerTitle = this._container.getElement().querySelector(`.films-list__title`);
-      this._filmsList = this._container.getElement().querySelector(`.films-list`);
-      this._filmsListContainer = this._container.getElement().querySelector(`.films-list__container`);
+      const containerTitle = this._container.selectNode(`.films-list__title`);
+      this._filmsList = this._container.selectNode(`.films-list`);
+      this._filmsListContainer = this._container.selectNode(`.films-list__container`);
 
       containerTitle.classList.add(ContainerTitle.CLASS);
       containerTitle.textContent = ContainerTitle.TEXT_CONTENT;
@@ -231,7 +232,6 @@ export default class PageController {
   }
 
   _updateCommentsData(data, filmPopup) {
-    console.log(123)
     const isSuccess = this._filmModel.updateMovie(data.id, data);
 
     if (isSuccess) {

@@ -20,14 +20,6 @@ const sortFilms = (data, type, flag) => {
   return newData;
 };
 
-const getRandomDate = () => {
-  const targetDate = new Date();
-  const diffValue = -getRandomBetween(0, 60);
-
-  targetDate.setDate(targetDate.getDate() + diffValue);
-  return targetDate;
-};
-
 const pluralize = (count, noun, suffix = `s`) =>
   `${noun}${count !== 1 ? suffix : ``}`;
 
@@ -39,4 +31,6 @@ const bindAll = (ctx, props) => {
 
 const calculateRunTime = (time) => `${Math.floor(time / 60)}h ${time % 60}m`;
 
-export {getRandomDate, calculateRunTime, getRandomBetween, getRandomArrayItem, sortFilms, pluralize, bindAll};
+const mapEntries = (obj, cb) => Object.entries(obj).map(cb);
+
+export {calculateRunTime, getRandomBetween, getRandomArrayItem, sortFilms, pluralize, bindAll, mapEntries};

@@ -8,32 +8,11 @@ const FilterName = {
   STATS: `Stats`
 };
 
-const FILTER_MAX_VALUE = 20;
-
 const Nodes = {
   BODY: document.querySelector(`body`),
   HEADER: document.querySelector(`.header`),
   MAIN: document.querySelector(`.main`),
   FOOTER_STATISTIC: document.querySelector(`.footer__statistics p`)
-};
-
-const generateExceptionsFiltersCount = (item) => {
-  if (item.includes(FilterName.ALL) || item.includes(FilterName.STATS)) {
-    return ``;
-  }
-  return Math.floor(Math.random() * FILTER_MAX_VALUE);
-};
-
-const generateFilters = () => {
-  return Object.values(FilterName).map((item) => {
-    const itemIndexOf = item.indexOf(` `);
-    const generateLink = item.slice(0, itemIndexOf !== -1 ? itemIndexOf : item.length).toLowerCase();
-    return {
-      name: item,
-      link: generateLink,
-      count: generateExceptionsFiltersCount(item)
-    };
-  });
 };
 
 const ExtraTitles = {
@@ -87,4 +66,4 @@ const ButtonStatus = {
   DELETE: `Delete`
 };
 
-export {NAMES, GenreIndex, Nodes, generateFilters, ExtraTitles, SortType, Count, KeyCode, RenderPosition, Mode, FilterName, ContainerTitle, ButtonStatus};
+export {NAMES, GenreIndex, Nodes, ExtraTitles, SortType, Count, KeyCode, RenderPosition, Mode, FilterName, ContainerTitle, ButtonStatus};

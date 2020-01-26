@@ -8,7 +8,7 @@ import FilterController from './controllers/filter.js';
 import SortingComponent from './components/sorting.js';
 import FilmListComponent from './components/film-list.js';
 import FilmListTitleComponent from './components/film-list-title.js';
-import StatisticsComponent from './components/statistics.js';
+import StatisticsComponent from './components/statistics/statistics.js';
 import MoviesModel from './models/movies.js';
 import PageController from './controllers/page-controller.js';
 
@@ -33,6 +33,8 @@ const showStatisticHandler = (pageController, statisticsComponent) => {
   };
 };
 
+const getArrayOfPromises = (films, api) => films.map((film) => api.getComments(film[`id`]).then((comments) => comments));
+
 const moviesModel = new MoviesModel();
 
 const pasteElements = () => {
@@ -44,28 +46,29 @@ const pasteElements = () => {
   apiWithProvider.getFilms()
     .then((films) => {
       moviesModel.setMovies(films);
-      const filmListComponent = new FilmListComponent(moviesModel.getMoviesAll());
+      const allMovies = moviesModel.getMoviesAll();
+      const filmListComponent = new FilmListComponent(allMovies);
       const sortingComponent = new SortingComponent();
       const pageController = new PageController(filmListComponent, sortingComponent, moviesModel, apiWithProvider);
       const statisticsComponent = new StatisticsComponent(moviesModel);
 
-      renderHtmlPart(Nodes.HEADER, new ProfileStatusComponent(moviesModel.getMoviesAll().length).getElement(), RenderPosition.BEFOREEND);
+      renderHtmlPart(Nodes.HEADER, new ProfileStatusComponent(moviesModel).getElement(), RenderPosition.BEFOREEND);
 
       const filterController = new FilterController(Nodes.MAIN, moviesModel, showStatisticHandler(pageController, statisticsComponent));
       filterController.render();
 
-      renderHtmlPart(filmListComponent.getElement().querySelector(`.films-list`), new FilmListTitleComponent(moviesModel.getMoviesAll()).getElement(), RenderPosition.AFTERBEGIN);
+      renderHtmlPart(filmListComponent.getElement().querySelector(`.films-list`), new FilmListTitleComponent(allMovies).getElement(), RenderPosition.AFTERBEGIN);
       renderHtmlPart(Nodes.MAIN, createFragment([sortingComponent.getElement(), filmListComponent.getElement()]), RenderPosition.BEFOREEND);
       renderHtmlPart(Nodes.MAIN, statisticsComponent.getElement(), RenderPosition.BEFOREEND);
       statisticsComponent.hide();
 
-      Nodes.FOOTER_STATISTIC.textContent = `${moviesModel.getMoviesAll().length} movies inside`;
+      Nodes.FOOTER_STATISTIC.textContent = `${allMovies.length} movies inside`;
 
-      const arrayOfPromises = films.map((film) => apiWithProvider.getComments(film[`id`]).then((comments) => comments));
-      Promise.all(arrayOfPromises).then((comments) => {
+      const arrayOfPromoses = getArrayOfPromises(films, apiWithProvider);
+      Promise.all(arrayOfPromoses).then((comments) => {
         moviesModel.setComments(comments);
-        pageController.render();
       });
+      pageController.render();
     });
 
   window.addEventListener(`load`, () => {

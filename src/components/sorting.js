@@ -23,7 +23,11 @@ export default class Sorting extends AbstractComponent {
   }
 
   setSortTypeChangeHandler(handler) {
-    this.getElement().addEventListener(`click`, (evt) => {
+    this.getElement().addEventListener(`click`, this.sortTypeChangeHandler(handler));
+  }
+
+  sortTypeChangeHandler(handler) {
+    return (evt) => {
       evt.preventDefault();
 
       if (evt.target.tagName !== `A`) {
@@ -38,6 +42,6 @@ export default class Sorting extends AbstractComponent {
       this._currenSortType = sortType;
 
       handler(this._currenSortType);
-    });
+    };
   }
 }

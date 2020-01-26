@@ -3,7 +3,7 @@ import he from 'he';
 import AbstractSmartComponent from './abstract-smart-component.js';
 import MovieModel from '../models/movie';
 import {ButtonStatus} from '../constants.js';
-import {pluralize, calculateRunTime, bindAll, sortFilms} from '../utils/common.js';
+import {pluralize, calculateRunTime, bindAll, sortFilms, mapEntries} from '../utils/common.js';
 
 const TimeInSeconds = {
   MILLISECONDS: 0.001,
@@ -23,25 +23,29 @@ const Color = {
   RATING_LABEL: `#d8d8d8`
 };
 
+const filmsDetailsRowTemplate = ([key, name]) => {
+  return `
+    <tr class="film-details__row">
+      <td class="film-details__term">${key}</td>
+      <td class="film-details__cell">${name}</td>
+    </tr>
+  `;
+};
+
+const filmsDetailsControlsTemplate = ([key, name]) => {
+  const loweKey = key.toLowerCase();
+  return `
+  <input type="checkbox" class="film-details__control-input visually-hidden" id="${loweKey}" name="${loweKey}"${name[1] ? ` checked` : ``}>
+  <label for="${loweKey}" class="film-details__control-label film-details__control-label--${loweKey}">${name[0]}</label>
+  `;
+};
+
 const generateFilmsDetailsRow = (filmsDetailsRow) => {
-  return Object.entries(filmsDetailsRow).map(([key, name]) => {
-    return `
-      <tr class="film-details__row">
-        <td class="film-details__term">${key}</td>
-        <td class="film-details__cell">${name}</td>
-      </tr>
-    `;
-  }).join(`\n`);
+  return mapEntries(filmsDetailsRow, filmsDetailsRowTemplate).join(`\n`);
 };
 
 const generateFilmDetailsControls = (filmDetailsControls) => {
-  return Object.entries(filmDetailsControls).map(([key, name]) => {
-    const loweKey = key.toLowerCase();
-    return `
-    <input type="checkbox" class="film-details__control-input visually-hidden" id="${loweKey}" name="${loweKey}"${name[1] ? ` checked` : ``}>
-    <label for="${loweKey}" class="film-details__control-label film-details__control-label--${loweKey}">${name[0]}</label>
-    `;
-  }).join(`\n`);
+  return mapEntries(filmDetailsControls, filmsDetailsControlsTemplate).join(`\n`);
 };
 
 const generateRating = (userRating) => {
@@ -122,7 +126,7 @@ const setDateFromNow = (commentDate, dateNow) => {
 };
 
 const generateComment = (comments) => {
-  const sortedComments = sortFilms(comments, `date`, `reverse`)
+  const sortedComments = sortFilms(comments, `date`, `reverse`);
   const nowDate = Date.now();
 
   return sortedComments.map((comment) => {

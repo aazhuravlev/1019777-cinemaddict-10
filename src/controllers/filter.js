@@ -1,7 +1,7 @@
 import FilterComponent from '../components/filter.js';
 import {FilterName} from '../constants.js';
 import {renderHtmlPart, RenderPosition, replace} from '../utils/render.js';
-import {bindAll} from '../utils/common.js';
+import {bindAll, mapEntries} from '../utils/common.js';
 import {getFilmsByFilter} from '../utils/filter.js';
 
 export default class FilterController {
@@ -10,26 +10,18 @@ export default class FilterController {
     this._movieModel = movieModel;
     this._showStatisticHandler = showStatisticHandler;
 
-    this._activeFilterName = FilterName.ALL;
-    this._filterComponent = null;
+    bindAll(this, [`_onDataChange`, `_onFilterChange`, `_getFiltersProperties`]);
 
-    bindAll(this, [`_onDataChange`, `_onFilterChange`]);
+    this._activeFilterName = FilterName.ALL;
+    this._filtersPropertires = mapEntries(FilterName, this._getFiltersProperties);
+    this._filterComponent = null;
 
     this._movieModel.setDataChangeHandler(this._onDataChange);
   }
 
   render() {
-    const allFilms = this._movieModel.getMoviesAll();
-    const filters = Object.entries(FilterName).map(([link, filterName]) => {
-      return {
-        name: filterName,
-        link,
-        count: getFilmsByFilter(allFilms, filterName).length,
-        isActive: filterName.split(` `)[0] === this._activeFilterName.split(` `)[0],
-      };
-    });
     const oldComponent = this._filterComponent;
-    this._filterComponent = new FilterComponent(filters);
+    this._filterComponent = new FilterComponent(this._filtersPropertires);
 
     this._filterComponent.setFilterChangeHandler(this._onFilterChange);
     this._filterComponent.setShowStatisticHandler(this._showStatisticHandler);
@@ -44,7 +36,18 @@ export default class FilterController {
   _onFilterChange(filterName) {
     this._movieModel.setFilter(filterName);
     this._activeFilterName = filterName;
+
+    this._filtersPropertires = mapEntries(FilterName, this._getFiltersProperties);
     this.render();
+  }
+
+  _getFiltersProperties([link, filterName]) {
+    return {
+      name: filterName,
+      link,
+      count: getFilmsByFilter(this._movieModel.getMoviesAll(), filterName).length,
+      isActive: filterName.split(` `)[0] === this._activeFilterName.split(` `)[0],
+    };
   }
 
   _onDataChange() {

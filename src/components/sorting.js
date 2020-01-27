@@ -44,4 +44,9 @@ export default class Sorting extends AbstractComponent {
       handler(this._currenSortType);
     };
   }
+
+  setSortTypeDefault() {
+    const sortByDefault = this.getElement().querySelector(`a[data-sort-type="default"]`);
+    sortByDefault.click();
+  }
 }

@@ -71,16 +71,14 @@ export default class MovieController {
     }
   }
 
-  watchListButtonClickHandler(evt) {
-    evt.preventDefault();
+  watchListButtonClickHandler() {
     const newFilm = MovieModel.clone(this._cardData);
     newFilm.isWatchlist = !newFilm.isWatchlist;
 
     this._onDataChange(this._cardData, newFilm);
   }
 
-  watchedButtonClickHandler(evt) {
-    evt.preventDefault();
+  watchedButtonClickHandler() {
     const newFilm = MovieModel.clone(this._cardData);
     newFilm.isWatched = !newFilm.isWatched;
     newFilm.personalRating = 0;
@@ -90,8 +88,7 @@ export default class MovieController {
 
   }
 
-  favoritesButtonClickHandler(evt) {
-    evt.preventDefault();
+  favoritesButtonClickHandler() {
     const newFilm = MovieModel.clone(this._cardData);
     newFilm.isFavorite = !newFilm.isFavorite;
 

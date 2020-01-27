@@ -24,9 +24,9 @@ const createFilmCardTemplate = (data) => {
       <p class="film-card__description">${generateFilmCardDescription(description)}</p>
       <a class="film-card__comments">${comments.length} comments</a>
       <form class="film-card__controls">
-        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist${generateActiveFilmCardControl(isWatchlist)}"> Add to watchlist </button>
-        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched${generateActiveFilmCardControl(isWatched)}"> Mark as watched </button>
-        <button class="film-card__controls-item button film-card__controls-item--favorite${generateActiveFilmCardControl(isFavorite)}"> Mark as favorite </button>
+        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist${generateActiveFilmCardControl(isWatchlist)}" type="button"> Add to watchlist </button>
+        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched${generateActiveFilmCardControl(isWatched)}" type="button"> Mark as watched </button>
+        <button class="film-card__controls-item button film-card__controls-item--favorite${generateActiveFilmCardControl(isFavorite)}" type="button"> Mark as favorite </button>
       </form>
     </article>`
   );

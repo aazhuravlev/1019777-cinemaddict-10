@@ -1,8 +1,9 @@
 import moment from 'moment';
 import he from 'he';
+import debounce from 'lodash/debounce';
 import AbstractSmartComponent from './abstract-smart-component.js';
 import MovieModel from '../models/movie';
-import {ButtonStatus} from '../constants.js';
+import {ButtonStatus, DEBOUNCE_TIMEOUT} from '../constants.js';
 import {pluralize, calculateRunTime, bindAll, sortFilms, mapEntries} from '../utils/common.js';
 
 const TimeInSeconds = {
@@ -305,23 +306,23 @@ export default class FilmPopup extends AbstractSmartComponent {
     const element = this.getElement();
 
     element.querySelector(`.film-details__control-label--watchlist`)
-      .addEventListener(`click`, this.watchlistControlClickHandler);
+      .addEventListener(`click`, debounce(this.watchlistControlClickHandler, DEBOUNCE_TIMEOUT));
 
     element.querySelector(`.film-details__control-label--watched`)
-      .addEventListener(`click`, this.watchedControlClickHandler);
+      .addEventListener(`click`, debounce(this.watchedControlClickHandler, DEBOUNCE_TIMEOUT));
 
     if (element.querySelector(`.film-details__user-rating-score`)) {
       element.querySelector(`.film-details__user-rating-score`)
-        .addEventListener(`click`, this.userRatingScoreClickHandler);
+        .addEventListener(`click`, debounce(this.userRatingScoreClickHandler, DEBOUNCE_TIMEOUT));
       element.querySelector(`.film-details__watched-reset`)
-        .addEventListener(`click`, this.userRatingScoreResetClickHandler);
+        .addEventListener(`click`, debounce(this.userRatingScoreResetClickHandler, DEBOUNCE_TIMEOUT));
     }
 
     element.querySelector(`.film-details__emoji-list`)
     .addEventListener(`click`, this.emojiClickHandler);
 
     element.querySelector(`.film-details__control-label--favorite`)
-      .addEventListener(`click`, this.favoriteControlClickHandler);
+      .addEventListener(`click`, debounce(this.favoriteControlClickHandler, DEBOUNCE_TIMEOUT));
 
     element.querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, this._handler);

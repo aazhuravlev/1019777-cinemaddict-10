@@ -68,4 +68,6 @@ const ButtonStatus = {
   UNDO: `Undo`
 };
 
-export {NAMES, GenreIndex, Nodes, ExtraTitles, SortType, Count, KeyCode, RenderPosition, Mode, FilterName, ContainerTitle, ButtonStatus};
+const DEBOUNCE_TIMEOUT = 500;
+
+export {NAMES, DEBOUNCE_TIMEOUT, GenreIndex, Nodes, ExtraTitles, SortType, Count, KeyCode, RenderPosition, Mode, FilterName, ContainerTitle, ButtonStatus};

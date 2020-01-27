@@ -37,13 +37,21 @@ export default class MovieController {
     this._container.appendChild(this._filmCardComponent.getElement());
   }
 
-  setDefaultView() {
-    if (this._mode !== Mode.DEFAULT) {
-      this._popupRemove();
+  _removePopup() {
+    if (this._filmCardPopupComponent.getElement()) {
+      this._filmCardPopupComponent.removeClickHandler(this._removePopupCkickHandler);
+      document.removeEventListener(`keydown`, this._removePopupKeydownHandler);
+      document.removeEventListener(`keydown`, this.submitCommentKeydownHandler);
+
+      this._mode = Mode.DEFAULT;
+
+      remove(this._filmCardPopupComponent);
+      remove(this._filmCardPopupBgComponent);
     }
   }
 
   _cardClickHandler(evt) {
+    this._onViewChange();
     const filmTitle = this._filmCardComponent.getElement().querySelector(`h3`);
     const filmImage = this._filmCardComponent.getElement().querySelector(`img`);
     const filmComments = this._filmCardComponent.getElement().querySelector(`a`);
@@ -111,26 +119,13 @@ export default class MovieController {
     }
   }
 
-  _popupRemove() {
-    if (this._filmCardPopupComponent.getElement()) {
-      this._filmCardPopupComponent.removeClickHandler(this._removePopupCkickHandler);
-      document.removeEventListener(`keydown`, this._removePopupKeydownHandler);
-      document.removeEventListener(`keydown`, this.submitCommentKeydownHandler);
-
-      this._mode = Mode.DEFAULT;
-
-      remove(this._filmCardPopupComponent);
-      remove(this._filmCardPopupBgComponent);
-    }
-  }
-
   _removePopupCkickHandler() {
-    this._popupRemove();
+    this._removePopup();
   }
 
   _removePopupKeydownHandler(evt) {
     if (evt.keyCode === KeyCode.ESC) {
-      this._popupRemove();
+      this._removePopup();
     }
   }
 }

@@ -4,6 +4,8 @@ import nanoid from 'nanoid';
 import {getRandomArrayItem} from "../utils/common.js";
 import {NAMES} from "../constants.js";
 
+const STORE_MOVIES_FLAG = `storeMovies`;
+
 const getSyncedFilms = (items) => items.filter(({success}) => success).map(({payload}) => payload.film);
 
 export default class Provider {
@@ -79,7 +81,7 @@ export default class Provider {
     if (this._isOnLine()) {
       return this._api.addComment(id, comment)
         .then((comments) => {
-          this._storeMovies.setComments(id, comments, `storeMovies`);
+          this._storeMovies.setComments(id, comments, STORE_MOVIES_FLAG);
           this._storeComments.setComments(id, comments);
 
           return Movie.parseMovie(this._storeMovies.getAll()[id]);
@@ -97,7 +99,7 @@ export default class Provider {
     const comments = this._storeComments.getAll()[id];
     comments.push(newComment);
 
-    this._storeMovies.setComments(id, comments, `storeMovies`);
+    this._storeMovies.setComments(id, comments, STORE_MOVIES_FLAG);
     this._storeComments.setComments(id, comments);
 
     return Promise.resolve(Movie.parseMovie(this._storeMovies.getAll()[id]));
@@ -108,14 +110,14 @@ export default class Provider {
       return this._api.deleteComment(commentId).then(
           () => {
             this._storeComments.removeComment(dataId, commentId);
-            this._storeMovies.removeComment(dataId, commentId, `storeMovies`);
+            this._storeMovies.removeComment(dataId, commentId, STORE_MOVIES_FLAG);
           }
       );
     }
     this._isSynchronized = false;
 
     this._storeComments.removeComment(dataId, commentId);
-    this._storeMovies.removeComment(dataId, commentId, `storeMovies`);
+    this._storeMovies.removeComment(dataId, commentId, STORE_MOVIES_FLAG);
 
     return Promise.resolve();
   }

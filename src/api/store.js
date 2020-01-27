@@ -55,7 +55,6 @@ export default class Store {
           index = i;
         }
       });
-
       store[dataId].splice([index], 1);
     }
 

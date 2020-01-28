@@ -43,6 +43,14 @@ const renderFilmListExtra = (node, data, onDataChange, onViewChange) => {
   }
 };
 
+const Handler = {
+  onDataChange: `_onDataChange`,
+  onSortTypeChange: `_onSortTypeChange`,
+  onViewChange: `_onViewChange`,
+  onFilterChange: `_onFilterChange`,
+  showMoreButtonClickHandler: `showMoreButtonClickHandler`
+};
+
 export default class PageController {
   constructor(container, sortingComponent, filmModel, api) {
     this._container = container;
@@ -59,7 +67,7 @@ export default class PageController {
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
     this._extraListComponents = null;
 
-    bindAll(this, [`_onDataChange`, `_onSortTypeChange`, `_onViewChange`, `_onFilterChange`, `showMoreButtonClickHandler`]);
+    bindAll(this, [Handler.onDataChange, Handler.onSortTypeChange, Handler.onViewChange, Handler.onFilterChange, Handler.showMoreButtonClickHandler]);
 
     this._sortingComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     this._filmModel.setFilterChangeHandler(this._onFilterChange);

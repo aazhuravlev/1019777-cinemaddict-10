@@ -6,6 +6,15 @@ import FilmPopupComponent from '../components/film-popup.js';
 import FilmPopupBgComponent from '../components/film-popup-bg.js';
 import {bindAll} from '../utils/common.js';
 
+const Handler = {
+  cardClickHandler: `_cardClickHandler`,
+  removePopupCkickHandler: `_removePopupCkickHandler`,
+  removePopupKeydownHandler: `_removePopupKeydownHandler`,
+  watchListButtonClickHandler: `watchListButtonClickHandler`,
+  watchedButtonClickHandler: `watchedButtonClickHandler`,
+  favoritesButtonClickHandler: `favoritesButtonClickHandler`,
+  submitCommentKeydownHandler: `submitCommentKeydownHandler`
+};
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
     this._container = container;
@@ -20,7 +29,7 @@ export default class MovieController {
     this._filmCardPopupBgComponent = null;
     this._filmCardPopupComponent = null;
 
-    bindAll(this, [`_cardClickHandler`, `_removePopupCkickHandler`, `_removePopupKeydownHandler`, `watchListButtonClickHandler`, `watchedButtonClickHandler`, `favoritesButtonClickHandler`, `submitCommentKeydownHandler`]);
+    bindAll(this, [Handler.cardClickHandler, Handler.removePopupCkickHandler, Handler.removePopupKeydownHandler, Handler.watchListButtonClickHandler, Handler.watchedButtonClickHandler, Handler.favoritesButtonClickHandler, Handler.submitCommentKeydownHandler]);
   }
 
   render(filmCardData) {
@@ -51,12 +60,12 @@ export default class MovieController {
   }
 
   _cardClickHandler(evt) {
-    this._onViewChange();
     const filmTitle = this._filmCardComponent.getElement().querySelector(`h3`);
     const filmImage = this._filmCardComponent.getElement().querySelector(`img`);
     const filmComments = this._filmCardComponent.getElement().querySelector(`a`);
 
     if ([filmTitle, filmImage, filmComments].includes(evt.target)) {
+      this._onViewChange();
       const filmCardPopupBg = this._filmCardPopupBgComponent.getElement();
 
       renderHtmlPart(Nodes.BODY, filmCardPopupBg, RenderPosition.BEFOREEND);

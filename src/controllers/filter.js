@@ -4,13 +4,19 @@ import {renderHtmlPart, RenderPosition, replace} from '../utils/render.js';
 import {bindAll, mapEntries} from '../utils/common.js';
 import {getFilmsByFilter} from '../utils/filter.js';
 
+const Handler = {
+  onDataChange: `_onDataChange`,
+  onFilterChange: `_onFilterChange`,
+  getFiltersProperties: `_getFiltersProperties`
+};
+
 export default class FilterController {
   constructor(container, movieModel, showStatisticHandler) {
     this._container = container;
     this._movieModel = movieModel;
     this._showStatisticHandler = showStatisticHandler;
 
-    bindAll(this, [`_onDataChange`, `_onFilterChange`, `_getFiltersProperties`]);
+    bindAll(this, [Handler.onDataChange, Handler.onFilterChange, Handler.getFiltersProperties]);
 
     this._activeFilterName = FilterName.ALL;
     this._filtersPropertires = mapEntries(FilterName, this._getFiltersProperties);

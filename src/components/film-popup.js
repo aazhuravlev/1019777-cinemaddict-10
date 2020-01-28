@@ -24,6 +24,19 @@ const Color = {
   RATING_LABEL: `#d8d8d8`
 };
 
+const Handler = {
+  recoverListeners: `recoverListeners`,
+  subscribeOnEvents: `_subscribeOnEvents`,
+  watchlistControlClickHandler: `watchlistControlClickHandler`,
+  favoriteControlClickHandler: `favoriteControlClickHandler`,
+  watchedControlClickHandler: `watchedControlClickHandler`,
+  userRatingScoreClickHandler: `userRatingScoreClickHandler`,
+  userRatingScoreResetClickHandler: `userRatingScoreResetClickHandler`,
+  emojiClickHandler: `emojiClickHandler`,
+  commentChangeHandler: `commentChangeHandler`,
+  deleteClickHandler: `deleteClickHandler`
+};
+
 const filmsDetailsRowTemplate = ([key, name]) => {
   return `
     <tr class="film-details__row">
@@ -287,7 +300,7 @@ export default class FilmPopup extends AbstractSmartComponent {
 
     this._handler = null;
 
-    bindAll(this, [`recoverListeners`, `_subscribeOnEvents`, `watchlistControlClickHandler`, `favoriteControlClickHandler`, `watchedControlClickHandler`, `userRatingScoreClickHandler`, `userRatingScoreResetClickHandler`, `emojiClickHandler`, `commentChangeHandler`, `deleteClickHandler`]);
+    bindAll(this, [Handler.recoverListeners, Handler.subscribeOnEvents, Handler.watchlistControlClickHandler, Handler.favoriteControlClickHandler, Handler.watchedControlClickHandler, Handler.userRatingScoreClickHandler, Handler.userRatingScoreResetClickHandler, Handler.emojiClickHandler, Handler.commentChangeHandler, Handler.deleteClickHandler]);
   }
 
   getTemplate() {

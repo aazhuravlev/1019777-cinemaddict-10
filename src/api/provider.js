@@ -6,8 +6,6 @@ import {NAMES} from "../constants.js";
 
 const STORE_MOVIES_FLAG = `storeMovies`;
 
-const getSyncedFilms = (items) => items.filter(({success}) => success).map(({payload}) => payload.film);
-
 export default class Provider {
   constructor(api, storeMovies, storeComments) {
     this._api = api;
@@ -127,24 +125,12 @@ export default class Provider {
       const storeMovies = Object.values(this._storeMovies.getAll());
       return this._api.sync(storeMovies)
         .then((response) => {
-          // Удаляем из хранилища задачи, что были созданы
-          // или изменены в оффлайне. Они нам больше не нужны
           storeMovies.filter((movie) => movie.offline).forEach((movie) => {
             this._storeMovies.removeItem(movie.id);
           });
 
-          // Забираем из ответа синхронизированные задачи
-          const createdFilms = getSyncedFilms(response.created);
-          const updatedFilms = getSyncedFilms(response.updated);
+          response.updated.forEach((movie) => this._storeMovies.setItem(movie.id, movie));
 
-          // Добавляем синхронизированные задачи в хранилище.
-          // Хранилище должно быть актуальным в любой момент,
-          // вдруг сеть пропадёт
-          [...createdFilms, ...updatedFilms].forEach((movie) => {
-            this._storeMovies.setItem(movie.id, movie);
-          });
-
-          // Помечаем, что всё синхронизировано
           this._isSynchronized = true;
 
           return Promise.resolve();

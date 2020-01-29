@@ -23,15 +23,12 @@ export default class Store {
     );
   }
 
-  setComments(id, comments, flag) {
+  setComments(id, comments, movieFlag) {
     const store = this.getAll();
-    if (flag) {
-      const commentsId = comments.map((comment) => comment.id);
-      store[id].comments = commentsId;
+    if (movieFlag) {
+      store[id].comments = comments.map((comment) => comment.id);
     } else {
-      const commentsObj = comments;
-
-      store[id] = commentsObj;
+      store[id] = comments;
     }
     this._storage.setItem(
         this._storeKey,
@@ -39,23 +36,13 @@ export default class Store {
     );
   }
 
-  removeComment(dataId, key, flag) {
+  removeComment(dataId, key, movieFlag) {
     const store = this.getAll();
-    let index;
-    if (flag) {
-      store[dataId].comments.forEach((comment, i) => {
-        if (comment === key) {
-          index = i;
-        }
-      });
-      store[dataId].comments.splice([index], 1);
+
+    if (movieFlag) {
+      store[dataId].comments.filter((comment) => comment !== key);
     } else {
-      store[dataId].forEach((comment, i) => {
-        if (comment.id === key) {
-          index = i;
-        }
-      });
-      store[dataId].splice([index], 1);
+      store[dataId].filter((comment) => comment !== key);
     }
 
     this._storage.setItem(

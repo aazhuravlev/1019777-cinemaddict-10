@@ -19,11 +19,11 @@ const StoreName = {
 const AUTHORIZATION = `Basic dXNlckBwYZFad28yAo=`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 
-const mainNavigationAdditionalItemClassName = `main-navigation__item--additional`;
+const MAIN_NAVIGATION_ADDITIONAL_CLASS = `main-navigation__item--additional`;
 
 const showStatisticHandler = (pageController, statisticsComponent) => {
   return (evt) => {
-    if (evt.target.className.includes(mainNavigationAdditionalItemClassName)) {
+    if (evt.target.className.includes(MAIN_NAVIGATION_ADDITIONAL_CLASS)) {
       pageController.hide();
       statisticsComponent.show();
     } else {
@@ -64,8 +64,8 @@ const pasteElements = () => {
 
       Nodes.FOOTER_STATISTIC.textContent = `${allMovies.length} movies inside`;
 
-      const arrayOfPromoses = getArrayOfPromises(films, apiWithProvider);
-      Promise.all(arrayOfPromoses).then((comments) => {
+      const arrayOfCommentsPromises = getArrayOfPromises(films, apiWithProvider);
+      Promise.all(arrayOfCommentsPromises).then((comments) => {
         moviesModel.setComments(comments);
       });
       pageController.render();

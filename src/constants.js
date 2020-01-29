@@ -70,4 +70,16 @@ const ButtonStatus = {
 
 const DEBOUNCE_TIMEOUT = 500;
 
-export {NAMES, DEBOUNCE_TIMEOUT, GenreIndex, Nodes, ExtraTitles, SortType, Count, KeyCode, RenderPosition, Mode, FilterName, ContainerTitle, ButtonStatus};
+const TagName = {
+  INPUT: `INPUT`,
+  BUTTON: `BUTTON`,
+  LABEL: `LABEL`,
+  A: `A`
+};
+
+const SortFlag = {
+  REVERSE: `reverse`,
+  LENGTH: `length`
+};
+
+export {NAMES, SortFlag, TagName, DEBOUNCE_TIMEOUT, GenreIndex, Nodes, ExtraTitles, SortType, Count, KeyCode, RenderPosition, Mode, FilterName, ContainerTitle, ButtonStatus};

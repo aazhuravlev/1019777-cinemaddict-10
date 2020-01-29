@@ -5,9 +5,9 @@ import {bindAll, mapEntries} from '../utils/common.js';
 import {getFilmsByFilter} from '../utils/filter.js';
 
 const Handler = {
-  onDataChange: `_onDataChange`,
-  onFilterChange: `_onFilterChange`,
-  getFiltersProperties: `_getFiltersProperties`
+  ON_DATA_CHANGE: `_onDataChange`,
+  ON_FILTER_CHANGE: `_onFilterChange`,
+  GET_FILTERS_PROPERTIES: `_getFiltersProperties`
 };
 
 export default class FilterController {
@@ -16,7 +16,7 @@ export default class FilterController {
     this._movieModel = movieModel;
     this._showStatisticHandler = showStatisticHandler;
 
-    bindAll(this, [Handler.onDataChange, Handler.onFilterChange, Handler.getFiltersProperties]);
+    bindAll(this, [Handler.ON_DATA_CHANGE, Handler.ON_FILTER_CHANGE, Handler.GET_FILTERS_PROPERTIES]);
 
     this._activeFilterName = FilterName.ALL;
     this._filtersPropertires = mapEntries(FilterName, this._getFiltersProperties);

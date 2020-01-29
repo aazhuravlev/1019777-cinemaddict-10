@@ -1,4 +1,4 @@
-import {SortType} from '../constants.js';
+import {SortType, TagName} from '../constants.js';
 import AbstractComponent from './abstract-component.js';
 
 const createSortingTemplate = () => {
@@ -30,7 +30,7 @@ export default class Sorting extends AbstractComponent {
     return (evt) => {
       evt.preventDefault();
 
-      if (evt.target.tagName !== `A`) {
+      if (evt.target.tagName !== TagName.A) {
         return;
       }
       const sortType = evt.target.dataset.sortType;

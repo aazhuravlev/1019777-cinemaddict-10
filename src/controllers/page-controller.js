@@ -1,10 +1,18 @@
-import {Nodes, Count, ExtraTitles, SortType, ContainerTitle} from '../constants.js';
+import {Nodes, Count, ExtraTitles, SortType, ContainerTitle, SortFlag} from '../constants.js';
 import {renderHtmlPart, RenderPosition, createFragment, remove} from '../utils/render.js';
 import {sortFilms} from '../utils/common.js';
 import MovieController from '../controllers/movie-сontroller.js';
 import ShowMoreButtonComponent from '../components/show-more-button.js';
 import ExtraListComponent from '../components/extra-list.js';
 import {bindAll} from '../utils/common.js';
+
+const Handler = {
+  ON_DATA_CHANGE: `_onDataChange`,
+  ON_SORT_TYPE_CHANGE: `_onSortTypeChange`,
+  ON_VIEW_CHANGE: `_onViewChange`,
+  ON_FILTER_CHANGE: `_onFilterChange`,
+  SHOW_MORE_BUTTON_CLICK_HANDLER: `showMoreButtonClickHandler`
+};
 
 const createFilmCardFragment = (cardsData, onDataChange, onViewChange) => {
   const fragment = document.createDocumentFragment();
@@ -24,7 +32,7 @@ const renderExtraFilmCard = (data, node, onDataChange, onViewChange) => {
 
 const renderFilmListExtra = (node, data, onDataChange, onViewChange) => {
   const ratingSortedFilms = sortFilms(data, SortType.RATING).slice(0, Count.EXTRA_FILMS);
-  const commentsSortedFilms = sortFilms(data, SortType.COMMENTS, `length`).slice(0, Count.EXTRA_FILMS);
+  const commentsSortedFilms = sortFilms(data, SortType.COMMENTS, SortFlag.LENGTH).slice(0, Count.EXTRA_FILMS);
 
   const isUnRated = ratingSortedFilms.every((film) => film.totalRating === 0);
   const isUnComment = ratingSortedFilms.every((comment) => comment.comments === 0);
@@ -43,14 +51,6 @@ const renderFilmListExtra = (node, data, onDataChange, onViewChange) => {
   }
 };
 
-const Handler = {
-  onDataChange: `_onDataChange`,
-  onSortTypeChange: `_onSortTypeChange`,
-  onViewChange: `_onViewChange`,
-  onFilterChange: `_onFilterChange`,
-  showMoreButtonClickHandler: `showMoreButtonClickHandler`
-};
-
 export default class PageController {
   constructor(container, sortingComponent, filmModel, api) {
     this._container = container;
@@ -67,7 +67,7 @@ export default class PageController {
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
     this._extraListComponents = null;
 
-    bindAll(this, [Handler.onDataChange, Handler.onSortTypeChange, Handler.onViewChange, Handler.onFilterChange, Handler.showMoreButtonClickHandler]);
+    bindAll(this, [Handler.ON_DATA_CHANGE, Handler.ON_SORT_TYPE_CHANGE, Handler.ON_VIEW_CHANGE, Handler.ON_FILTER_CHANGE, Handler.SHOW_MORE_BUTTON_CLICK_HANDLER]);
 
     this._sortingComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     this._filmModel.setFilterChangeHandler(this._onFilterChange);

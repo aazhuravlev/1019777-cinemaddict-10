@@ -1,5 +1,6 @@
 import Chart from 'chart.js';
 import AbstractSmartComponent from '../abstract-smart-component.js';
+import {TagName} from '../../constants.js';
 import {InputValue, LabelName, DAYS_COUNT, ChartParameter, MINUTES_IN_HOUR, CHART_PROPERTIES} from './statistics-constants.js';
 
 const getTotalDurationTime = (films) => {
@@ -153,7 +154,7 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   handler(evt) {
-    if (evt.target.tagName === `INPUT`) {
+    if (evt.target.tagName === TagName.INPUT) {
       this._target = evt.target.value;
 
       const filteredFilmsByDate = getFilteredFilmsByDate(this._filmsData.getHistoryMovies(), DAYS_COUNT[(evt.target.value).toUpperCase()]);

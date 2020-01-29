@@ -7,13 +7,13 @@ import FilmPopupBgComponent from '../components/film-popup-bg.js';
 import {bindAll} from '../utils/common.js';
 
 const Handler = {
-  cardClickHandler: `_cardClickHandler`,
-  removePopupCkickHandler: `_removePopupCkickHandler`,
-  removePopupKeydownHandler: `_removePopupKeydownHandler`,
-  watchListButtonClickHandler: `watchListButtonClickHandler`,
-  watchedButtonClickHandler: `watchedButtonClickHandler`,
-  favoritesButtonClickHandler: `favoritesButtonClickHandler`,
-  submitCommentKeydownHandler: `submitCommentKeydownHandler`
+  CARD_CLICK_HANDLER: `_cardClickHandler`,
+  REMOVE_POPUP_CLICK_HANDLER: `_removePopupCkickHandler`,
+  REMOVE_POPUP_KEYDOWN_HANDLER: `_removePopupKeydownHandler`,
+  WATCHLIST_BUTTON_CLICK_HANDLER: `watchListButtonClickHandler`,
+  WATCHED_BUTTON_CLICK_HANDLER: `watchedButtonClickHandler`,
+  FAVORITES_BUTTON_CLICK_HANDLER: `favoritesButtonClickHandler`,
+  SUBMIT_COMMENT_KEYDOWN_HANDLER: `submitCommentKeydownHandler`
 };
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
@@ -29,7 +29,7 @@ export default class MovieController {
     this._filmCardPopupBgComponent = null;
     this._filmCardPopupComponent = null;
 
-    bindAll(this, [Handler.cardClickHandler, Handler.removePopupCkickHandler, Handler.removePopupKeydownHandler, Handler.watchListButtonClickHandler, Handler.watchedButtonClickHandler, Handler.favoritesButtonClickHandler, Handler.submitCommentKeydownHandler]);
+    bindAll(this, [Handler.CARD_CLICK_HANDLER, Handler.REMOVE_POPUP_CLICK_HANDLER, Handler.REMOVE_POPUP_KEYDOWN_HANDLER, Handler.WATCHLIST_BUTTON_CLICK_HANDLER, Handler.WATCHED_BUTTON_CLICK_HANDLER, Handler.FAVORITES_BUTTON_CLICK_HANDLER, Handler.SUBMIT_COMMENT_KEYDOWN_HANDLER]);
   }
 
   render(filmCardData) {

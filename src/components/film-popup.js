@@ -3,7 +3,7 @@ import he from 'he';
 import debounce from 'lodash/debounce';
 import AbstractSmartComponent from './abstract-smart-component.js';
 import MovieModel from '../models/movie';
-import {ButtonStatus, DEBOUNCE_TIMEOUT} from '../constants.js';
+import {ButtonStatus, DEBOUNCE_TIMEOUT, TagName, SortFlag} from '../constants.js';
 import {pluralize, calculateRunTime, bindAll, sortFilms, mapEntries} from '../utils/common.js';
 
 const TimeInSeconds = {
@@ -14,8 +14,10 @@ const TimeInSeconds = {
   TWO_HOURS: 7140,
   DAY: 86340
 };
+
 const SHAKE_ANIMATION_TIMEOUT = 600;
 const POPUP_RATING_LENGTH = 9;
+
 const Color = {
   ERROR: `red`,
   DISABLED: `#999`,
@@ -25,17 +27,19 @@ const Color = {
 };
 
 const Handler = {
-  recoverListeners: `recoverListeners`,
-  subscribeOnEvents: `_subscribeOnEvents`,
-  watchlistControlClickHandler: `watchlistControlClickHandler`,
-  favoriteControlClickHandler: `favoriteControlClickHandler`,
-  watchedControlClickHandler: `watchedControlClickHandler`,
-  userRatingScoreClickHandler: `userRatingScoreClickHandler`,
-  userRatingScoreResetClickHandler: `userRatingScoreResetClickHandler`,
-  emojiClickHandler: `emojiClickHandler`,
-  commentChangeHandler: `commentChangeHandler`,
-  deleteClickHandler: `deleteClickHandler`
+  RECOVER_LISTENERS: `recoverListeners`,
+  SUBSCRIBE_ON_EVENTS: `_subscribeOnEvents`,
+  WATCHLIST_CONTROL_CLICK_HANDLER: `watchlistControlClickHandler`,
+  FAVORITE_CONTROL_CLICK_HANDLER: `favoriteControlClickHandler`,
+  WATCHED_CONTROL_CLICK_HANDLER: `watchedControlClickHandler`,
+  USER_RATING_SCORE_CLICK_HANDLER: `userRatingScoreClickHandler`,
+  USER_RATING_SCORE_RESET_CLICK_HANDLER: `userRatingScoreResetClickHandler`,
+  EMOJI_CLICK_HANDLER: `emojiClickHandler`,
+  COMMENT_CHANGE_HANDLER: `commentChangeHandler`,
+  DELETE_CLICK_HANDLER: `deleteClickHandler`
 };
+
+const DATE_SORT_TYPE = `date`;
 
 const filmsDetailsRowTemplate = ([key, name]) => {
   return `
@@ -140,7 +144,7 @@ const setDateFromNow = (commentDate, dateNow) => {
 };
 
 const generateComment = (comments) => {
-  const sortedComments = sortFilms(comments, `date`, `reverse`);
+  const sortedComments = sortFilms(comments, DATE_SORT_TYPE, SortFlag.REVERSE);
   const nowDate = Date.now();
 
   return sortedComments.map((comment) => {
@@ -180,6 +184,12 @@ const objKeysUppercaseFirstLetter = (obj) => {
 const createFilmPopupTemplate = (data) => {
   const {title, alternativeTitle, poster, totalRating, ageRating, runtime, genre, description, comments, director, writers, actors, releaseDate, releaseCountry, isWatchlist, isWatched, isFavorite, personalRating, userEmoji} = data;
 
+  const FilmDetailsControls = {
+    WATCHLIST: [`Add to watchlist`, isWatchlist],
+    WATCHED: [`Already watched`, isWatched],
+    FAVORITE: [`Add to favorites`, isFavorite]
+  };
+
   const FilmsDetailsRow = {
     'DIRECTOR': director,
     'WRITERS': writers,
@@ -188,13 +198,8 @@ const createFilmPopupTemplate = (data) => {
     'RUNTIME': calculateRunTime(runtime),
     'COUNTRY': releaseCountry
   };
-  const popupFilmsDetailsRow = objKeysUppercaseFirstLetter(FilmsDetailsRow);
 
-  const FilmDetailsControls = {
-    WATCHLIST: [`Add to watchlist`, isWatchlist],
-    WATCHED: [`Already watched`, isWatched],
-    FAVORITE: [`Add to favorites`, isFavorite]
-  };
+  const popupFilmsDetailsRow = objKeysUppercaseFirstLetter(FilmsDetailsRow);
 
   return (
     `<form class="film-details__inner" action="" method="get">
@@ -300,7 +305,7 @@ export default class FilmPopup extends AbstractSmartComponent {
 
     this._handler = null;
 
-    bindAll(this, [Handler.recoverListeners, Handler.subscribeOnEvents, Handler.watchlistControlClickHandler, Handler.favoriteControlClickHandler, Handler.watchedControlClickHandler, Handler.userRatingScoreClickHandler, Handler.userRatingScoreResetClickHandler, Handler.emojiClickHandler, Handler.commentChangeHandler, Handler.deleteClickHandler]);
+    bindAll(this, [Handler.RECOVER_LISTENERS, Handler.SUBSCRIBE_ON_EVENTS, Handler.WATCHLIST_CONTROL_CLICK_HANDLER, Handler.FAVORITE_CONTROL_CLICK_HANDLER, Handler.WATCHED_CONTROL_CLICK_HANDLER, Handler.USER_RATING_SCORE_CLICK_HANDLER, Handler.USER_RATING_SCORE_RESET_CLICK_HANDLER, Handler.EMOJI_CLICK_HANDLER, Handler.COMMENT_CHANGE_HANDLER, Handler.DELETE_CLICK_HANDLER]);
   }
 
   getTemplate() {
@@ -363,7 +368,7 @@ export default class FilmPopup extends AbstractSmartComponent {
   deleteClickHandler(evt) {
     evt.preventDefault();
     let commentId;
-    if (evt.target.tagName === `BUTTON`) {
+    if (evt.target.tagName === TagName.BUTTON) {
       this._clickedDeleteButton = evt.target;
       this.setDisabledDeleteButton();
 
@@ -422,10 +427,10 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   userRatingScoreClickHandler(evt) {
-    if (evt.target.tagName === `LABEL`) {
+    if (evt.target.tagName === TagName.LABEL) {
       this.clickedRatingIcon = evt.target;
     }
-    if (evt.target.tagName === `INPUT`) {
+    if (evt.target.tagName === TagName.INPUT) {
       const newFilm = MovieModel.clone(this._data);
       newFilm.personalRating = Number(evt.target.value);
 
@@ -457,7 +462,7 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   emojiClickHandler(evt) {
-    if (evt.target.tagName === `INPUT` || evt.target.parentNode.tagName === `INPUT`) {
+    if (evt.target.tagName === TagName.INPUT || evt.target.parentNode.tagName === TagName.INPUT) {
       this._data.userEmoji = evt.target.id.slice(6);
       this.rerender();
     }

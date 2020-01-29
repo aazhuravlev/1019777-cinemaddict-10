@@ -43,7 +43,6 @@ export default class FilterController {
     this._movieModel.setFilter(filterName);
     this._activeFilterName = filterName;
 
-    this._filtersPropertires = mapEntries(FilterName, this._getFiltersProperties);
     this.render();
   }
 
@@ -57,6 +56,7 @@ export default class FilterController {
   }
 
   _onDataChange() {
+    this._filtersPropertires = mapEntries(FilterName, this._getFiltersProperties);
     this.render();
   }
 }

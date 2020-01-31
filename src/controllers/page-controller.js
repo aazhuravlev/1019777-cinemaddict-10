@@ -1,7 +1,7 @@
 import {Nodes, Count, ExtraTitles, SortType, ContainerTitle, SortFlag} from '../constants.js';
 import {renderHtmlPart, RenderPosition, createFragment, remove} from '../utils/render.js';
 import {sortFilms} from '../utils/common.js';
-import MovieController from '../controllers/movie-сontroller.js';
+import MovieController from './movie-controller.js';
 import ShowMoreButtonComponent from '../components/show-more-button.js';
 import ExtraListComponent from '../components/extra-list.js';
 import {bindAll} from '../utils/common.js';
